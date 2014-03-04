@@ -182,9 +182,14 @@ app.post('/uploadFiles', function (req, res, next) {
     });
 });
 
-app.get('/download/:name', function (req, res) {
-    var name = req.param('name');
-    res.download(__dirname + "\\uploads\\" + name);
+//app.get('/download/:name', function (req, res) {
+//    var name = req.param('name');
+//    res.download(__dirname + "\\uploads\\" + name);
+//});
+
+app.get('/download/:path', function (req, res) {
+    var path = req.param('path');
+    res.download(path);
 });
 
 function uploadFileArray(req, res, callback) {

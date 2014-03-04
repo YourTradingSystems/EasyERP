@@ -224,7 +224,7 @@ define([
                 $("#" + parent[0].id).append('<span id="saveSpan"><a href="#">c</a></span>');
 
                 $("#" + parent[0].id).append('<span id="cancelSpan"><a href="#">x</a></span>');
-                $("#" + parent[0].id).find("#editInput").width($("#" + parent[0].id).find("#editInput").width() - 40);
+                $("#" + parent[0].id).find("#editInput").width($("#" + parent[0].id).find("#editInput").width() - 50);
             },
 
             saveClick: function (e) {
@@ -311,7 +311,7 @@ define([
                     alert("Note Content can not be empty");
                 }
                 else {
-                    if (val || title) {
+                if (val.replace(/ /g,'') || title.replace(/ /g,'')) {
                         var notes = this.formModel.get('notes');
                         var arrKeyStr = $('#getNoteKey').attr("value");
                         var noteObj = {

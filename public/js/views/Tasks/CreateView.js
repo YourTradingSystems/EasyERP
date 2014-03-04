@@ -121,10 +121,9 @@ define([
                            mid: mid
                        },
                        wait: true,
-                       success: function (model) {
+                       success: function (model, response) {
                            Backbone.history.fragment = '';
-                           var currentModel = model.changed.task;
-                           var currentModelID = currentModel["_id"];
+                           var currentModelID = response.id || (new Date()).valueOf();
                            var addFrmAttach = $("#createTaskForm");
                            var fileArr = [];
                            var addInptAttach = '';

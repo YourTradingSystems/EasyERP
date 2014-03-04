@@ -1,4 +1,4 @@
-﻿var Customers = function (logWriter, mongoose, models, department, fs) {
+﻿var Customers = function (logWriter, mongoose, models, department) {
     var ObjectId = mongoose.Schema.Types.ObjectId;
     var newObjectId = mongoose.Types.ObjectId;
     var customerSchema = mongoose.Schema({
@@ -63,7 +63,7 @@
         },
         editedBy: {
             user: { type: ObjectId, ref: 'Users', default: null },
-            date: { type: Date, default: Date.now }
+            date: { type: Date }
         }
     }, { collection: 'Customers' });
 
@@ -85,15 +85,13 @@
             switch (contentType) {
                 case ('Persons'): {
                     optionsObject['type'] = 'Person';
-
-                    if (data.filter && data.filter.letter) {
+                    if (data.filter.letter)
                         optionsObject['name.last'] = new RegExp('^[' + data.filter.letter.toLowerCase() + data.filter.letter.toUpperCase() + '].*');
-                    }
                 }
                     break;
                 case ('Companies'): {
                     optionsObject['type'] = 'Company';
-                    if (data.filter && data.filter.letter)
+                    if (data.filter.letter)
                         optionsObject['name.first'] = new RegExp('^[' + data.filter.letter.toLowerCase() + data.filter.letter.toUpperCase() + '].*');
                 }
                     break;
@@ -239,8 +237,6 @@
                         _customer = new models.get(req.session.lastDb - 1, "Customers", customerSchema)();
                         if (data.uId) {
                             _customer.createdBy.user = data.uId;
-                            //on creation addded uId to editBy field user value
-                            _customer.editedBy.user = data.uId;
                         }
                         if (data.groups) {
                             _customer.groups = data.groups;
@@ -373,8 +369,7 @@
                                 logWriter.log("Person.js create savetoBd _customer.save " + err);
                                 res.send(500, { error: 'Person.save BD error' });
                             } else {
-                                
-                                res.send(201, { success: 'A new Person crate success' });
+                                res.send(201, { success: 'A new Person crate success', id: result._id });
                             }
                         });
 
@@ -841,9 +836,6 @@
                                         case ('Persons'):
                                             switch (viewType) {
                                                 case ('list'): {
-                                                    if (data.sort) {
-                                                           query.sort(data.sort);
-                                                    }
                                                     query.select("_id createdBy editedBy address.country email name phones.phone").
                                                         populate('createdBy.user', 'login').
                                                         populate('editedBy.user', 'login');
@@ -863,9 +855,6 @@
                                         case ('Companies'):
                                             switch (viewType) {
                                                 case ('list'): {
-													if (data.sort) {
-														query.sort(data.sort);
-													}
                                                     query.select("_id editedBy createdBy salesPurchases name email phones.phone address.country").
                                                         populate('salesPurchases.salesPerson', '_id name').
                                                         populate('salesPurchases.salesTeam', '_id departmentName').
@@ -1101,12 +1090,11 @@
             }
         },
 
-        getCustomers: function (req, response, data) {
+        getCustomers: function (req, response) {
+
             var res = {};
             res['data'] = [];
-            var query = models.get(req.session.lastDb - 1, "Customers", customerSchema).find();
-            if (data && data.id)
-                query.where({ _id: newObjectId(data.id) });
+            var query = models.get(req.session.lastDb - 1, "Customers", customerSchema).find({ 'salesPurchases.isCustomer': true });
             query.sort({ "name.first": 1 });
             query.exec(function (err, customers) {
                 if (err) {
@@ -1162,15 +1150,11 @@
 
 		updateOnlySelectedFields:function(req, _id, data, res) {
 			delete data._id;
-            var fileName = data.fileName;
-            delete data.fileName;
 			if (data.notes && data.notes.length != 0) {
 				var obj = data.notes[data.notes.length - 1];
-                if (!obj._id)
-				    obj._id = mongoose.Types.ObjectId();
+				obj._id = mongoose.Types.ObjectId();
 				obj.date = new Date();
-                if (!obj.author)
-				    obj.author = req.session.uName;
+				obj.author = req.session.uName;
 				data.notes[data.notes.length - 1] = obj;
 			}
 			 
@@ -1180,42 +1164,7 @@
 					logWriter.log("Customer.js update customer.update " + err);
 					res.send(500, { error: "Can't update Customer" });
 				} else {
-                    if (fileName) {
-                        var newDirname = __dirname.replace("\\Modules","");
-                        var os = require("os");
-                        var osType = (os.type().split('_')[0]);
-                        var path;
-                        var dir;
-                        switch (osType) {
-                            case "Windows":
-                            {
-                                while (newDirname.indexOf("\\") !== -1) {
-                                    newDirname = newDirname.replace("\\","\/");
-                                }
-                                path = newDirname + "\/uploads\/" + _id + "\/" + fileName;
-                                dir = newDirname + "\/uploads\/" + _id;
-                            }
-                                break;
-                            case "Linux":
-                            {
-                                while (newDirname.indexOf("\\") !== -1) {
-                                    newDirname = newDirname.replace("\\","\/");
-                                }
-                                path = newDirname + "\/uploads\/" + _id + "\/" + fileName;
-                                dir = newDirname + "\/uploads\/" + _id;
-                            }
-                        }
-
-                        logWriter.fs.unlink(path,function(){
-                            logWriter.fs.readdir(dir, function(err, files){
-                                if (files.length === 0) {
-                                    logWriter.fs.rmdir(dir,function(){});
-                                }
-                            });
-                        });
-
-                    }
-				    res.send(200,{ success: 'Customer update', notes: result.notes } );
+					res.send(200,{ success: 'Customer update', notes: result.notes } );
 				}
 			});
 		},

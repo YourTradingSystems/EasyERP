@@ -91,79 +91,79 @@ define([
                 if (!file) { return false; }
                 return file.size < App.File.MAXSIZE;
             },
-			updateAssigneesPagination:function(el){
-				var pag = el.find(".userPagination .text");
-				el.find(".userPagination .nextUserList").remove();
-				el.find(".userPagination .prevUserList").remove();
-				el.find(".userPagination .nextGroupList").remove();
-				el.find(".userPagination .prevGroupList").remove();
+            updateAssigneesPagination: function (el) {
+                var pag = el.find(".userPagination .text");
+                el.find(".userPagination .nextUserList").remove();
+                el.find(".userPagination .prevUserList").remove();
+                el.find(".userPagination .nextGroupList").remove();
+                el.find(".userPagination .prevGroupList").remove();
 
-				var list = el.find("ul");
-				var count = list.find("li").length;
-				var s ="";
-				var page  = parseInt(list.attr("data-page"));
-				if (page>1){
-					el.find(".userPagination").prepend("<a class='prevUserList' href='javascript:;'>« prev</a>");
-				}
-				if (count===0){
-					s+="0-0 of 0";
-				}else{
-					if ((page)*20-1<count){
-						s+=((page-1)*20+1)+"-"+((page)*20)+" of "+count;
-					}else{
-						s+=((page-1)*20+1)+"-"+(count)+" of "+count;
-					}
-				}
-				
-				if (page<count/20){
-					el.find(".userPagination").append("<a class='nextUserList' href='javascript:;'>next »</a>");
-				}
-				el.find("ul li").hide();
-				for (var i=(page-1)*20;i<20*page;i++){
-					el.find("ul li").eq(i).show();
-				}
- 
-				pag.text(s);
-			},
+                var list = el.find("ul");
+                var count = list.find("li").length;
+                var s = "";
+                var page = parseInt(list.attr("data-page"));
+                if (page > 1) {
+                    el.find(".userPagination").prepend("<a class='prevUserList' href='javascript:;'>« prev</a>");
+                }
+                if (count === 0) {
+                    s += "0-0 of 0";
+                } else {
+                    if ((page) * 20 - 1 < count) {
+                        s += ((page - 1) * 20 + 1) + "-" + ((page) * 20) + " of " + count;
+                    } else {
+                        s += ((page - 1) * 20 + 1) + "-" + (count) + " of " + count;
+                    }
+                }
+
+                if (page < count / 20) {
+                    el.find(".userPagination").append("<a class='nextUserList' href='javascript:;'>next »</a>");
+                }
+                el.find("ul li").hide();
+                for (var i = (page - 1) * 20; i < 20 * page; i++) {
+                    el.find("ul li").eq(i).show();
+                }
+
+                pag.text(s);
+            },
 
             nextUserList: function (e, page) {
-				$(e.target).closest(".left").find("ul").attr("data-page",parseInt($(e.target).closest(".left").find("ul").attr("data-page"))+1);
-				e.data.self.updateAssigneesPagination($(e.target).closest(".left"));
+                $(e.target).closest(".left").find("ul").attr("data-page", parseInt($(e.target).closest(".left").find("ul").attr("data-page")) + 1);
+                e.data.self.updateAssigneesPagination($(e.target).closest(".left"));
 
-			},
+            },
 
             prevUserList: function (e, page) {
-				$(e.target).closest(".left").find("ul").attr("data-page",parseInt($(e.target).closest(".left").find("ul").attr("data-page"))-1);
-				e.data.self.updateAssigneesPagination($(e.target).closest(".left"));
+                $(e.target).closest(".left").find("ul").attr("data-page", parseInt($(e.target).closest(".left").find("ul").attr("data-page")) - 1);
+                e.data.self.updateAssigneesPagination($(e.target).closest(".left"));
             },
 
             nextGroupList: function (e) {
-				$(e.target).closest(".left").find("ul").attr("data-page",parseInt($(e.target).closest(".left").find("ul").attr("data-page"))+1);
-				e.data.self.updateAssigneesPagination($(e.target).closest(".left"));
+                $(e.target).closest(".left").find("ul").attr("data-page", parseInt($(e.target).closest(".left").find("ul").attr("data-page")) + 1);
+                e.data.self.updateAssigneesPagination($(e.target).closest(".left"));
             },
 
             prevGroupList: function (e) {
-				$(e.target).closest(".left").find("ul").attr("data-page",parseInt($(e.target).closest(".left").find("ul").attr("data-page"))-1);
-				e.data.self.updateAssigneesPagination($(e.target).closest(".left"));
+                $(e.target).closest(".left").find("ul").attr("data-page", parseInt($(e.target).closest(".left").find("ul").attr("data-page")) - 1);
+                e.data.self.updateAssigneesPagination($(e.target).closest(".left"));
             },
 
             addUsers: function (e) {
                 e.preventDefault();
-				$(e.target).parents("ul").find("li:not(:visible)").eq(0).show();
-				var div =$(e.target).parents(".left");
+                $(e.target).parents("ul").find("li:not(:visible)").eq(0).show();
+                var div = $(e.target).parents(".left");
                 $(e.target).closest(".ui-dialog").find(".target").append($(e.target));
-				e.data.self.updateAssigneesPagination(div);
-				div =$(e.target).parents(".left");
-				e.data.self.updateAssigneesPagination(div);
+                e.data.self.updateAssigneesPagination(div);
+                div = $(e.target).parents(".left");
+                e.data.self.updateAssigneesPagination(div);
             },
 
             removeUsers: function (e) {
                 e.preventDefault();
-				var div =$(e.target).parents(".left");
+                var div = $(e.target).parents(".left");
                 $(e.target).closest(".ui-dialog").find(".source").append($(e.target));
-				e.data.self.updateAssigneesPagination(div);
-				div =$(e.target).parents(".left");
-				e.data.self.updateAssigneesPagination(div);
+                e.data.self.updateAssigneesPagination(div);
+                div = $(e.target).parents(".left");
+                e.data.self.updateAssigneesPagination(div);
 
             },
 
@@ -192,7 +192,7 @@ define([
                 $(id).find("li").each(function () {
                     groupsAndUser_holder.append("<tr data-type='" + id.replace("#", "") + "' data-id='" + $(this).attr("id") + "'><td>" + $(this).text() + "</td><td class='text-right'></td></tr>");
                 });
-                if ($(".groupsAndUser tr").length <2) {
+                if ($(".groupsAndUser tr").length < 2) {
                     groupsAndUser_holder.hide();
                 }
 
@@ -224,12 +224,12 @@ define([
                     }
 
                 });
-                $("#targetUsers").unbind().on("click", "li", {self:this},this.removeUsers);
-                $("#sourceUsers").unbind().on("click", "li", {self:this},this.addUsers);
-                $(document).on("click", ".nextUserList",{self:this}, function (e) {
+                $("#targetUsers").unbind().on("click", "li", { self: this }, this.removeUsers);
+                $("#sourceUsers").unbind().on("click", "li", { self: this }, this.addUsers);
+                $(document).on("click", ".nextUserList", { self: this }, function (e) {
                     self.nextUserList(e);
                 });
-                $(document).on("click", ".prevUserList",{self:this}, function (e) {
+                $(document).on("click", ".prevUserList", { self: this }, function (e) {
                     self.prevUserList(e);
                 });
 
@@ -259,12 +259,12 @@ define([
                     }
 
                 });
-                $("#targetGroups").unbind().on("click", "li", {self:this},this.removeUsers);
-                $("#sourceGroups").unbind().on("click", "li", {self:this},this.addUsers);
-                $(document).on("click", ".nextGroupList",{self:this}, function (e) {
+                $("#targetGroups").unbind().on("click", "li", { self: this }, this.removeUsers);
+                $("#sourceGroups").unbind().on("click", "li", { self: this }, this.addUsers);
+                $(document).on("click", ".nextGroupList", { self: this }, function (e) {
                     self.nextUserList(e);
                 });
-                $(document).on("click", ".prevGroupList",{self:this}, function (e) {
+                $(document).on("click", ".prevGroupList", { self: this }, function (e) {
                     self.prevUserList(e);
                 });
 
@@ -347,9 +347,9 @@ define([
                         mid: mid
                     },
                     wait: true,
-                    success: function (model) {
-                        var currentModel = model.changed.result;
-                        var currentModelID = currentModel["_id"];
+                    success: function (model, response) {
+                        Backbone.history.fragment = '';
+                        var currentModelID = response.id || (new Date()).valueOf();
                         var addFrmAttach = $("#createProjectForm");
                         var fileArr = [];
                         var addInptAttach = '';
@@ -403,8 +403,7 @@ define([
                         });
                         if (fileArr.length > 0) {
                             addFrmAttach.submit();
-                        }
-                        else {
+                        } else {
                             self.hideDialog();
                             Backbone.history.navigate("easyErp/" + self.contentType, { trigger: true });
 
@@ -414,12 +413,12 @@ define([
                     },
                     error: function (model, xhr) {
                         self.hideDialog();
-						if (xhr && (xhr.status === 401||xhr.status === 403)) {
-							if (xhr.status === 401){
-								Backbone.history.navigate("login", { trigger: true });
-							}else{
-								alert("You do not have permission to perform this action");								
-							}
+                        if (xhr && (xhr.status === 401 || xhr.status === 403)) {
+                            if (xhr.status === 401) {
+                                Backbone.history.navigate("login", { trigger: true });
+                            } else {
+                                alert("You do not have permission to perform this action");
+                            }
                         } else {
                             Backbone.history.navigate("home", { trigger: true });
                         }
@@ -437,7 +436,7 @@ define([
                 var formString = this.template();
                 var self = this;
                 this.$el = $(formString).dialog({
-					closeOnEscape: false,
+                    closeOnEscape: false,
                     dialogClass: "edit-dialog",
                     width: "900",
                     title: "Create Project",
@@ -458,13 +457,13 @@ define([
                         }
                     }
                 });
-                common.populateUsersForGroups('#sourceUsers', '#targetUsers', null, this.page, function(arr){
-					console.log(arr);
-				});
+                common.populateUsersForGroups('#sourceUsers', '#targetUsers', null, this.page, function (arr) {
+                    console.log(arr);
+                });
                 common.populateDepartmentsList("#sourceGroups", "#targetGroups", "/DepartmentsForDd", null, this.pageG);
                 common.populateUsers("#allUsers", "/Users", null, null, true);
 
-				populate.get("#projectTypeDD", "/projectType", {}, "name", this, true, true);
+                populate.get("#projectTypeDD", "/projectType", {}, "name", this, true, true);
                 populate.get2name("#projectManagerDD", "/getPersonsForDd", {}, this, true);
                 populate.get2name("#customerDd", "/Customer", {}, this, true, true);
                 populate.getWorkflow("#workflowsDd", "#workflowNamesDd", "/WorkflowsForDd", { id: "Projects" }, "name", this, true);

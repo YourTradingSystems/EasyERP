@@ -22,8 +22,7 @@ var logWriter = function (fs) {
         });
     }
     return {
-        log: erfunc,
-        fs: fs
+        log: erfunc
     }
 }
 module.exports = logWriter;
