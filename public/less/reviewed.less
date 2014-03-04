@@ -639,13 +639,14 @@
 .mainmenu(@defaultColor: #333,@activeColor: #36a9e1, @height: 30px) {
   display: block;
   float: none;
-  .position(relative);
+//  .position(relative);
+  position:fixed;
   width: 100%;
   background: #fff;
   height: @height;
   .noPaddingMargin;
   border-bottom: @thin-border #4D5A75;
-
+  z-index:100;
   nav {
     .left;
     background: #4D5A75;
@@ -713,12 +714,13 @@
 }
 
 .top-bar(@defaultHeight: 30px, @defaultBackground: #fff, @defaultBorderColor: #ababab, @defaultH3Color: #333, @defaultMargin: 6px 0 0 0, @defaultPadding: 0 10px) {
-  position: relative;
+  position: fixed;
   display: block;
-  width: auto;
+  width: 100%;
   height: @defaultHeight;
   border-bottom: @thin-border @defaultBorderColor;
   background: @defaultBackground;
+  margin-top:69px;
   clear: both;
 
   h3 {
@@ -734,9 +736,10 @@
 
 .submenu(@defaultColor: #FFF,@activeColor: #FFF, @height: 30px, @bg: #4D5A75) {
   display: block;
-  position: relative;
+  position: fixed;
   height: @height;
   width: auto;
+  margin-top:32px;
 
   nav {
     height: @height;
@@ -2537,12 +2540,14 @@ input, textarea, select {
 
 .btn-list {
   height: 24px;
-  .left;
   margin: 0 12px;
   border: @thin-border #ababab;
   border-right: 0;
   border-bottom: 0;
-  .position(absolute, auto, auto, 5px, 0);
+  float:left;
+  margin-top:5px;
+  margin-left:5px;
+//  .position(absolute, auto, auto, 5px, 0);
 
   li {
     border-right: @thin-border #ababab;
@@ -2872,6 +2877,7 @@ dl {
   position: absolute;
 
   #content-holder {
+	  margin-top:100px;
     position: inherit;
     height: auto;
     display: block;
@@ -2982,9 +2988,9 @@ dl {
 .filterButton {
   background-color: #FFF;
   border: @thin-border #ABABAB;
-  position: absolute;
+  position: fixed;
   right: 118px;
-  top: -26px;
+  margin-top:-26px;
   display: block;
   height: 24px;
   line-height: 24px;

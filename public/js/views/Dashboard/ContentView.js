@@ -294,7 +294,7 @@ define([
 					   }
                        var maxval = d3.max(data1, function (d) { return d.count; });
 					   data1 = dataAll;
-                       var scale = 0.9;
+                       var scale = 1;
                        var maxval = d3.max(data1, function (d) { return d.count; }) * scale;
                        var minval2 = d3.min(percent, function (d) { return d.count; }) * scale;
 
@@ -311,7 +311,7 @@ define([
 					   console.log("percent");
 					   console.log(percent);
                        x.domain(data.map(function (d) { return d.source; }));
-                       y.domain([0, d3.max(data, function (d) { return d.count; })]);
+                       y.domain([0, d3.max(data1, function (d) { return d.count; })]);
                        y2.domain([0, 100]);
                        x2.domain([0, d3.max(data, function (d) { return d.count; })]);
 					   if(self.dateItem != "D"){
