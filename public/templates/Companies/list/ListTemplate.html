@@ -8,7 +8,7 @@
       <span><a href="skype:<%=company.phones.phone%>?call"><%=company.phones.phone%></a></span>
       <span><a href="skype:<%=company.phones.mobile%>?call"><%=company.phones.mobile%></a></span>
     </td>
-    <td><%=company.createdBy.user?(company.createdBy.date + ' (' + company.createdBy.user.login + ')'):''%></td>
+    <td><%=company.createdBy.user?(company.createdBy.date + ' (' + company.createdBy.user.login + ')'):(company.createdBy.date?company.createdBy.date:'')%></td>
     <td><%=company.editedBy.user?((company.editedBy.date) ? company.editedBy.date + ' (' + company.editedBy.user.login + ')' : ''):''%></td>
     <td><%=company.address.country%></td>
 </tr>

@@ -733,7 +733,7 @@
 							}
                         } else {
 						   if (xhr&&xhr.status === 400&&xhr.responseJSON){
-							   alert(error.responseJSON.error);
+							   alert(xhr.responseJSON.error);
 						   }else{
 							   Backbone.history.navigate("easyErp/Opportunities", { trigger: true });
 						   }

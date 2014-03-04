@@ -307,8 +307,8 @@ define([
                     },
                     whoCanRW: whoCanRW
                 };
-                if (currentWorkflow._id && (currentWorkflow._id != workflow))
-                    data['workflow'] = workflow;
+                if (!currentWorkflow ||( currentWorkflow && currentWorkflow._id && (currentWorkflow._id != workflow)))
+                    data['workflow'] = workflow||null;
                 this.currentModel.save(data, {
                     headers: {
                         mid: mid

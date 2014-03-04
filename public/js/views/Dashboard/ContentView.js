@@ -191,9 +191,7 @@ define([
                    });
                },
                renderPopulate: function () {
-
                    var self = this;
-
                    $(".leadChart").empty();
                    common.getLeadsForChart(null, this.dateRange, this.dateItem, function (data) {
 					   $("#timeBuildingDataFromServer").text("Server response in " + self.buildTime + " ms");
@@ -242,7 +240,7 @@ define([
 						   .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
                        var line = d3.svg.line()
 						   .x(function (d) { return x(d.source) + x.rangeBand() / 2; })
-						   .y(function (d) { return y(d.count); })
+						   .y(function (d) { return y2(d.count); })
 						   .interpolate("monotone");
 //                       data.sort(function (a, b) { return d3.ascending(a.source, b.source); });
 					   if(self.dateItem == "D"){
@@ -294,19 +292,11 @@ define([
 						   }
 						   dataAll.push(({source:unicSource[z],count:d1+d2}));
 					   }
-                       var maxval = d3.max(data, function (d) { return d.count; });
+                       var maxval = d3.max(data1, function (d) { return d.count; });
 					   data1 = dataAll;
-                       var maxval3 = d3.max(percent, function (d) { return d.count; });
-                       var minval3 = d3.min(percent, function (d) { return d.count; });
-
-                       var scale = 0.9;
-                       var maxval = d3.max(data, function (d) { return d.count; }) * scale;
+                       var scale = 1;
+                       var maxval = d3.max(data1, function (d) { return d.count; }) * scale;
                        var minval2 = d3.min(percent, function (d) { return d.count; }) * scale;
-                       percent = _.map(percent, function (item) {
-                           item.count = (item.count - minval2)
-                           return item;
-
-                       });
 
 
 					   var maxval2 = d3.max(percent, function (d) { return d.count; });		
@@ -316,10 +306,13 @@ define([
                            return item;
 
                        });
+                       var maxval3 = d3.max(percent, function (d) { return d.count; });
+                       var minval3 = d3.min(percent, function (d) { return d.count; });
+					   console.log("percent");
 					   console.log(percent);
                        x.domain(data.map(function (d) { return d.source; }));
-                       y.domain([0, d3.max(data, function (d) { return d.count; })]);
-                       y2.domain([minval3 * 100, maxval3 * 100]);
+                       y.domain([0, d3.max(data1, function (d) { return d.count; })]);
+                       y2.domain([0, 100]);
                        x2.domain([0, d3.max(data, function (d) { return d.count; })]);
 					   if(self.dateItem != "D"){
 						   chart.append("g")
@@ -435,7 +428,7 @@ define([
 						   .enter().append("circle")
 						   .attr("class", "circle")
 						   .attr("cx", function (d) { return x(d.source) + x.rangeBand() / 2; })
-						   .attr("cy", function (d) { return y(d.count); })
+						   .attr("cy", function (d) { return y2(d.count); })
 						   .attr("r", function (d) { return 4; })
 						   .style("fill", "#1EBBEA")
 						   .style("stroke", "#fff")
