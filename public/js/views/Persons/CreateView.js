@@ -18,8 +18,6 @@ define([
                 _.bindAll(this, "saveItem", "render");
                 this.model = new PersonModel();
                 this.models = (options && options.model) ? options.model : null;
-                this.page = 1;
-                this.pageG = 1;
 				this.responseObj = {};
                 this.render();
             },
@@ -388,9 +386,9 @@ define([
 
                 });
                 var personModel = new PersonModel();
-                common.populateUsersForGroups('#sourceUsers', '#targetUsers', null, this.page);
+                common.populateUsersForGroups('#sourceUsers', '#targetUsers', null, 1);
                 common.populateUsers("#allUsers", "/UsersForDd", null, null, true);
-                common.populateDepartmentsList("#sourceGroups", "#targetGroups", "/DepartmentsForDd", null, this.pageG);
+                common.populateDepartmentsList("#sourceGroups", "#targetGroups", "/DepartmentsForDd", null, 1);
 				populate.getCompanies("#companiesDd", "/CompaniesForDd",{},this,false,true, (this.models)?this.models._id:null);
                 common.canvasDraw({ model: personModel.toJSON() }, this);
                 this.$el.find('.dateBirth').datepicker({

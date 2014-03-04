@@ -299,7 +299,7 @@ define([
                 e.preventDefault();
                 var val = $('#noteArea').val().replace(/</g, "&#60;").replace(/>/g, "&#62;");
                 var title = $('#noteTitleArea').val().replace(/</g, "&#60;").replace(/>/g, "&#62;");
-                if (val || title) {
+                if (val.replace(/ /g,'') || title.replace(/ /g,'')) {
                     var formModel = this.formModel;
                     var notes = formModel.get('notes');
                     var arrKeyStr = $('#getNoteKey').attr("value");
@@ -356,7 +356,9 @@ define([
                     }
                     $('#noteArea').val('');
                     $('#noteTitleArea').val('');
-                }
+                }else{
+					return false;
+				}
             },
 
             addAttach: function (event) {

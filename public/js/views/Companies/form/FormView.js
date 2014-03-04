@@ -368,7 +368,7 @@ define([
                     alert("Note Content can not be empty");
                 }
                 else {
-                    if (val || title) {
+                if (val.replace(/ /g,'') || title.replace(/ /g,'')) {
                         var notes = this.formModel.get('notes');
                         var arrKeyStr = $('#getNoteKey').attr("value");
                         var noteObj = {
