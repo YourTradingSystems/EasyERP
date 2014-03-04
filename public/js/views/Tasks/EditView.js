@@ -97,7 +97,7 @@
                   	alert("Note Content can not be empty");
                   }
                   else {
-                  if (val || title) {
+					  if (val.replace(/ /g,'') || title.replace(/ /g,'')) {
                       var currentModel = this.currentModel;
                       var notes = currentModel.get('notes');
                       var arr_key_str = $('#getNoteKey').attr("value");
@@ -182,7 +182,7 @@
               },
 
               saveNote: function (e) {
-                  if (!($(e.target).parents(".addNote").find("#noteArea").val() == "" && $(e.target).parents(".addNote").find("#noteTitleArea").val() == "")) {
+				  if ($(e.target).parents(".addNote").find("#noteArea").val().replace(/ /g,'') || $(e.target).parents(".addNote").find("#noteTitleArea").val().replace(/ /g,'')){
                       $(e.target).parents(".addNote").find("#noteArea").attr("placeholder", "Add a Note...").parents(".addNote").removeClass("active");
                       $(".title-wrapper").hide();
                       $(".addTitle").hide();
@@ -256,7 +256,7 @@
                               console.log("Attach file error");
                           }
                       });
-                  })
+                  });
                   addFrmAttach.submit();
                   addFrmAttach.off('submit');
               },

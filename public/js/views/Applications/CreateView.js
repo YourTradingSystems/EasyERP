@@ -431,7 +431,6 @@ define([
 									},
 									
 									success: function () {
-										console.log('Attach file');
 										addFrmAttach[0].reset();
 										status.hide();
 										self.hideDialog();

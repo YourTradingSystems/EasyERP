@@ -192,7 +192,7 @@ define([
                 this.prevQuickEdit = parent[0];
                 $("#" + parent[0].id).append('<span id="saveSpan"><a href="#">c</a></span>');
                 $("#" + parent[0].id).append('<span id="cancelSpan"><a href="#">x</a></span>');
-                $("#" + parent[0].id).find("#editInput").width($("#" + parent[0].id).find("#editInput").width() - 40);
+                $("#" + parent[0].id).find("#editInput").width($("#" + parent[0].id).find("#editInput").width() - 50);
             },
             saveCheckboxChange: function (e) {
                 var parent = $(e.target).parent();
@@ -288,7 +288,7 @@ define([
                 e.preventDefault();
                 var val = $('#noteArea').val().replace(/</g, "&#60;").replace(/>/g, "&#62;");
                 var title = $('#noteTitleArea').val().replace(/</g, "&#60;").replace(/>/g, "&#62;");
-                if (val || title) {
+                if (val.replace(/ /g,'') || title.replace(/ /g,'')) {
                     var formModel = this.formModel;
                     var notes = formModel.get('notes');
                     var arrKeyStr = $('#getNoteKey').attr("value");
@@ -345,7 +345,9 @@ define([
                     }
                     $('#noteArea').val('');
                     $('#noteTitleArea').val('');
-                }
+                }else{
+					return false;
+				}
             },
 
             addAttach: function (event) {
