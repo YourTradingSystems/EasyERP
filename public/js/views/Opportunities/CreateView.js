@@ -339,7 +339,7 @@ define([
 
                 var name = $.trim($("#name").val());
 
-                var expectedRevenueValue = $.trim($("#expectedRevenueValue").val());
+                var expectedRevenueValue = $.trim($("#expectedRevenueValue").val())||"0";
                 var expectedRevenueProgress = $.trim($("#expectedRevenueProgress").val());
                 var expectedRevenue;
                 if (expectedRevenueValue || expectedRevenueProgress) {

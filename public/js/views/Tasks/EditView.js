@@ -340,12 +340,12 @@
                       sequence = null;
                   }
                   var workflow = holder.find("#workflowsDd").data("id");
-                  var estimated = $.trim(holder.find("#estimated").val());
+                  var estimated = parseInt($.trim(holder.find("#estimated").val()));
                   if ($.trim(estimated) == "") {
                       estimated = 0;
                   }
 
-                  var logged = $.trim(holder.find("#logged").val());
+                  var logged = parseInt($.trim(holder.find("#logged").val()));
 
                   var priority = holder.find("#priorityDd").data("id");
 
@@ -383,7 +383,7 @@
                           ids.push(assignedTo);
                           ids['task_id'] = model._id;
                           common.getImages(ids, "/getEmployeesImages");
-                          result = res.result;
+                          var result = res.result;
                           self.hideDialog();
                           switch (viewType) {
                               case 'list':
@@ -394,8 +394,8 @@
                                       tr_holder.eq(4).find('a').data('id', project).text(editHolder.find("#projectDd").text());
                                       tr_holder.eq(5).find('a').text(editHolder.find("#workflowsDd").text());
                                       tr_holder.eq(6).text(editHolder.find("#assignedToDd").text());
-                                      tr_holder.eq(7).text(editHolder.find("#estimated").val() || 0);
-                                      tr_holder.eq(8).text(editHolder.find("#logged").val() || 0);
+                                      tr_holder.eq(7).text(parseInt(editHolder.find("#estimated").val() || 0));
+                                      tr_holder.eq(8).text(parseInt(editHolder.find("#logged").val() || 0));
                                       tr_holder.eq(9).find('a').text(editHolder.find("#type").text());
 									  if (data.workflow){
 										  Backbone.history.fragment = "";
