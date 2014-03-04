@@ -412,6 +412,12 @@ define([
 						]
 
                 });
+                common.populateUsersForGroups('#sourceUsers','#targetUsers',this.currentModel.toJSON(),this.page);
+                common.populateUsers("#allUsers", "/UsersForDd",this.currentModel.toJSON(),null,true);
+                common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",this.currentModel.toJSON(),this.pageG);
+				populate.getCompanies("#companiesDd", "/CompaniesForDd",{},this,false,true);
+
+                common.canvasDraw({ model: this.currentModel.toJSON() }, this);
                 this.$el.find('.dateBirth').datepicker({
                     dateFormat: "d M, yy",
                     changeMonth: true,
@@ -419,13 +425,7 @@ define([
                     yearRange: '-100y:c+nn',
                     maxDate: '-18y'
                 });
-                common.populateUsersForGroups('#sourceUsers','#targetUsers',this.currentModel.toJSON(),this.page);
-                common.populateUsers("#allUsers", "/UsersForDd",this.currentModel.toJSON(),null,true);
-                common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",this.currentModel.toJSON(),this.pageG);
-				populate.getCompanies("#companiesDd", "/CompaniesForDd",{},this,false,true);
                 this.delegateEvents(this.events);
-
-                common.canvasDraw({ model: this.currentModel.toJSON() }, this);
                 var model = this.currentModel.toJSON();
                 if (model.groups)
                     if (model.groups.users.length>0||model.groups.group.length){
