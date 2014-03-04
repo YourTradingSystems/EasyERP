@@ -177,6 +177,7 @@ define([
 
             hideItemsNumber: function (e) {
                 $(".allNumberPerPage").hide();
+                $(".newSelectList").hide();
                 if (!$(e.target).closest(".filter-check-list").length) {
                     $(".allNumberPerPage").hide();
                     if ($(".filter-check-list").is(":visible")) {
