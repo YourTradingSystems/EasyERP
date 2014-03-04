@@ -1,5 +1,5 @@
 var JobPosition = function (logWriter, mongoose, employee, department, models) {
-    var ObjectId = mongoose.Schema.Types.ObjectId;
+var ObjectId = mongoose.Schema.Types.ObjectId;
     var objectId = mongoose.Types.ObjectId;
     var newObjectId = mongoose.Types.ObjectId;
     var jobPositionSchema = mongoose.Schema({
@@ -27,7 +27,7 @@ var JobPosition = function (logWriter, mongoose, employee, department, models) {
         },
         editedBy: {
             user: { type: ObjectId, ref: 'Users', default: null },
-            date: { type: Date, default: Date.now }
+            date: { type: Date }
         }
 
     }, { collection: 'JobPosition' });
@@ -137,8 +137,6 @@ var JobPosition = function (logWriter, mongoose, employee, department, models) {
                     _job = new models.get(req.session.lastDb - 1, 'JobPosition', jobPositionSchema)();
                     if (data.uId) {
                         _job.createdBy.user = data.uId;
-                        //uId for edited by field on creation
-                        _job.editedBy.user = data.uId;
                     }
                     if (data.name) {
                         _job.name = data.name;
@@ -205,15 +203,15 @@ var JobPosition = function (logWriter, mongoose, employee, department, models) {
 
     function getJobPositionById(req, id, res) {
         var query = models.get(req.session.lastDb - 1, 'JobPosition', jobPositionSchema).findById(id);
-        query.populate("department", "departmentName _id");
-        query.populate("workflow", "name _id");
-        query.exec(function (err, response) {
+		query.populate("department","departmentName _id");
+		query.populate("workflow","name _id");
+		query.exec(function (err, response) {
             if (err) {
                 console.log(err);
                 logWriter.log('JobPosition.js get job.find' + err);
                 res.send(500, { error: "Can't find JobPosition" });
             } else {
-                console.log(response);
+				console.log(response);
                 var aggregate = models.get(req.session.lastDb - 1, 'Employees', employee.employeeSchema).aggregate(
                    {
                        $match: {
@@ -223,7 +221,7 @@ var JobPosition = function (logWriter, mongoose, employee, department, models) {
                    function (err, result) {
                        if (err) {
                            logWriter.log('JobPosition.js getJobPositionById aggregate ' + err);
-                           res.send(500, { error: "Cant't find an JobPosition" });
+                           res.send(500, {error:"Cant't find an JobPosition"});
                        } else {
                            console.log('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^');
                            response.numberOfEmployees = result.length;
@@ -261,8 +259,7 @@ var JobPosition = function (logWriter, mongoose, employee, department, models) {
         var query = models.get(req.session.lastDb - 1, 'JobPosition', jobPositionSchema).find({});
         query.populate('department').
 			populate('createdBy.user').
-            populate('editedBy.user').
-			populate('workflow','name _id');
+            populate('editedBy.user');
         query.sort({ name: 1 });
         query.exec(function (err, result) {
             if (err) {
@@ -298,6 +295,67 @@ var JobPosition = function (logWriter, mongoose, employee, department, models) {
         //}
     }; //end get
 
+    function getCustom(req, response) {
+        var res = {};
+        res['data'] = [];
+        var query = models.get(req.session.lastDb - 1, 'JobPosition', jobPositionSchema).find({});
+        query.populate('department').
+			populate('createdBy.user').
+            populate('editedBy.user');
+        query.sort({ name: 1 });
+        query.exec(function (err, jobPos) {
+            if (err) {
+                console.log(err);
+                logWriter.log('JobPosition.js get job.find' + err);
+                response.send(500, { error: "Can't find JobPosition" });
+            } else {
+                //res['data'] = result;
+                //response.send(res);
+                getTotalEmployees(jobPos, 0);
+                //
+                //response.send(res);
+            }
+        });
+        var getTotalEmployees = function(jobPositions, count) {
+            if (jobPositions && jobPositions.length > count) {
+                var jobId = jobPositions[count]._id.toString();
+                console.log(jobId);
+                var aggregate = models.get(req.session.lastDb - 1, 'Employees', employee.employeeSchema).aggregate(
+                    {
+                        $match: {
+                            jobPosition: objectId(jobId)
+                        }
+                    },
+                    function(err, result) {
+                        if (result) {
+                            jobPositions[count].numberOfEmployees = result.length;
+                            jobPositions[count].totalForecastedEmployees = jobPositions[count].expectedRecruitment + result.length;
+                            count++;
+                            getTotalEmployees(jobPositions, count);
+                        }
+                    }
+                );
+                //    employee.employee.find({ 'jobPosition.name': jobPositions[count].name }, function (err, _employees) {
+                //        if (err) {
+                //            console.log(err);
+                //            res['data'] = jobPositions;
+                //            response.send(res);
+                //        } else {
+                //            jobPositions[count].numberOfEmployees = _employees.length;
+                //            jobPositions[count].totalForecastedEmployees = jobPositions[count].expectedRecruitment + _employees.length;
+                //            count++;
+                //            getTotalEmployees(jobPositions, count);
+                //        }
+                //    });
+                //} else {
+                //    res['data'] = jobPositions;
+                //    response.send(res);
+            } else {
+                res['data'] = jobPositions;
+                response.send(res);
+            }
+        }
+    }; //end get
 
     function getFilter(req, response) {
         var res = {};
@@ -321,41 +379,36 @@ var JobPosition = function (logWriter, mongoose, employee, department, models) {
             function (err, deps) {
                 if (!err) {
                     var arrOfObjectId = deps.objectID();
+                    
                     models.get(req.session.lastDb - 1, "JobPosition", jobPositionSchema).aggregate(
                         {
                             $match: {
-                                $or: [
-                                    {
                                         $or: [
                                             {
-                                                $and: [
-                                                    { whoCanRW: 'group' },
-                                                    { 'groups.users': newObjectId(req.session.uId) }
+                                                $or: [
+                                                    {
+                                                        $and: [
+                                                            { whoCanRW: 'group' },
+                                                            { 'groups.users': newObjectId(req.session.uId) }
+                                                        ]
+                                                    },
+                                                    {
+                                                        $and: [
+                                                            { whoCanRW: 'group' },
+                                                            { 'groups.group': { $in: arrOfObjectId } }
+                                                        ]
+                                                    }
                                                 ]
                                             },
                                             {
                                                 $and: [
-                                                    { whoCanRW: 'group' },
-                                                    { 'groups.group': { $in: arrOfObjectId } }
+                                                    { whoCanRW: 'owner' },
+                                                    { 'groups.owner': newObjectId(req.session.uId) }
                                                 ]
-                                            }
+                                            },
+                                            { whoCanRW: "everyOne" }
                                         ]
-                                    },
-                                    {
-                                        $and: [
-                                            { whoCanRW: 'owner' },
-                                            { 'groups.owner': newObjectId(req.session.uId) }
-                                        ]
-                                    },
-                                    { whoCanRW: "everyOne" }
-                                ]
                             }
-                        },
-                        {
-                            $skip: (data.page - 1) * data.count
-                        },
-                        {
-                            $limit: parseInt(data.count)
                         },
                         {
                             $project: {
@@ -365,68 +418,213 @@ var JobPosition = function (logWriter, mongoose, employee, department, models) {
                         function (err, result) {
                             if (!err) {
                                 var query = models.get(req.session.lastDb - 1, "JobPosition", jobPositionSchema).find().where('_id').in(result);
-								console.log(data);
-                                if (data.sort) {
-                                    query.sort(data.sort);
-                                }
                                 query.select("_id createdBy editedBy name department totalForecastedEmployees numberOfEmployees expectedRecruitment workflow").
-                                    populate('createdBy.user', 'login').
-                                    populate('editedBy.user', 'login').
-                                    populate('department', 'departmentName').
-									populate('workflow','name _id').
+									populate('createdBy.user', 'login').
+									populate('editedBy.user', 'login').
+									populate('department', 'departmentName').
+									skip((data.page - 1) * data.count).
+									limit(data.count).
                                     exec(function (error, _res) {
                                         if (!error) {
                                             res['data'] = _res;
-                                            if (_res.length !== 0) {
-                                                _res.forEach(function(ellement, index) {
-                                                    models.get(req.session.lastDb - 1, 'Employees', employee.employeeSchema).find({ jobPosition: ellement._id }).count(function(err, count) {
-                                                        if (count) {
-                                                            ellement.numberOfEmployees = count;
-
-                                                        } else if (err) {
-                                                            console.log(err);
-                                                            response.send(500, { error: 'Some error occured in JobPosition' });
-                                                        }
-                                                        if (index === result.length - 1)
-                                                            response.send(res);
-                                                    }
-                                                    );
-                                                });
-                                            } else {
-                                                response.send(res);
-                                            }
-                                            //response.send(res);
+                                            response.send(res);
                                         } else {
                                             console.log(error);
-                                            response.send(500, { error: 'Some error occured in JobPosition' });
                                         }
                                     });
                             } else {
                                 console.log(err);
-                                response.send(500, { error: 'Some error occured in JobPosition' });
                             }
                         }
                     );
                 } else {
                     console.log(err);
-                    response.send(500, { error: 'Some error occured in JobPosition' });
                 }
             });
     }
+/*    function getJobPosition(req, data,response) {
+        var res = {};
+        res['data'] = [];
+        var i = 0;
+        var qeryEveryOne = function (arrayOfId, n, workflowsId) {
 
+            var query = models.get(req.session.lastDb - 1, 'JobPosition', jobPositionSchema).find();
+            if (workflowsId && workflowsId.length > 0)
+                query.where('workflow').in(workflowsId);
+            query.where('_id').in(arrayOfId).
+                populate('department').
+                populate('createdBy.user').
+                populate('editedBy.user').
+                exec(function (error, _res) {
+                    if (!error) {
+                        i++;
+                        res['data'] = res['data'].concat(_res);
+                        if (i == n) getjobPositions(res['data'], 0);
+                    }
+                });
+        };
+
+        var qeryOwner = function (arrayOfId, n, workflowsId) {
+            var query = models.get(req.session.lastDb - 1, 'JobPosition', jobPositionSchema).find();
+            if (workflowsId && workflowsId.length > 0)
+                query.where('workflow').in(workflowsId);
+            query.where('_id').in(arrayOfId).
+                where({ 'groups.owner': data.uId }).
+                populate('department').
+                populate('createdBy.user').
+                populate('editedBy.user').
+                exec(function (error, _res) {
+                    if (!error) {
+                        i++;
+                        console.log(i);
+                        console.log(n);
+                        res['data'] = res['data'].concat(_res);
+                        console.log(res['data']);
+                        if (i == n) getjobPositions(res['data'], 0);
+                    } else {
+                        console.log(error);
+                    }
+                });
+        };
+
+        var qeryByGroup = function (arrayOfId, n) {
+            var query = models.get(req.session.lastDb - 1, 'JobPosition', jobPositionSchema).find();
+            if (workflowsId && workflowsId.length > 0)
+                query.where('workflow').in(workflowsId);
+            query.where({ 'groups.users': data.uId }).
+                populate('department').
+                populate('createdBy.user').
+                populate('editedBy.user').
+                exec(function (error, _res1) {
+                    if (!error) {
+                        models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema).find({ users: data.uId }, { _id: 1 },
+                            function (err, deps) {
+                                console.log(deps);
+                                if (!err) {
+                                    var query = models.get(req.session.lastDb - 1, 'JobPosition', jobPositionSchema).find();
+                                    query.where('_id').in(arrayOfId).
+                                        populate('department').
+                                        populate('createdBy.user').
+                                        populate('editedBy.user').
+                                        exec(function (error, _res) {
+                                            if (!error) {
+                                                i++;
+                                                console.log(i);
+                                                console.log(n);
+                                                res['data'] = res['data'].concat(_res1);
+                                                res['data'] = res['data'].concat(_res);
+                                                console.log(res['data']);
+                                                if (i == n) getjobPositions(res['data'], 0);;
+                                            } else {
+                                                console.log(error);
+                                            }
+                                        });
+                                }
+                            });
+                    } else {
+                        console.log(error);
+                    }
+                });
+        };
+
+        var workflowsId = data ? data.status : null;
+        models.get(req.session.lastDb - 1, 'JobPosition', jobPositionSchema).aggregate(
+            {
+                $group: {
+                    _id: "$whoCanRW",
+                    ID: { $push: "$_id" },
+                    groupId: { $push: "$groups.group" }
+                }
+            },
+            function (err, result) {
+                if (!err) {
+                    if (result.length != 0) {
+                        result.forEach(function(application) {
+                            switch (application._id) {
+                                case "everyOne":
+                                {
+                                    qeryEveryOne(application.ID, result.length, workflowsId);
+                                }
+                                    break;
+                                case "owner":
+                                {
+                                    qeryOwner(application.ID, result.length, workflowsId);
+                                }
+                                    break;
+
+                                case "group":
+                                {
+                                    qeryByGroup(application.ID, result.length, workflowsId);
+                                }
+                                    break;
+                            }
+                        });
+                    } else {
+                        response.send(res);
+                    }
+                } else {
+                    console.log(err);
+                }
+            }
+        );
+
+        var getjobPositions = function (jobPositions, count) {
+            var startIndex,endIndex;
+
+            if ((data.page-1)*data.count > jobPositions.length ) {
+                startIndex = jobPositions.length;
+            } else {
+                startIndex = (data.page-1)*data.count;
+            }
+
+            if (data.page*data.count > jobPositions.length ) {
+                endIndex = jobPositions.length;
+            } else {
+                endIndex = data.page*data.count;
+            }
+            res['listLength'] = jobPositions.length;
+            var jobPositionsSendArray = [];
+            getTotalEmployees(jobPositions, startIndex, endIndex, jobPositionsSendArray);
+        }
+        var getTotalEmployees = function(jobPositions, startIndex, endIndex, jobPositionsSendArray) {
+            if (jobPositions && (startIndex < endIndex)) {
+                var jobId = jobPositions[startIndex]._id.toString();
+                models.get(req.session.lastDb - 1, "Employees", employee.employeeSchema).aggregate(
+                    {
+                        $match: {
+                            jobPosition: objectId(jobId)
+                        }
+                    },
+                    function(err, result) {
+                        if (result) {
+                            jobPositions[startIndex].numberOfEmployees = result.length;
+                            jobPositions[startIndex].totalForecastedEmployees = jobPositions[startIndex].expectedRecruitment + result.length;
+                            jobPositionsSendArray.push( jobPositions[startIndex]);
+                            startIndex++;
+                            getTotalEmployees(jobPositions, startIndex, endIndex,jobPositionsSendArray);
+                        }
+                    }
+                );
+            } else {
+                res['data'] = jobPositionsSendArray;
+                response.send(res);
+            }
+        }
+    };
+*/
     function update(req, _id, data, res) {
         try {
             delete data._id;
             delete data.createdBy;
-            console.log(data);
+            
             if (data.workflow === '528ce71ef3f67bc40b00001d') {
-                ++data.expectedRecruitment;
+                data.expectedRecruitment = 0;
             } else {
-                if (data.workflow && data.expectedRecruitment !== 0)
-                    --data.expectedRecruitment;
+                if (data.expectedRecruitment === 0) {
+                    ++data.expectedRecruitment;
+                }
             }
-            data.numberOfEmployees = data.numberOfEmployees || 0;
-            data.totalForecastedEmployees = data.expectedRecruitment + data.numberOfEmployees;
+            
             if (data.department && data.department._id) {
                 data.department = data.department._id;
             }
@@ -467,7 +665,7 @@ var JobPosition = function (logWriter, mongoose, employee, department, models) {
 
         getJobPositionById: getJobPositionById,
 
-        //getCustom: getCustom,
+        getCustom: getCustom,
 
         create: create,
 
@@ -479,10 +677,10 @@ var JobPosition = function (logWriter, mongoose, employee, department, models) {
 
         remove: remove,
 
-        getJobPositionForDd: getJobPositionForDd,
+        getJobPositionForDd:getJobPositionForDd,
 
         jobPositionSchema: jobPositionSchema
     };
-};
+    };
 
-module.exports = JobPosition;
+    module.exports = JobPosition;

@@ -77,7 +77,7 @@ var Department = function (logWriter, mongoose, models) {
                             logWriter.log("Department.js saveDepartmentToDb _department.save" + err);
                             res.send(500, { error: 'Department.save BD error' });
                         } else {
-                            res.send(201, { success: 'A new Department create success' });
+                            res.send(201, { success: 'A new Department create success', id: result._id });
                         }
                     });
                 }

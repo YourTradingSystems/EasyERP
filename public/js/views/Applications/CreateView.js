@@ -389,9 +389,9 @@ define([
                         mid: mid
                     },
                     wait: true,
-                    success: function (model) {
-						var currentModel = model.changed.result;
-						var currentModelID = currentModel["_id"];
+                    success: function (model, response) {
+                        Backbone.history.fragment = '';
+                        var currentModelID = response.id || (new Date()).valueOf();
 						var addFrmAttach = $("#createApplicationForm");
 						var fileArr= [];
 						var addInptAttach = '';

@@ -129,7 +129,7 @@ var Users = function (logWriter, mongoose, models, department) {
                             logWriter.log("User.js create savetoBd _user.save " + err);
                             result.send(500, { error: 'User.create save error' });
                         } else {
-                            result.send(201, { success: 'A new User crate success' });
+                            result.send(201, { success: 'A new User crate success', id: result1._id });
                         }
                     });
 
@@ -277,9 +277,6 @@ var Users = function (logWriter, mongoose, models, department) {
             data[i] = req.query[i];
         }
         var query = models.get(req.session.lastDb - 1, 'Users', userSchema).find({}, { __v: 0, upass: 0 });
-        if (data.sort) {
-                query.sort(data.sort);
-        }
         query.populate('profile');
         query.skip((data.page - 1) * data.count).limit(data.count);
         query.exec(function (err, result) {
@@ -324,16 +321,12 @@ var Users = function (logWriter, mongoose, models, department) {
                 });
             } else updateUser();
             function updateUser() {
-               // console.log("--->"+JSON.stringify(data, ""));
                 for (var i in data) {
-                    //commented condition to rewrite empty data
-                    // if (data[i]) {
+                    if (data[i]) {
                         updateFields[i] = data[i];
-                    //}
+                    }
                 }
-
                 var _object = { $set: updateFields };
-                //console.log("--->"+JSON.stringify(_object, ""));
                 models.get(req.session.lastDb - 1, 'Users', userSchema).findByIdAndUpdate(_id, _object, function (err, result) {
 
                     if (err) {
