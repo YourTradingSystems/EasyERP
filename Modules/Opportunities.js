@@ -208,7 +208,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                     if (doc.length > 0) {
                         if (doc[0].name === data.name) {
                             logWriter.log('Opprtunities.js. createLead Dublicate Leads' + data.name);
-                            res.send(400, { error: 'An Opprtunities with the same Name already exists' });
+                            res.send(400, { error: 'An Opportunities with the same Name already exists' });
                         }
                     } else if (doc.length === 0) {
                         savetoDb(data);
@@ -877,7 +877,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                     }
                     if (doc.length > 0&&doc[0]._id!=_id) {
 						logWriter.log('Opprtunities.js. createLead Dublicate Leads' + data.name);
-                        res.send(400, { error: 'An Opprtunities with the same Name already exists' });
+                        res.send(400, { error: 'An Opportunities with the same Name already exists' });
 					}else{
                 event.emit('updateSequence', models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema), "sequence", data.sequenceStart, data.sequence, data.workflowStart, data.workflowStart, false, true, function (sequence) {
                     event.emit('updateSequence',models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema), "sequence", data.sequenceStart, data.sequence, data.workflow, data.workflow, true, false, function (sequence) {
@@ -922,7 +922,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                     }
                     if (doc.length > 0&&doc[0]._id!=_id) {
 						logWriter.log('Opprtunities.js. createLead Dublicate Leads' + data.name);
-                        res.send(400, { error: 'An Opprtunities with the same Name already exists' });
+                        res.send(400, { error: 'An Opportunities with the same Name already exists' });
 					}else{
             if (data.notes && data.notes.length != 0) {
                 var obj = data.notes[data.notes.length - 1];
