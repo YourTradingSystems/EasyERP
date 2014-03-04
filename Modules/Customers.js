@@ -86,14 +86,14 @@
                 case ('Persons'): {
                     optionsObject['type'] = 'Person';
 
-                    if (data.filter.letter ){
+                    if (data.filter && data.filter.letter) {
                         optionsObject['name.last'] = new RegExp('^[' + data.filter.letter.toLowerCase() + data.filter.letter.toUpperCase() + '].*');
                     }
                 }
                     break;
                 case ('Companies'): {
                     optionsObject['type'] = 'Company';
-                    if (data.filter.letter)
+                    if (data.filter && data.filter.letter)
                         optionsObject['name.first'] = new RegExp('^[' + data.filter.letter.toLowerCase() + data.filter.letter.toUpperCase() + '].*');
                 }
                     break;

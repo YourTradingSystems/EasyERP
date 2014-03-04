@@ -289,7 +289,6 @@ define([
                     data: { id: modelId },
                     success: function (model) {
                         console.log(model);
-                        //                        self.convertModelDates(model);
                         var topbarView = new topBarView({ actionType: "Content" });
                         var contentView = new contentFormView({ model: model, startTime: startTime });
 
