@@ -521,7 +521,6 @@
       }
 	  &.oe_sortable{
 		  cursor:pointer;
-//		  position:relative;
 		  .arrow{
 			  display: none;
 			  padding: 0;
@@ -573,22 +572,9 @@
 	  &.stage-lost{
 		  position:relative;
 		  text-decoration:line-through;
-/*		  .line-wrapper{
-			  left:0px;
-			  position:absolute;
-			  width:100%;
-			  margin-top:8px;
-			  height:2px;
-			  overflow-x:hidden;
-			  .line{
-				  position:absolute;
-				  margin-left:25px;
-				  width:100%;
-				  border-top:1px solid black;
-			  }
-		  }*/
 	  }
       td {
+		  .text-overflow;
         cursor: pointer;
         padding: 4px 5px;
         line-height: 17px;
@@ -3049,7 +3035,8 @@ dl {
   li {
     cursor: pointer;
     line-height: 20px;
-
+	overflow:hidden;
+	.text-overflow;
     &:hover {
       background-color: #EEE;
     }
@@ -4539,6 +4526,10 @@ h3.dashboard {
 	width:100%;
 }
 .newSelectList{
+	max-width:200px;
+	li{
+		.text-overflow;
+	}
 	.miniStylePagination{
 		position:relative;
 		text-align:center;

@@ -224,7 +224,7 @@ define([
                 $("#" + parent[0].id).append('<span id="saveSpan"><a href="#">c</a></span>');
 
                 $("#" + parent[0].id).append('<span id="cancelSpan"><a href="#">x</a></span>');
-                $("#" + parent[0].id).find("#editInput").width($("#" + parent[0].id).find("#editInput").width() - 40);
+                $("#" + parent[0].id).find("#editInput").width($("#" + parent[0].id).find("#editInput").width() - 50);
             },
 
             saveClick: function (e) {
