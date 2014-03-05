@@ -180,7 +180,12 @@ function (listTemplate, createView, listItemView, aphabeticTemplate,contentColle
                         });
                     }
             });
-
+                var pagenation = this.$el.find('.pagination');
+                if (this.collection.length === 0) {
+                        pagenation.hide();
+                } else {
+                        pagenation.show();
+                }
             currentEl.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
         },
 
@@ -385,6 +390,12 @@ function (listTemplate, createView, listItemView, aphabeticTemplate,contentColle
                     var holder = this.$el;
                     var created = holder.find('#timeRecivingDataFromServer');
                     created.before(new listItemView({ collection: this.collection, page: holder.find("#currentShowPage").val(), itemsNumber: holder.find("span#itemsNumber").text()}).render());//added two parameters page and items number
+                }
+                var pagenation = this.$el.find('.pagination');
+                if (this.collection.length === 0) {
+                        pagenation.hide();
+                } else {
+                        pagenation.show();
                 }
         },
         deleteItems: function () {

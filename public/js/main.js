@@ -477,7 +477,15 @@ require(['app'], function (app) {
                 $("#startLetter .current").removeClass("current").addClass("empty");
             } else {
                 $("#grid-start").text((deletePage - 1) * itemsNumber + 1);
-                $("#grid-end").text(deletePage * itemsNumber);
+                //page counter Vasya
+                var gridEnd = deletePage * itemsNumber;
+                if (this.listLength <= gridEnd) {
+                    $("#grid-end").text(this.listLength);
+                }
+                else {
+                    $("#grid-end").text(gridEnd);
+                }
+                //end
                 $("#grid-count").text(this.listLength);
                 $("#currentShowPage").val(deletePage);
                 $("#pageList").empty();

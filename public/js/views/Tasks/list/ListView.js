@@ -30,8 +30,6 @@ define([
                 this.collection = options.collection;
                 _.bind(this.collection.showMore, this.collection);
                 this.parrentContentId = options.collection.parrentContentId;
-				console.log("parrentContentId");
-				console.log(this.parrentContentId);
                 this.filter = options.filter;
                 this.stages = [];
                 this.defaultItemsNumber = this.collection.namberToShow || 50;
@@ -310,6 +308,12 @@ define([
                     var holder = this.$el;
                     var created = holder.find('#timeRecivingDataFromServer');
                     created.before(new listItemView({ collection: this.collection,page: holder.find("#currentShowPage").val(), itemsNumber: holder.find("span#itemsNumber").text() }).render());
+                }
+                var pagenation = this.$el.find('.pagination');
+                if (this.collection.length === 0) {
+                        pagenation.hide();
+                } else {
+                        pagenation.show();
                 }
             },
 

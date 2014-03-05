@@ -384,8 +384,12 @@ define([
                 $(document).on("click", function (e) {
                     self.hideItemsNumber(e);
                 });
-
-
+                var pagenation = this.$el.find('.pagination');
+                if (this.collection.length === 0) {
+                    pagenation.hide();
+                } else {
+                    pagenation.show();
+                }
                 currentEl.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
                 //this.renderContent();
             },
@@ -463,6 +467,12 @@ define([
                     var holder = this.$el;
                     var created = holder.find('#timeRecivingDataFromServer');
                     created.before(new listItemView({ collection: this.collection, page: holder.find("#currentShowPage").val(), itemsNumber: holder.find("span#itemsNumber").text() }).render());
+                }
+                var pagenation = this.$el.find('.pagination');
+                if (this.collection.length === 0) {
+                        pagenation.hide();
+                } else {
+                        pagenation.show();
                 }
             },
 
