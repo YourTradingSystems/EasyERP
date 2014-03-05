@@ -193,6 +193,7 @@ app.get('/download/:path', function (req, res) {
 });
 
 function uploadFileArray(req, res, callback) {
+    console.log(req);
     var files = [];
     if (req.files && !req.files.attachfile.length) {
         req.files.attachfile = [req.files.attachfile];
@@ -508,9 +509,9 @@ app.post('/uploadOpportunitiesFiles', function (req, res, next) {
                 if (err) {
                     fs.mkdir(dir, function (errr) {
                         if (!errr)
-                            uploadFileArray(req, res, function (files) {
-                                requestHandler.uploadOpportunitiesFiles(req, res, req.headers.id, files);
-                            });
+                        uploadFileArray(req, res, function (files) {
+                            requestHandler.uploadOpportunitiesFiles(req, res, req.headers.id, files);
+                        });
                     });
                 } else {
                     uploadFileArray(req, res, function (files) {

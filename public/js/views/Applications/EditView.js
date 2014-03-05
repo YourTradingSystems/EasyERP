@@ -16,20 +16,19 @@
             initialize: function (options) {
                 _.bindAll(this, "saveItem");
                 _.bindAll(this, "render", "deleteItem");
-                this.workflowsCollection = new WorkflowsCollection({id:'Applications'});
+                this.workflowsCollection = new WorkflowsCollection({ id: 'Applications' });
                 this.employeesCollection = options.collection;
                 this.currentModel = (options.model) ? options.model : options.collection.getElement();
-				this.currentModel.urlRoot = "/Applications";
+                this.currentModel.urlRoot = "/Applications";
                 this.page = 1;
                 this.pageG = 1;
-				this.responseObj = {};
+                this.responseObj = {};
                 this.render();
             },
 
             events: {
                 "click #tabList a": "switchTab",
                 "click .breadcrumb a, #refuse": "changeWorkflow",
-//                "click #hire": "isEmployee",
                 "change #workflowNames": "changeWorkflows",
                 'keydown': 'keydownHandler',
                 "mouseenter .avatar": "showEdit",
@@ -49,53 +48,51 @@
                 "click .newSelectList li.miniStylePagination": "notHide",
                 "click .newSelectList li.miniStylePagination .next:not(.disabled)": "nextSelect",
                 "click .newSelectList li.miniStylePagination .prev:not(.disabled)": "prevSelect",
-				"click .hireEmployee": "isEmployee",
+                "click .hireEmployee": "isEmployee",
                 "click .refuseEmployee": "refuseEmployee"
             },
-			refuseEmployee:function (e) {
-				var self = this;
-                var workflow = this.workflowsCollection.findWhere({name: "Refused"});
-                if(!workflow)
-                {
+            refuseEmployee: function (e) {
+                var self = this;
+                var workflow = this.workflowsCollection.findWhere({ name: "Refused" });
+                if (!workflow) {
                     throw new Error('Workflow "Refused" not found');
-                    return;
                 }
                 var id = workflow.get('_id');
                 this.currentModel.save({
-                    workflow:id
+                    workflow: id
                 }, {
                     success: function (model) {
-						model = model.toJSON();
-						var viewType = custom.getCurrentVT();
-						switch (viewType) {
-						case 'list':
-							{
-                                $("tr[data-id='" + model._id + "'] td").eq(6).find("a").text("Refused");
-							}
-							break;
-						case 'kanban':
-							{
-								$(".column[data-id='"+id+"']").find(".columnNameDiv").after($("#" + model._id));
-							}
-						}
-						self.hideDialog();
+                        model = model.toJSON();
+                        var viewType = custom.getCurrentVT();
+                        switch (viewType) {
+                            case 'list':
+                                {
+                                    $("tr[data-id='" + model._id + "'] td").eq(6).find("a").text("Refused");
+                                }
+                                break;
+                            case 'kanban':
+                                {
+                                    $(".column[data-id='" + id + "']").find(".columnNameDiv").after($("#" + model._id));
+                                }
+                        }
+                        self.hideDialog();
                     },
                     error: function (model, xhr, options) {
                         Backbone.history.navigate("easyErp", { trigger: true });
                     }
                 });
-				return false;
+                return false;
 
             },
             isEmployee: function (e) {
-				e.preventDefault();
-            	this.currentModel.save({
+                e.preventDefault();
+                this.currentModel.save({
                     isEmployee: true
-                },{
+                }, {
                     headers: {
                         mid: 39
                     },
-					patch:true,
+                    patch: true,
                     success: function () {
                         Backbone.history.navigate("easyErp/Employees", { trigger: true });
                     }
@@ -103,59 +100,59 @@
             },
 
             notHide: function (e) {
-				return false;
+                return false;
             },
 
-			nextSelect:function(e){
-				this.showNewSelect(e,false,true);
-			},
-			prevSelect:function(e){
-				this.showNewSelect(e,true,false);
-			},
+            nextSelect: function (e) {
+                this.showNewSelect(e, false, true);
+            },
+            prevSelect: function (e) {
+                this.showNewSelect(e, true, false);
+            },
 
-            changeTab:function(e){
+            changeTab: function (e) {
                 var holder = $(e.target);
                 holder.closest(".dialog-tabs").find("a.active").removeClass("active");
                 holder.addClass("active");
-                var n= holder.parents(".dialog-tabs").find("li").index(holder.parent());
+                var n = holder.parents(".dialog-tabs").find("li").index(holder.parent());
                 var dialog_holder = $(".dialog-tabs-items");
                 dialog_holder.find(".dialog-tabs-item.active").removeClass("active");
                 dialog_holder.find(".dialog-tabs-item").eq(n).addClass("active");
             },
-			updateAssigneesPagination:function(el){
-				var pag = el.find(".userPagination .text");
-				el.find(".userPagination .nextUserList").remove();
-				el.find(".userPagination .prevUserList").remove();
-				el.find(".userPagination .nextGroupList").remove();
-				el.find(".userPagination .prevGroupList").remove();
+            updateAssigneesPagination: function (el) {
+                var pag = el.find(".userPagination .text");
+                el.find(".userPagination .nextUserList").remove();
+                el.find(".userPagination .prevUserList").remove();
+                el.find(".userPagination .nextGroupList").remove();
+                el.find(".userPagination .prevGroupList").remove();
 
-				var list = el.find("ul");
-				var count = list.find("li").length;
-				var s ="";
-				var page  = parseInt(list.attr("data-page"));
-				if (page>1){
-					el.find(".userPagination").prepend("<a class='prevUserList' href='javascript:;'>« prev</a>");
-				}
-				if (count===0){
-					s+="0-0 of 0";
-				}else{
-					if ((page)*20-1<count){
-						s+=((page-1)*20+1)+"-"+((page)*20)+" of "+count;
-					}else{
-						s+=((page-1)*20+1)+"-"+(count)+" of "+count;
-					}
-				}
-				
-				if (page<count/20){
-					el.find(".userPagination").append("<a class='nextUserList' href='javascript:;'>next »</a>");
-				}
-				el.find("ul li").hide();
-				for (var i=(page-1)*20;i<20*page;i++){
-					el.find("ul li").eq(i).show();
-				}
- 
-				pag.text(s);
-			},
+                var list = el.find("ul");
+                var count = list.find("li").length;
+                var s = "";
+                var page = parseInt(list.attr("data-page"));
+                if (page > 1) {
+                    el.find(".userPagination").prepend("<a class='prevUserList' href='javascript:;'>« prev</a>");
+                }
+                if (count === 0) {
+                    s += "0-0 of 0";
+                } else {
+                    if ((page) * 20 - 1 < count) {
+                        s += ((page - 1) * 20 + 1) + "-" + ((page) * 20) + " of " + count;
+                    } else {
+                        s += ((page - 1) * 20 + 1) + "-" + (count) + " of " + count;
+                    }
+                }
+
+                if (page < count / 20) {
+                    el.find(".userPagination").append("<a class='nextUserList' href='javascript:;'>next »</a>");
+                }
+                el.find("ul li").hide();
+                for (var i = (page - 1) * 20; i < 20 * page; i++) {
+                    el.find("ul li").eq(i).show();
+                }
+
+                pag.text(s);
+            },
 
             addUser: function () {
                 var self = this;
@@ -183,14 +180,14 @@
                     }
 
                 });
-				this.updateAssigneesPagination($("#sourceUsers").closest(".left"));
-				this.updateAssigneesPagination($("#targetUsers").closest(".left"));
-                $("#targetUsers").on("click", "li", {self:this},this.removeUsers);
-                $("#sourceUsers").on("click", "li", {self:this},this.addUsers);
-                $(document).on("click", ".nextUserList",{self:this}, function (e) {
+                this.updateAssigneesPagination($("#sourceUsers").closest(".left"));
+                this.updateAssigneesPagination($("#targetUsers").closest(".left"));
+                $("#targetUsers").on("click", "li", { self: this }, this.removeUsers);
+                $("#sourceUsers").on("click", "li", { self: this }, this.addUsers);
+                $(document).on("click", ".nextUserList", { self: this }, function (e) {
                     self.nextUserList(e);
                 });
-                $(document).on("click", ".prevUserList",{self:this}, function (e) {
+                $(document).on("click", ".prevUserList", { self: this }, function (e) {
                     self.prevUserList(e);
                 });
 
@@ -220,57 +217,57 @@
                     }
 
                 });
-				this.updateAssigneesPagination($("#sourceGroups").closest(".left"));
-				this.updateAssigneesPagination($("#targetGroups").closest(".left"));
-                $("#targetGroups").on("click", "li", {self:this},this.removeUsers);
-                $("#sourceGroups").on("click", "li", {self:this},this.addUsers);
-                $(document).on("click", ".nextUserList",{self:this}, function (e) {
+                this.updateAssigneesPagination($("#sourceGroups").closest(".left"));
+                this.updateAssigneesPagination($("#targetGroups").closest(".left"));
+                $("#targetGroups").on("click", "li", { self: this }, this.removeUsers);
+                $("#sourceGroups").on("click", "li", { self: this }, this.addUsers);
+                $(document).on("click", ".nextUserList", { self: this }, function (e) {
                     self.nextUserList(e);
                 });
-                $(document).on("click", ".prevUserList",{self:this}, function (e) {
+                $(document).on("click", ".prevUserList", { self: this }, function (e) {
                     self.prevUserList(e);
                 });
             },
 
             nextUserList: function (e, page) {
-				$(e.target).closest(".left").find("ul").attr("data-page",parseInt($(e.target).closest(".left").find("ul").attr("data-page"))+1);
-				e.data.self.updateAssigneesPagination($(e.target).closest(".left"));
+                $(e.target).closest(".left").find("ul").attr("data-page", parseInt($(e.target).closest(".left").find("ul").attr("data-page")) + 1);
+                e.data.self.updateAssigneesPagination($(e.target).closest(".left"));
             },
 
             prevUserList: function (e, page) {
-				$(e.target).closest(".left").find("ul").attr("data-page",parseInt($(e.target).closest(".left").find("ul").attr("data-page"))-1);
-				e.data.self.updateAssigneesPagination($(e.target).closest(".left"));
+                $(e.target).closest(".left").find("ul").attr("data-page", parseInt($(e.target).closest(".left").find("ul").attr("data-page")) - 1);
+                e.data.self.updateAssigneesPagination($(e.target).closest(".left"));
             },
 
             addUsers: function (e) {
                 e.preventDefault();
-				$(e.target).parents("ul").find("li:not(:visible)").eq(0).show();
-				var div =$(e.target).parents(".left");
+                $(e.target).parents("ul").find("li:not(:visible)").eq(0).show();
+                var div = $(e.target).parents(".left");
                 $(e.target).closest(".ui-dialog").find(".target").append($(e.target));
-				e.data.self.updateAssigneesPagination(div);
-				div =$(e.target).parents(".left");
-				e.data.self.updateAssigneesPagination(div);
+                e.data.self.updateAssigneesPagination(div);
+                div = $(e.target).parents(".left");
+                e.data.self.updateAssigneesPagination(div);
 
             },
 
             removeUsers: function (e) {
                 e.preventDefault();
-				var div =$(e.target).parents(".left");
+                var div = $(e.target).parents(".left");
                 $(e.target).closest(".ui-dialog").find(".source").append($(e.target));
-				e.data.self.updateAssigneesPagination(div);
-				div =$(e.target).parents(".left");
-				e.data.self.updateAssigneesPagination(div);
+                e.data.self.updateAssigneesPagination(div);
+                div = $(e.target).parents(".left");
+                e.data.self.updateAssigneesPagination(div);
             },
 
-            unassign:function(e){
+            unassign: function (e) {
                 var holder = $(e.target);
                 var id = holder.closest("tr").data("id");
                 var type = holder.closest("tr").data("type");
                 var text = holder.closest("tr").find("td").eq(0).text();
-                $("#"+type).append("<option value='"+id+"'>"+text+"</option>");
+                $("#" + type).append("<option value='" + id + "'>" + text + "</option>");
                 holder.closest("tr").remove();
                 var groupsAndUser = $(".groupsAndUser");
-                if (groupsAndUser.find("tr").length==1){
+                if (groupsAndUser.find("tr").length == 1) {
                     groupsAndUser.hide();
                 }
 
@@ -280,19 +277,19 @@
                 $(e.target).toggleClass("choosen");
             },
 
-            addUserToTable:function(id){
+            addUserToTable: function (id) {
                 var groupsAndUser_holder = $(".groupsAndUser");
                 var groupsAndUserHr_holder = $(".groupsAndUser tr");
                 groupsAndUser_holder.show();
-                groupsAndUserHr_holder.each(function(){
-                    if ($(this).data("type")==id.replace("#","")){
+                groupsAndUserHr_holder.each(function () {
+                    if ($(this).data("type") == id.replace("#", "")) {
                         $(this).remove();
                     }
                 });
-                $(id).find("li").each(function(){
-                    groupsAndUser_holder.append("<tr data-type='"+id.replace("#","")+"' data-id='"+ $(this).attr("id")+"'><td>"+$(this).text()+"</td><td class='text-right'></td></tr>");
+                $(id).find("li").each(function () {
+                    groupsAndUser_holder.append("<tr data-type='" + id.replace("#", "") + "' data-id='" + $(this).attr("id") + "'><td>" + $(this).text() + "</td><td class='text-right'></td></tr>");
                 });
-                if ($(".groupsAndUser tr").length <2) {
+                if ($(".groupsAndUser tr").length < 2) {
                     groupsAndUser_holder.hide();
                 }
             },
@@ -307,6 +304,7 @@
                 var addFrmAttach = $("#createApplicationForm");
                 var addInptAttach = $(".input-file .inputAttach")[0].files[0];
                 if (!this.fileSizeIsAcceptable(addInptAttach)) {
+                    $('#inputAttach').val('');
                     alert('File you are trying to attach is too big. MaxFileSize: ' + App.File.MaxFileSizeDisplay);
                     return;
                 }
@@ -359,29 +357,30 @@
                 addFrmAttach.off('submit');
             },
             deleteAttach: function (e) {
-                if ($(e.target).closest("li").hasClass("attachFile")) {
-                    $(e.target).closest(".attachFile").remove();
-                }
-                else {
-                    var id = e.target.id;
-                    var currentModel = this.currentModel;
-                    var attachments = currentModel.get('attachments');
-                    var new_attachments = _.filter(attachments, function (attach) {
-                        if (attach._id != id) {
-                            return attach;
-                        }
-                    });
-                    var fileName = $('.attachFile_' + id + ' a')[0].innerHTML;
-                    currentModel.save({'attachments': new_attachments, fileName: fileName},
-                                      {
-                                          headers: {
-                                              mid: 39
-                                          },
-										  patch:true,
-                                          success: function (model, response, options) {
-                                              $('.attachFile_' + id).remove();
-                                          }
-                                      });
+                if (confirm("You realy want to remove file? ")) {
+                    if ($(e.target).closest("li").hasClass("attachFile")) {
+                        $(e.target).closest(".attachFile").remove();
+                    } else {
+                        var id = e.target.id;
+                        var currentModel = this.currentModel;
+                        var attachments = currentModel.get('attachments');
+                        var new_attachments = _.filter(attachments, function(attach) {
+                            if (attach._id != id) {
+                                return attach;
+                            }
+                        });
+                        var fileName = $('.attachFile_' + id + ' a')[0].innerHTML;
+                        currentModel.save({ 'attachments': new_attachments, fileName: fileName },
+                            {
+                                headers: {
+                                    mid: 39
+                                },
+                                patch: true,
+                                success: function(model, response, options) {
+                                    $('.attachFile_' + id).remove();
+                                }
+                            });
+                    }
                 }
             },
 
@@ -461,7 +460,7 @@
 
                 });
                 var whoCanRW = this.$el.find("[name='whoCanRW']:checked").val();
-                var workflow= this.$el.find("#workflowsDd").data("id") ? this.$el.find("#workflowsDd").data("id") : null;
+                var workflow = this.$el.find("#workflowsDd").data("id") ? this.$el.find("#workflowsDd").data("id") : null;
                 var data = {
                     //subject: this.$el.find("#subject").val(),
                     imageSrc: this.imageSrc,
@@ -497,7 +496,7 @@
                 if (currentWorkflow._id && (currentWorkflow._id != workflow)) {
                     data['workflow'] = workflow;
                     data['sequence'] = -1;
-                    data['sequenceStart'] =  this.currentModel.toJSON().sequence;
+                    data['sequenceStart'] = this.currentModel.toJSON().sequence;
                     data['workflowStart'] = currentWorkflow._id;
                 };
                 this.currentModel.save(data, {
@@ -507,58 +506,58 @@
                     patch: true,
                     success: function (model, result) {
                         model = model.toJSON();
-						result = result.result;
+                        result = result.result;
                         var editHolder = self.$el;
-						switch (viewType) {
-                        case 'list':
-                            {
-								var tr_holder = $("tr[data-id='" + model._id + "'] td");
-                                tr_holder.eq(2).text(data.name.first+" "+data.name.last);
-                                tr_holder.eq(3).text(data.personalEmail);
-                                tr_holder.eq(4).find("a").text(data.workPhones.phone).attr("href","skype:"+data.workPhones.phone+"?call");
-                                tr_holder.eq(5).text(self.$el.find("#jobPositionDd").text());
-                                tr_holder.eq(6).find("a").text(self.$el.find("#workflowsDd").text());
-                                tr_holder.eq(7).text(data.jobType);
-								if (data.workflow){
-									Backbone.history.fragment = "";
-									Backbone.history.navigate(window.location.hash.replace("#",""), { trigger: true });
-								}
+                        switch (viewType) {
+                            case 'list':
+                                {
+                                    var tr_holder = $("tr[data-id='" + model._id + "'] td");
+                                    tr_holder.eq(2).text(data.name.first + " " + data.name.last);
+                                    tr_holder.eq(3).text(data.personalEmail);
+                                    tr_holder.eq(4).find("a").text(data.workPhones.phone).attr("href", "skype:" + data.workPhones.phone + "?call");
+                                    tr_holder.eq(5).text(self.$el.find("#jobPositionDd").text());
+                                    tr_holder.eq(6).find("a").text(self.$el.find("#workflowsDd").text());
+                                    tr_holder.eq(7).text(data.jobType);
+                                    if (data.workflow) {
+                                        Backbone.history.fragment = "";
+                                        Backbone.history.navigate(window.location.hash.replace("#", ""), { trigger: true });
+                                    }
 
-                            }
-                            break;
-                        case 'kanban':
-                            {
-                                var kanban_holder = $("#" + model._id);
-                                kanban_holder.find(".application-header .left").html(data.name.first+"<br/>"+data.name.last);
-								if (parseInt(data.proposedSalary))
-									kanban_holder.find(".application-header .right").text(data.proposedSalary+"$");
-                                kanban_holder.find(".application-content p.center").text(self.$el.find("#jobPositionDd").text());
-                                kanban_holder.find(".application-content p.right").text(nextAction);
+                                }
+                                break;
+                            case 'kanban':
+                                {
+                                    var kanban_holder = $("#" + model._id);
+                                    kanban_holder.find(".application-header .left").html(data.name.first + "<br/>" + data.name.last);
+                                    if (parseInt(data.proposedSalary))
+                                        kanban_holder.find(".application-header .right").text(data.proposedSalary + "$");
+                                    kanban_holder.find(".application-content p.center").text(self.$el.find("#jobPositionDd").text());
+                                    kanban_holder.find(".application-content p.right").text(nextAction);
 
-                                if (result && result.sequence){
-									$("#" + data.workflowStart).find(".item").each(function () {
-										var seq = $(this).find(".inner").data("sequence");
-										if (seq > data.sequenceStart) {
-											$(this).find(".inner").attr("data-sequence", seq - 1);
-										}
-									});
-                                    kanban_holder.find(".inner").attr("data-sequence", result.sequence);
-								}
+                                    if (result && result.sequence) {
+                                        $("#" + data.workflowStart).find(".item").each(function () {
+                                            var seq = $(this).find(".inner").data("sequence");
+                                            if (seq > data.sequenceStart) {
+                                                $(this).find(".inner").attr("data-sequence", seq - 1);
+                                            }
+                                        });
+                                        kanban_holder.find(".inner").attr("data-sequence", result.sequence);
+                                    }
 
-                                $(".column[data-id='" + data.workflow+"']").find(".columnNameDiv").after(kanban_holder);
+                                    $(".column[data-id='" + data.workflow + "']").find(".columnNameDiv").after(kanban_holder);
 
-                            }
+                                }
                         }
                         self.hideDialog();
                     },
                     error: function (model, xhr) {
                         self.hideDialog();
-						if (xhr && (xhr.status === 401||xhr.status === 403)) {
-							if (xhr.status === 401){
-								Backbone.history.navigate("login", { trigger: true });
-							}else{
-								alert("You do not have permission to perform this action");								
-							}
+                        if (xhr && (xhr.status === 401 || xhr.status === 403)) {
+                            if (xhr.status === 401) {
+                                Backbone.history.navigate("login", { trigger: true });
+                            } else {
+                                alert("You do not have permission to perform this action");
+                            }
                         } else {
                             Backbone.history.navigate("home", { trigger: true });
                         }
@@ -577,33 +576,33 @@
                             mid: mid
                         },
                         success: function (model) {
-							model = model.toJSON();
-							var viewType = custom.getCurrentVT();
-							switch (viewType) {
-							case 'list':
-								{
-									$("tr[data-id='" + model._id + "'] td").remove();
-								}
-								break;
-							case 'kanban':
-								{
-									$("#" + model._id).remove();
-									//count kanban
-									var wId = model.workflow._id;
-									var newTotal = ($("td[data-id='" + wId + "'] .totalCount").html()-1);
-									$("td[data-id='" + wId + "'] .totalCount").html(newTotal);
-								}
-							}
-							self.hideDialog();
+                            model = model.toJSON();
+                            var viewType = custom.getCurrentVT();
+                            switch (viewType) {
+                                case 'list':
+                                    {
+                                        $("tr[data-id='" + model._id + "'] td").remove();
+                                    }
+                                    break;
+                                case 'kanban':
+                                    {
+                                        $("#" + model._id).remove();
+                                        //count kanban
+                                        var wId = model.workflow._id;
+                                        var newTotal = ($("td[data-id='" + wId + "'] .totalCount").html() - 1);
+                                        $("td[data-id='" + wId + "'] .totalCount").html(newTotal);
+                                    }
+                            }
+                            self.hideDialog();
 
                         },
                         error: function (model, err) {
-							if (err.status===403){
-								alert("You do not have permission to perform this action");
-							}else{
-								$('.applications-edit-dialog').remove();
-								Backbone.history.navigate("home", { trigger: true });
-							}
+                            if (err.status === 403) {
+                                alert("You do not have permission to perform this action");
+                            } else {
+                                $('.applications-edit-dialog').remove();
+                                Backbone.history.navigate("home", { trigger: true });
+                            }
                         }
                     });
                 }
@@ -611,15 +610,15 @@
             hideNewSelect: function (e) {
                 $(".newSelectList").hide();
             },
-              showNewSelect:function(e,prev,next){
-                populate.showSelect(e,prev,next,this);
+            showNewSelect: function (e, prev, next) {
+                populate.showSelect(e, prev, next, this);
                 return false;
-                
+
             },
 
 
             chooseOption: function (e) {
-                $(e.target).parents("dd").find(".current-selected").text($(e.target).text()).attr("data-id",$(e.target).attr("id"));
+                $(e.target).parents("dd").find(".current-selected").text($(e.target).text()).attr("data-id", $(e.target).attr("id"));
             },
 
             render: function () {
@@ -628,7 +627,7 @@
                 });
                 var self = this;
                 this.$el = $(formString).dialog({
-					closeOnEscape: false,
+                    closeOnEscape: false,
                     dialogClass: "edit-dialog",
                     width: 690,
                     title: "Edit Application",
@@ -653,10 +652,10 @@
                 common.populateUsersForGroups('#sourceUsers', '#targetUsers', this.currentModel.toJSON(), 1);
                 common.populateUsers("#allUsers", "/UsersForDd", this.currentModel.toJSON(), null, true);
                 common.populateDepartmentsList("#sourceGroups", "#targetGroups", "/DepartmentsForDd", this.currentModel.toJSON(), 1);
-				populate.getWorkflow("#workflowsDd","#workflowNamesDd","/WorkflowsForDd",{id:"Applications"},"name",this);
-				populate.get("#departmentDd","/DepartmentsForDd",{},"departmentName",this);
-				populate.get("#jobPositionDd","/JobPositionForDd",{},"name",this);
-				populate.get("#jobTypeDd","/jobType",{},"_id",this);
+                populate.getWorkflow("#workflowsDd", "#workflowNamesDd", "/WorkflowsForDd", { id: "Applications" }, "name", this);
+                populate.get("#departmentDd", "/DepartmentsForDd", {}, "departmentName", this);
+                populate.get("#jobPositionDd", "/JobPositionForDd", {}, "name", this);
+                populate.get("#jobTypeDd", "/jobType", {}, "_id", this);
                 common.canvasDraw({ model: this.currentModel.toJSON() }, this);
                 $('#nextAction').datepicker({
                     dateFormat: "d M, yy",

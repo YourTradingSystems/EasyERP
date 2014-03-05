@@ -105,7 +105,8 @@ define([
                 var currentModelID = currentModel["id"];
                 var addFrmAttach = $("#editEmployeeForm");
                 var addInptAttach = $("#editEmployeeForm .input-file .inputAttach")[0].files[0];
-                if(!this.fileSizeIsAcceptable(addInptAttach)){
+                if (!this.fileSizeIsAcceptable(addInptAttach)) {
+                    $('#inputAttach').val('');
                     alert('File you are trying to attach is too big. MaxFileSize: ' + App.File.MaxFileSizeDisplay);
                     return;
                 }
@@ -159,29 +160,30 @@ define([
 			},
 
             deleteAttach: function (e) {
-                if ($(e.target).closest("li").hasClass("attachFile")){
-                    $(e.target).closest(".attachFile").remove();
-                }
-                else{
-                    var id = e.target.id;
-                    var currentModel = this.currentModel;
-                    var attachments = currentModel.get('attachments');
-                    var new_attachments = _.filter(attachments, function (attach) {
-                        if (attach._id != id) {
-                            return attach;
-                        }
-                    });
-                    var fileName = $('.attachFile_' + id + ' a')[0].innerHTML;
-                    currentModel.save({'attachments': new_attachments, fileName: fileName},
-                                      {
-                                          headers: {
-                                              mid: 39
-                                          },
-                                          patch:true,
-                                          success: function (model, response, options) {
-                                              $('.attachFile_' + id).remove();
-                                          }
-                                      });
+                if (confirm("You realy want to remove file? ")) {
+                    if ($(e.target).closest("li").hasClass("attachFile")) {
+                        $(e.target).closest(".attachFile").remove();
+                    } else {
+                        var id = e.target.id;
+                        var currentModel = this.currentModel;
+                        var attachments = currentModel.get('attachments');
+                        var new_attachments = _.filter(attachments, function(attach) {
+                            if (attach._id != id) {
+                                return attach;
+                            }
+                        });
+                        var fileName = $('.attachFile_' + id + ' a')[0].innerHTML;
+                        currentModel.save({ 'attachments': new_attachments, fileName: fileName },
+                            {
+                                headers: {
+                                    mid: 39
+                                },
+                                patch: true,
+                                success: function(model, response, options) {
+                                    $('.attachFile_' + id).remove();
+                                }
+                            });
+                    }
                 }
             },
 

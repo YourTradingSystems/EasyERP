@@ -1,8 +1,8 @@
 var App = App ||
 {
     File: {
-        MAXSIZE: 3145728,  //size in kilobytes  = 3 MB
-        MaxFileSizeDisplay: "3 MB"
+        MAXSIZE: 10485760,  //size in kilobytes  = 3 MB
+        MaxFileSizeDisplay: "10 MB"
     },
     requestedURL: null,
     Calendar: {

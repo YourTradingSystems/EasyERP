@@ -1208,7 +1208,6 @@
                         }
 
                         logWriter.fs.unlink(path, function (err) {
-                            console.log(err);
                             logWriter.fs.readdir(dir, function(err, files){
                                 if (files.length === 0) {
                                     logWriter.fs.rmdir(dir,function(){});

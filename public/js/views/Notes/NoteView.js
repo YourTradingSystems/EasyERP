@@ -1,10 +1,3 @@
-/**
- * Created with JetBrains PhpStorm.
- * User: Ivan
- * Date: 13.11.13
- * Time: 11:28
- * To change this template use File | Settings | File Templates.
- */
 define([
     'text!templates/Notes/NoteTemplate.html'
 
@@ -18,39 +11,25 @@ define([
             "click #cancelNote" : "cancelNote",
             "click #addNote" : "saveNote",
             "click .addTitle" : "showTitle",
-            "click .editNote" : "editNote",
-            "change #inputAttach": "fileAttachHandler"
-        },
-
-        fileAttachHandler: function(event){
-            var files = event.target.files;
-            if(files.length === 0){
-                alert('No files to attach');
-                return;
-            }
-            var file = files[0];
-            if(!this.fileSizeIsAcceptable(file)){
-                alert('File you are trying to attach is too big. MaxFileSize: ' + App.File.MaxFileSizeDisplay);
-                return;
-            }
-        },
-        fileSizeIsAcceptable: function(file){
-            if(!file){return false;}
-            return file.size < App.File.MAXSIZE;
+            "click .editNote" : "editNote"
         },
 
 		editNote : function(e){
 			$(".title-wrapper").show();
 			$("#noteArea").attr("placeholder","").parents(".addNote").addClass("active");
 		},
+        
 		expandNote : function(e){
 			if (!$(e.target).parents(".addNote").hasClass("active")){
 				$(e.target).attr("placeholder","").parents(".addNote").addClass("active");
 				$(".addTitle").show();
 			}
-        },
+		},
+        
 		cancelNote : function(e){
 			$(e.target).parents(".addNote").find("#noteArea").attr("placeholder","Add a Note...").parents(".addNote").removeClass("active");
+			$(e.target).parents(".addNote").find("#noteArea").val("");
+			$('#getNoteKey').val('');// remove id from hidden field if note editing is cancel
 			$(".title-wrapper").hide();
 			$(".addTitle").hide();
         },
@@ -74,7 +53,6 @@ define([
 
         render: function () {
             this.$el.html(this.template(this.model.toJSON()));
-            //this.delegateEvents(this.events);
             return this;
         }
     });
