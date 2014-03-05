@@ -192,7 +192,12 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, contentColl
                         });
                     }
             });
-
+            var pagenation = this.$el.find('.pagination');
+            if (this.collection.length === 0) {
+                pagenation.hide();
+            } else {
+                pagenation.show();
+            }
             currentEl.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
         },
         //modified for filter Vasya
@@ -392,14 +397,20 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, contentColl
                     var created = holder.find('#timeRecivingDataFromServer');
                     created.before(new listItemView({ collection: this.collection, page: holder.find("#currentShowPage").val(), itemsNumber: holder.find("span#itemsNumber").text() }).render());
                 }
+                var pagenation = this.$el.find('.pagination');
+                if (this.collection.length === 0) {
+                        pagenation.hide();
+                } else {
+                        pagenation.show();
+                }
         },
         deleteItems: function () {
             var that = this,
-                mid = 39,
-                model;
+                     mid = 39,
+                     model;
             var localCounter = 0;
-            this.collectionLength = this.collection.length;
 			var count = $("#listTable input:checked").length;
+            this.collectionLength = this.collection.length;
             $.each($("#listTable input:checked"), function (index, checkbox) {
                 model = that.collection.get(checkbox.value);
                 model.destroy({

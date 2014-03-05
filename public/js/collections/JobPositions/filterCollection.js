@@ -13,6 +13,8 @@
 
             initialize: function (options) {
 				this.startTime = new Date();
+                this.namberToShow = options.count;
+                this.page = options.page || 1;
                 var that = this;
                 if (options && options.viewType) {
                     this.url += options.viewType;
