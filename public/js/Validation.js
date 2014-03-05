@@ -6,6 +6,7 @@ define(
             nameRegExp = /[a-zA-Z0-9-,\s\.\/\s]+$/,
             groupsNameRegExp = /^[.!@#&]?[A-Za-z0-9]+[A-Za-z0-9-'\s()\+!@#&]+/,
             loginRegExp = /^[\w\.@]{6,100}$/,
+            skypeRegExp = /^[\w\._]{6,100}$/,
             workflowRegExp = /^[a-zA-Z0-9\s]{3,100}$/,
             invalidCharsRegExp = /[~<>\^\*₴]/,
             countryRegExp = /[a-zA-Z\s-]+/,
@@ -19,10 +20,14 @@ define(
 
         var validateEmail = function(validatedString){
             return emailRegExp.test(validatedString);
-        }
+        };
 
         var validateLogin = function(validatedString){
             return loginRegExp.test(validatedString);
+        }
+
+        var validateSkype = function(validatedString){
+            return skypeRegExp.test(validatedString);
         }
 
         var validateZip = function(validatedString){
@@ -218,7 +223,38 @@ define(
                     if(!validateName(fieldValue)) errorArray.push([fieldName, errorMessages.invalidLoginMsg].join(' '));
                 }
             }
-        }
+        };
+
+        var checkSkypeField = function(errorArray, required, fieldValue, fieldName){
+            if(required){
+                if(!fieldValue){
+                    errorArray.push([fieldName, errorMessages.requiredMsg].join(' '));
+                    return;
+                }
+                if(hasInvalidChars(fieldValue)) {
+                    errorArray.push([fieldName, errorMessages.invalidCharsMsg].join(' '));
+                    return;
+                }
+                if(fieldValue.length < LOGIN_MIN_LENGTH) {
+                    errorArray.push([fieldName, errorMessages.minLengthMsg(LOGIN_MIN_LENGTH)].join(' '));
+                    return;
+                }
+                if(!validateSkype(fieldValue)) errorArray.push([fieldName, errorMessages.invalidLoginMsg].join(' '));
+            } else{
+                if(fieldValue){
+                    if(hasInvalidChars(fieldValue)) {
+                        errorArray.push([fieldName, errorMessages.invalidCharsMsg].join(' '));
+                        return;
+                    }
+                    if(fieldValue.length < MIN_LENGTH) {
+                        errorArray.push([fieldName, errorMessages.minLengthMsg(6)].join(' '));
+                        return;
+                    }
+                    if(!validateSkype(fieldValue)) errorArray.push([fieldName, errorMessages.invalidLoginMsg].join(' '));
+                }
+            }
+        };
+
 
         var checkWorkflowNameField = function(errorArray, required, fieldValue, fieldName){
             if(required){
@@ -450,6 +486,7 @@ define(
             validGroupsName: validateGroupsName,
             validMoneyAmount: validateMoneyAmount,
             checkLogedField:checkLogedField,
-			checkWorkflowNameField:checkWorkflowNameField
+			checkWorkflowNameField:checkWorkflowNameField,
+			checkSkypeField:checkSkypeField
         }
     });

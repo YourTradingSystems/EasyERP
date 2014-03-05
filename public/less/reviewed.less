@@ -301,6 +301,14 @@
       width: 28px;
       .left;
       margin-right: 5px;
+      background-position:top;
+      -webkit-transition:background-position .1s ease-in;  
+      -moz-transition:background-position .1s ease-in;  
+      -o-transition:background-position .1s ease-in;  
+      transition:background-position .1s ease-in; 
+	  &:hover{
+		  background-position:bottom;
+	  }
     }
 
     .facebook {
@@ -639,14 +647,12 @@
 .mainmenu(@defaultColor: #333,@activeColor: #36a9e1, @height: 30px) {
   display: block;
   float: none;
-//  .position(relative);
-  position:fixed;
+  .position(relative);
   width: 100%;
   background: #fff;
   height: @height;
   .noPaddingMargin;
   border-bottom: @thin-border #4D5A75;
-  z-index:100;
   nav {
     .left;
     background: #4D5A75;
@@ -714,14 +720,13 @@
 }
 
 .top-bar(@defaultHeight: 30px, @defaultBackground: #fff, @defaultBorderColor: #ababab, @defaultH3Color: #333, @defaultMargin: 6px 0 0 0, @defaultPadding: 0 10px) {
-  position: fixed;
   display: block;
   width: 100%;
   height: @defaultHeight;
   border-bottom: @thin-border @defaultBorderColor;
   background: @defaultBackground;
-  margin-top:69px;
   clear: both;
+  margin-top:5px;
 
   h3 {
     margin: @defaultMargin;
@@ -736,10 +741,8 @@
 
 .submenu(@defaultColor: #FFF,@activeColor: #FFF, @height: 30px, @bg: #4D5A75) {
   display: block;
-  position: fixed;
   height: @height;
   width: auto;
-  margin-top:32px;
 
   nav {
     height: @height;
@@ -2877,7 +2880,6 @@ dl {
   position: absolute;
 
   #content-holder {
-	  margin-top:100px;
     position: inherit;
     height: auto;
     display: block;
@@ -2988,7 +2990,7 @@ dl {
 .filterButton {
   background-color: #FFF;
   border: @thin-border #ABABAB;
-  position: fixed;
+  position: absolute;
   right: 118px;
   margin-top:-26px;
   display: block;
