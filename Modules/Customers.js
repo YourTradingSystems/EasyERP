@@ -1181,7 +1181,6 @@
 					res.send(500, { error: "Can't update Customer" });
 				} else {
                     if (fileName) {
-                        var newDirname = __dirname.replace("\\Modules","");
                         var os = require("os");
                         var osType = (os.type().split('_')[0]);
                         var path;
@@ -1189,6 +1188,7 @@
                         switch (osType) {
                             case "Windows":
                             {
+                                var newDirname = __dirname.replace("\\Modules", "");
                                 while (newDirname.indexOf("\\") !== -1) {
                                     newDirname = newDirname.replace("\\","\/");
                                 }
@@ -1198,6 +1198,7 @@
                                 break;
                             case "Linux":
                             {
+                                var newDirname = __dirname.replace("/Modules", "");
                                 while (newDirname.indexOf("\\") !== -1) {
                                     newDirname = newDirname.replace("\\","\/");
                                 }
@@ -1206,7 +1207,8 @@
                             }
                         }
 
-                        logWriter.fs.unlink(path,function(){
+                        logWriter.fs.unlink(path, function (err) {
+                            console.log(err);
                             logWriter.fs.readdir(dir, function(err, files){
                                 if (files.length === 0) {
                                     logWriter.fs.rmdir(dir,function(){});

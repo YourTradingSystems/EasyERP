@@ -236,10 +236,10 @@ define([
 
                 if (objIndex.length > 1) {
                     var param = currentModel.get(objIndex[0]) || {};
-                    param[objIndex[1]] = $('#editInput').val();
+                    param[objIndex[1]] = $('#editInput').val().replace('http://', '');
                     newModel[objIndex[0]] = param;
                 } else {
-                    newModel[objIndex[0]] = $('#editInput').val();
+                    newModel[objIndex[0]] = $('#editInput').val().replace('http://', '');
                 }
                 this.formModel.save(newModel, {
                     headers: {

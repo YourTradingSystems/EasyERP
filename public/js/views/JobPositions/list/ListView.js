@@ -155,6 +155,7 @@ define([
 
             hideItemsNumber: function (e) {
                 $(".allNumberPerPage").hide();
+                $(".newSelectList").hide();
             },
 
             itemsNumber: function (e) {
