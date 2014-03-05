@@ -240,7 +240,12 @@ define([
                     }
                     itemView.trigger('incomingStages', stages);
                 });
-
+                var pagenation = this.$el.find('.pagination');
+                if (this.collection.length === 0) {
+                    pagenation.hide();
+                } else {
+                    pagenation.show();
+                }
                 currentEl.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
             },
             renderContent: function () {
@@ -403,64 +408,68 @@ define([
             },
             //modified for filter Vasya
             deleteItemsRender: function (deleteCounter, deletePage) {
-                dataService.getData('/totalCollectionLength/Applications', {
-                    type: 'Applications',
-                    filter: this.filter,
-                    newCollection: this.newCollection,
-                    parrentContentId: this.parrentContentId
-                }, function (response, context) {
-                    context.listLength = response.count || 0;
-                }, this);
-                this.deleteRender(deleteCounter, deletePage, {
-                    filter: this.filter,
-                    newCollection: this.newCollection,
-                    parrentContentId: this.parrentContentId
-                });
-                if (deleteCounter !== this.collectionLength) {
-                    var holder = this.$el;
-                    var created = holder.find('#timeRecivingDataFromServer');
-                    created.before(new listItemView({ collection: this.collection, page: holder.find("#currentShowPage").val(), itemsNumber: holder.find("span#itemsNumber").text() }).render());
-                }
+                    dataService.getData('/totalCollectionLength/Applications', {
+                        filter: this.filter,
+                        newCollection: this.newCollection
+                    }, function (response, context) {
+                        context.listLength = response.count || 0;
+                    }, this);
+                    this.deleteRender(deleteCounter, deletePage, {
+                        filter: this.filter,
+                        newCollection: this.newCollection,
+                        parrentContentId: this.parrentContentId
+                    });
+                    if (deleteCounter !== this.collectionLength) {
+                        var holder = this.$el;
+                        var created = holder.find('#timeRecivingDataFromServer');
+                        created.before(new listItemView({ collection: this.collection, page: holder.find("#currentShowPage").val(), itemsNumber: holder.find("span#itemsNumber").text()}).render());//added two parameters page and items number
+                    }
+                    var pagenation = this.$el.find('.pagination');
+                    if (this.collection.length === 0) {
+                            pagenation.hide();
+                    } else {
+                            pagenation.show();
+                    }
             },
             deleteItems: function () {
                 var that = this,
-                    mid = 39,
-                    model;
+                         mid = 39,
+                         model;
                 var localCounter = 0;
+                var count = $("#listTable input:checked").length;
                 this.collectionLength = this.collection.length;
-				var count = $("#listTable input:checked").length;
                 $.each($("#listTable input:checked"), function (index, checkbox) {
                     model = that.collection.get(checkbox.value);
                     model.destroy({
                         headers: {
                             mid: mid
                         },
-						wait:true,
-						success:function(){
-							that.listLength--;
-							localCounter++;
+                            wait:true,
+                            success:function(){
+                                that.listLength--;
+                                localCounter++;
 
-							if (index==count-1){
-								that.deleteCounter =localCounter;
-								that.deletePage = $("#currentShowPage").val();
-								that.deleteItemsRender(that.deleteCounter, that.deletePage);
+                                if (index==count-1){
+                                    that.deleteCounter =localCounter;
+                                    that.deletePage = $("#currentShowPage").val();
+                                    that.deleteItemsRender(that.deleteCounter, that.deletePage);
 
-							}
-						},
-						error: function (model, res) {
-							if(res.status===403&&index===0){
-								alert("You do not have permission to perform this action");
-							}
-							that.listLength--;
-							localCounter++;
-							if (index==count-1){
-								that.deleteCounter =localCounter;
-								that.deletePage = $("#currentShowPage").val();
-								that.deleteItemsRender(that.deleteCounter, that.deletePage);
+                                }
+                            },
+                            error: function (model, res) {
+                                if(res.status===403&&index===0){
+                                    alert("You do not have permission to perform this action");
+                                }
+                                that.listLength--;
+                                localCounter++;
+                                if (index==count-1){
+                                    that.deleteCounter =localCounter;
+                                    that.deletePage = $("#currentShowPage").val();
+                                    that.deleteItemsRender(that.deleteCounter, that.deletePage);
 
-							}
+                                }
 
-						}
+                            }
                     });
                 });
             }

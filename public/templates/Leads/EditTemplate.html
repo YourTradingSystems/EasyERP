@@ -24,7 +24,7 @@
                     <div class="half-block left">
                         <dl class="opp-info">
                       <dt><label>Subject </label></dt><dd>
-                        <input type="text" class="title-input" id="name" value="<%=model.name%>" placeholder="Subject" required maxlength="32"/>
+                        <input type="text" class="title-input" id="name" value="<%=model.name%>" placeholder="Subject" required maxlength="48"/>
                       </dd>
                             <dt><label for="company">Company Name</label></dt><dd><input type="text" id="company" value="<%= model.tempCompanyField %>" placeholder="Company name" maxlength="32" /></dd>
                             <dt><label for="customerDd">Customer</label></dt><dd>
@@ -80,7 +80,7 @@
                         </dl>
                     </div>
                 <dl class="internal-info">
-				  <dt><label for="internalNotes">Internal Notes</label></dt><dd><textarea id="internalNotes" placeholder="Add a Description..."><%=model.internalNotes%></textarea></dd>
+				  <dt><label for="internalNotes">Internal Notes</label></dt><dd><textarea id="internalNotes" placeholder="Add a Description..." maxlength="500"><%=model.internalNotes%></textarea></dd>
 				</dl>
 
                 </div>

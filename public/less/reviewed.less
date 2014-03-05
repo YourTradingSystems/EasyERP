@@ -49,6 +49,9 @@
 @birthdayColor: #555;
 
 /*------------------------Functions-----------------------------*/
+input::-ms-clear {
+    display: none;
+}
 .avatar(@size: 32px, @t: 5px, @r: 5px, @b: 5px, @l: 5px) {
   display: block;
   overflow: hidden;
@@ -301,6 +304,14 @@
       width: 28px;
       .left;
       margin-right: 5px;
+      background-position:top;
+      -webkit-transition:background-position .1s ease-in;  
+      -moz-transition:background-position .1s ease-in;  
+      -o-transition:background-position .1s ease-in;  
+      transition:background-position .1s ease-in; 
+	  &:hover{
+		  background-position:bottom;
+	  }
     }
 
     .facebook {
@@ -639,14 +650,12 @@
 .mainmenu(@defaultColor: #333,@activeColor: #36a9e1, @height: 30px) {
   display: block;
   float: none;
-//  .position(relative);
-  position:fixed;
+  .position(relative);
   width: 100%;
   background: #fff;
   height: @height;
   .noPaddingMargin;
   border-bottom: @thin-border #4D5A75;
-  z-index:100;
   nav {
     .left;
     background: #4D5A75;
@@ -714,14 +723,13 @@
 }
 
 .top-bar(@defaultHeight: 30px, @defaultBackground: #fff, @defaultBorderColor: #ababab, @defaultH3Color: #333, @defaultMargin: 6px 0 0 0, @defaultPadding: 0 10px) {
-  position: fixed;
   display: block;
   width: 100%;
   height: @defaultHeight;
   border-bottom: @thin-border @defaultBorderColor;
   background: @defaultBackground;
-  margin-top:69px;
   clear: both;
+  margin-top:5px;
 
   h3 {
     margin: @defaultMargin;
@@ -736,10 +744,8 @@
 
 .submenu(@defaultColor: #FFF,@activeColor: #FFF, @height: 30px, @bg: #4D5A75) {
   display: block;
-  position: fixed;
   height: @height;
   width: auto;
-  margin-top:32px;
 
   nav {
     height: @height;
@@ -1239,7 +1245,7 @@
 
     h2 {
       width: auto;
-      padding: 4px;
+      padding: 6px;
       text-align: left;
       color: #333333;
       font-size: 16px;
@@ -1251,7 +1257,11 @@
         font-weight: normal;
         line-height: 13px;
         font-size: 13px;
-
+		&.text{
+			.text-overflow;
+			width:calc(85%);
+			display: block;
+		}
         span {
           font-weight: normal;
           line-height: 13px;
@@ -1489,6 +1499,10 @@
         white-space: normal;
         width: 182px;
       }
+	  &:hover{
+		  text-decoration:underline;
+		  cursor:pointer;
+	  }
 
   }
   .title {
@@ -2685,7 +2699,7 @@ dl {
 }
 
 .noteWrapper {
-  width: 50%;
+  width: 100%;
   .noteText{
     word-wrap: break-word;
   }
@@ -2755,7 +2769,7 @@ dl {
       padding-left: 3px;
       padding-right: 0;
       .border-radius(0);
-      max-width: 555px;
+//      max-width: 555px;
       resize: none;
       &:focus {
         .box-shadow(0, 0, 5px, rgba(82, 168, 236, 0.5));
@@ -2877,7 +2891,6 @@ dl {
   position: absolute;
 
   #content-holder {
-	  margin-top:100px;
     position: inherit;
     height: auto;
     display: block;
@@ -2988,7 +3001,7 @@ dl {
 .filterButton {
   background-color: #FFF;
   border: @thin-border #ABABAB;
-  position: fixed;
+  position: absolute;
   right: 118px;
   margin-top:-26px;
   display: block;

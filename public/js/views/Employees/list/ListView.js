@@ -186,7 +186,12 @@ define([
                         });
                     }
                 });
-
+                var pagenation = this.$el.find('.pagination');
+                if (this.collection.length === 0) {
+                    pagenation.hide();
+                } else {
+                    pagenation.show();
+                }
                 currentEl.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
             },
             //modified for filter Vasya
@@ -367,7 +372,7 @@ define([
             deleteItemsRender: function (deleteCounter, deletePage) {
                 dataService.getData('/totalCollectionLength/Employees', {
                     filter: this.filter,
-                    newCollection: this.newCollection,
+                    newCollection: this.newCollection
                 }, function (response, context) {
                     context.listLength = response.count || 0;
                 }, this);
@@ -379,7 +384,13 @@ define([
                 if (deleteCounter !== this.collectionLength) {
                     var holder = this.$el;
                     var created = holder.find('#timeRecivingDataFromServer');
-                    created.before(new listItemView({ collection: this.collection, page: holder.find("#currentShowPage").val(), itemsNumber: holder.find("span#itemsNumber").text() }).render());
+                    created.before(new listItemView({ collection: this.collection, page: holder.find("#currentShowPage").val(), itemsNumber: holder.find("span#itemsNumber").text()}).render());//added two parameters page and items number
+                }
+                var pagenation = this.$el.find('.pagination');
+                if (this.collection.length === 0) {
+                        pagenation.hide();
+                } else {
+                        pagenation.show();
                 }
             },
 
@@ -388,8 +399,8 @@ define([
                     mid = 39,
                     model;
                 var localCounter = 0;
-                this.collectionLength = this.collection.length;
 				var count = $("#listTable input:checked").length;
+                this.collectionLength = this.collection.length;
                 $.each($("#listTable input:checked"), function (index, checkbox) {
                     model = that.collection.get(checkbox.value);
                     model.destroy({
@@ -405,7 +416,7 @@ define([
 								that.deleteCounter =localCounter;
 								that.deletePage = $("#currentShowPage").val();
 								that.deleteItemsRender(that.deleteCounter, that.deletePage);
-								
+
 							}
 						},
 						error: function (model, res) {
@@ -418,11 +429,12 @@ define([
 								that.deleteCounter =localCounter;
 								that.deletePage = $("#currentShowPage").val();
 								that.deleteItemsRender(that.deleteCounter, that.deletePage);
-								
+
 							}
 
 						}
                     });
+
                 });
             }
 

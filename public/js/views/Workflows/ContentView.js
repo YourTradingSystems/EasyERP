@@ -124,7 +124,7 @@ define([
 				   });
 
 				   td.siblings(".name").append(
-					   $("<input>").val(td.siblings("div.name").text().trim()));
+					   $("<input maxlength='32'>").val(td.siblings("div.name").text().trim()));
 				   td.append(
 					   $(text).text("Save").addClass("save"),
 					   $(text).text("Cancel").addClass("cancel")

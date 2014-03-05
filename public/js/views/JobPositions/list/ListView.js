@@ -15,19 +15,23 @@ define([
             el: '#content-holder',
             defaultItemsNumber: null,
             listLength: null,
+            sort: null,
+            newCollection: null,
             page: null, //if reload page, and in url is valid page
             contentType: 'JobPositions',//needs in view.prototype.changeLocationHash
             viewType: 'list',//needs in view.prototype.changeLocationHash
+
             initialize: function (options) {
                 this.startTime = options.startTime;
                 this.collection = options.collection;
-                 _.bind(this.collection.showMore, this.collection);
+                _.bind(this.collection.showMore, this.collection);
                 this.defaultItemsNumber = this.collection.namberToShow || 50;
                 this.newCollection = options.newCollection;
                 this.deleteCounter = 0;
+                this.newCollection = options.newCollection;
                 this.page = options.collection.page;
                 this.render();
-                this.getTotalLength(null, this.defaultItemsNumber);
+                this.getTotalLength(null, this.defaultItemsNumber, this.filter);
             },
 
             events: {
@@ -203,7 +207,12 @@ define([
                     }
                     itemView.trigger('incomingStages', stages);
                 });
-
+                var pagenation = this.$el.find('.pagination');
+                if (this.collection.length === 0) {
+                    pagenation.hide();
+                } else {
+                    pagenation.show();
+                }
                 currentEl.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
             },
 
@@ -338,20 +347,22 @@ define([
                 }
             },
             deleteItemsRender: function (deleteCounter, deletePage) {
-                dataService.getData('/totalCollectionLength/JobPositions', {
-                    newCollection: this.newCollection
-                },
-                    function (response, context) {
+                    dataService.getData('/totalCollectionLength/JobPositions', {
+                        filter: this.filter,
+                        newCollection: this.newCollection
+                    }, function (response, context) {
                         context.listLength = response.count || 0;
                     }, this);
-                this.deleteRender(deleteCounter, deletePage, {
-                    newCollection: this.newCollection
-                });
-                if (deleteCounter !== this.collectionLength) {
-                    var holder = this.$el;
-                    var created = holder.find('#timeRecivingDataFromServer');
-                    created.before(new listItemView({ collection: this.collection,page: holder.find("#currentShowPage").val(), itemsNumber: holder.find("span#itemsNumber").text()}).render());
-                }
+                    this.deleteRender(deleteCounter, deletePage, {
+                        filter: this.filter,
+                        newCollection: this.newCollection,
+                        parrentContentId: this.parrentContentId
+                    });
+                    if (deleteCounter !== this.collectionLength) {
+                        var holder = this.$el;
+                        var created = holder.find('#timeRecivingDataFromServer');
+                        created.before(new listItemView({ collection: this.collection, page: holder.find("#currentShowPage").val(), itemsNumber: holder.find("span#itemsNumber").text()}).render());//added two parameters page and items number
+                    }
             },
             deleteItems: function () {
                 var that = this,
@@ -393,6 +404,7 @@ define([
 
 						}
                     });
+
                 });
             }
 

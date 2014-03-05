@@ -1,190 +1,250 @@
 ﻿<div class="form-holder">
-    <form method="post" action="" id="editOpportunities" class="form" data-id="<%=model._id%>">
-        <fieldset>
-            <div class="inner">
-                <ul class="dialog-tabs">
-                    <li><a class="active" href="javascript:;">Main</a></li>
-                    <li><a href="javascript:;">Lead</a></li>
-                    <li><a href="javascript:;">Assignees</a></li>
-                </ul>
-                <div class="clearfix"></div>
-                <div class="dialog-tabs-items">
-                    <div class="dialog-tabs-item active">
+  <form method="post" action="" id="editOpportunities" class="form" data-id="<%=model._id%>">
+      <fieldset>
+          <div class="inner">
+              <ul class="dialog-tabs">
+                  <li><a class="active" href="javascript:;">Main</a></li>
+                  <li><a href="javascript:;">Lead</a></li>
+                  <li><a href="javascript:;">Assignees</a></li>
+              </ul>
+              <div class="clearfix"></div>
+              <div class="dialog-tabs-items">
+                  <div class="dialog-tabs-item active">
                         <dl class="subject-info">
-                            <dt><label for="name">Subject </label></dt>
-                            <dd><input type="text" class="title-input" id="name" value="<%=model.name%>" placeholder="Subject" required maxlength="48" /></dd>
+                          <dt><label for="name">Subject </label></dt><dd><input type="text" class="title-input" id="name" value="<%=model.name%>" placeholder="Subject" required maxlength="48"/></dd>
+						</dl>
+                      <div class="half-block left withPaddingLeft">
+                        <textarea id="internalNotes" placeholder="Internal notes..." maxlength="500" class="opp-internal"><%=model.internalNotes%></textarea>
+                      </div>
+                      <div class="half-block left">
+                        <dl class="opprtunitie-info">
+                          <dt><label for="expectedRevenueValue">Expected Revenue</label></dt><dd><input type="text"  class="date-min" id="expectedRevenueValue" value="<%=(model.expectedRevenue) ? model.expectedRevenue.value : ''%>" maxlength="12"/></dd>
+                          <!--<dt>&nbsp;</dt><dd><input type="text" id="expectedRevenueProgress" value="<%=model.expectedRevenue.progress%>" maxlength="32"/>%</dd>-->
+                          <dt><label for="customerDd">Customer</label></dt><dd>
+							<a id="customerDd" data-id="<%=(model.customer)?model.customer._id:''%>" class="current-selected" href="javascript:;"><%=(model.customer)?(model.customer.name.first+" "+model.customer.name.last):"Select"%></a>
+						  </dd>
+                          <dt><label for="salesPersonDd">Salesperson</label></dt><dd>
+							<a id="salesPersonDd" data-id="<%=(model.salesPerson)?model.salesPerson._id:''%>" class="current-selected" href="javascript:;"><%=(model.salesPerson)?(model.salesPerson.name.first+" "+model.salesPerson.name.last):"Select"%></a>
+						  </dd>
+                          <dt><label for="salesTeamDd">Sales Team</label></dt><dd>
+							<a id="salesTeamDd" data-id="<%=(model.salesTeam)?model.salesTeam._id:''%>" class="current-selected" href="javascript:;"><%=(model.salesTeam)?(model.salesTeam.departmentName):"Select"%></a>
+						  </dd>
+                          <dt><label for="workflowDd">Stages </label></dt><dd>
+							<a id="workflowDd" data-id="<%=(model.workflow)?model.workflow._id:''%>" class="current-selected" href="javascript:;"><%=(model.workflow)?(model.workflow.name):"Select"%></a>
+						  </dd>
+                          <dt><label for="nextActionDate">Next Action </label></dt><dd><input type="text" class="date" id="nextActionDate" value="<%=(model.nextAction) ? model.nextAction.date : ''%>" maxlength="32" placeholder="Date" readonly /></dd>
+                          <dt><label for="nextActionDescription">Next Action Description</label></dt><dd><input type="text" id="nextActionDescription" value="<%=(model.nextAction) ? model.nextAction.desc : ''%>" placeholder="Description"  maxlength="32"/></dd>
+                          <dt><label for="expectedClosing">Expected Closing </label></dt><dd><input type="text" id="expectedClosing"  class="date" value="<%=model.expectedClosing%>" maxlength="32" placeholder="Date" readonly/></dd>
+                          <dt><label for="priorityDd">Priority </label></dt><dd>
+							<a id="priorityDd" data-id="<%=(model.priority)?model.priority:''%>" class="current-selected" href="javascript:;"><%=(model.priority)?(model.priority):"Select"%></a>
+						  </dd>
+
                         </dl>
-                        <div class="half-block left withPaddingLeft">
-                            <textarea id="internalNotes" placeholder="Internal notes..." maxlength="500" class="opp-internal"><%=model.internalNotes%></textarea>
-                        </div>
-                        <div class="half-block left">
-                            <dl class="opprtunitie-info">
-                                <dt><label for="expectedRevenueValue">Expected Revenue</label></dt>
-                                <dd><input type="text" class="date-min" id="expectedRevenueValue" value="<%=(model.expectedRevenue) ? model.expectedRevenue.value : ''%>" maxlength="12" /></dd>
-                                <!--<dt>&nbsp;</dt><dd><input type="text" id="expectedRevenueProgress" value="<%=model.expectedRevenue.progress%>" maxlength="32"/>%</dd>-->
-                                <dt><label for="customerDd">Customer</label></dt>
-                                <dd>
-                                    <a id="customerDd" data-id="<%=(model.customer)?model.customer._id:''%>" class="current-selected" href="javascript:;"><%=(model.customer)?(model.customer.name.first+" "+model.customer.name.last):"Select"%></a>
-                                </dd>
-                                <dt><label for="salesPersonDd">Salesperson</label></dt>
-                                <dd>
-                                    <a id="salesPersonDd" data-id="<%=(model.salesPerson)?model.salesPerson._id:''%>" class="current-selected" href="javascript:;"><%=(model.salesPerson)?(model.salesPerson.name.first+" "+model.salesPerson.name.last):"Select"%></a>
-                                </dd>
-                                <dt><label for="salesTeamDd">Sales Team</label></dt>
-                                <dd>
-                                    <a id="salesTeamDd" data-id="<%=(model.salesTeam)?model.salesTeam._id:''%>" class="current-selected" href="javascript:;"><%=(model.salesTeam)?(model.salesTeam.departmentName):"Select"%></a>
-                                </dd>
-                                <dt><label for="workflowDd">Stages </label></dt>
-                                <dd>
-                                    <a id="workflowDd" data-id="<%=(model.workflow)?model.workflow._id:''%>" class="current-selected" href="javascript:;"><%=(model.workflow)?(model.workflow.name):"Select"%></a>
-                                </dd>
-                                <dt><label for="nextActionDate">Next Action </label></dt>
-                                <dd><input type="text" class="date" id="nextActionDate" value="<%=(model.nextAction) ? model.nextAction.date : ''%>" maxlength="32" placeholder="Date" readonly /></dd>
-                                <dt><label for="nextActionDescription">Next Action Description</label></dt>
-                                <dd><input type="text" id="nextActionDescription" value="<%=(model.nextAction) ? model.nextAction.desc : ''%>" placeholder="Description" /></dd>
-                                <dt><label for="expectedClosing">Expected Closing </label></dt>
-                                <dd><input type="text" id="expectedClosing" class="date" value="<%=model.expectedClosing%>" maxlength="32" placeholder="Date" readonly /></dd>
-                                <dt><label for="priorityDd">Priority </label></dt>
-                                <dd>
-                                    <a id="priorityDd" data-id="<%=(model.priority)?model.priority:''%>" class="current-selected" href="javascript:;"><%=(model.priority)?(model.priority):"Select"%></a>
-                                </dd>
+                      </div>
+                      <div class="clearfix"></div>
+<div class="noteWrapper projects-dialog">
+			  <label>Note</label>
+			  <div id="noteBody">
+				<% var n = model.notes.length-1;
+				   model.notes.reverse();
+				   _.each(model.notes, function(val,key){ %>
+				<div id="<%=val['_id'] %>" class="noteContainer">
+				  <div class="noteTitle"><%=val['title'].replace(/</g,"&#60;").replace(/>/g,"&#62;")  %></div>
+				  <div class="noteText"><%=val['note'].replace(/</g,"&#60;").replace(/>/g,"&#62;") %></div>
+				  <div>
+					<a class="name" href="javascript:;"><%=val['author'] %></a><span class="date"><%=val['date'] %></span>
+					<div class="right">
+					  <span>
+						<a href="javascript:;" id="edit_<%=val['_id']%>" data-id="<%=val['_id']%>" class="editDelNote editNote" >Edit</a>
+					  </span>
+					  <span  class="sep" >|</span>
+					  <span>
+						<a href="javascript:;" id="del_<%=val['_id']%>" data-id="<%=val['_id']%>" class="editDelNote">Del</a>
+					  </span>
 
-                            </dl>
-                        </div>
-                        <div class="clearfix"></div>
-                        <div id="divForNote">
-                            
-                        </div>
+					</div>
+				  </div>
+				</div>
+				<div class="clearfix"></div>
 
-                        <div class="clearfix"></div>
-                    </div>
-                    <div class="clearfix"></div>
-                    <div class="dialog-tabs-item">
-                        <div class="half-block left withPaddingLeft">
-                            <dl class="opprtunitie-lead-info">
-                                <!--                       <dt><label for="company">Company Name</label></dt><dd><input type="text" id="company" value="<%=(model.company && model.company.name) ? model.company.name.first : ''%>" disabled maxlength="32" /></dd> -->
-                                <dt><label for="street">Street</label></dt>
-                                <dd><input type="text" id="street" class="address" name="street" value="<%=model.address.street%>" placeholder="Street..." maxlength="32" /></dd>
-                                <dt><label for="city">City</label></dt>
-                                <dd><input type="text" id="city" class="address" name="city" value="<%=model.address.city%>" placeholder="City" maxlength="32" /></dd>
-                                <dt><label for="state">State</label></dt>
-                                <dd><input type="text" id="state" class="address" name="state" value="<%=model.address.state%>" placeholder="State" maxlength="32" /></dd>
-                            </dl>
-                        </div>
-                        <div class="half-block left">
-                            <dl class="opprtunitie-lead-info">
-                                <dt><label for="zip">Zip</label></dt>
-                                <dd><input type="text" id="zip" class="address" name="zip" value="<%=model.address.zip%>" placeholder="Zip" maxlength="32" /></dd>
-                                <dt><label for="country">Country</label></dt>
-                                <dd><input type="text" id="country" class="address" name="country" value="<%=model.address.country%>" placeholder="Country" maxlength="32" /></dd>
-                            </dl>
-                        </div>
+				<% }); model.notes.reverse(); %>
+			  </div>
+			  
+			  <div class="addNote">
+				<div>
+				  <label>Note Content</label>
+				  <textarea id="noteArea" placeholder="Add a Note..." maxlength="500"></textarea>
+				  <a class="addTitle" href="javascript:;">Add a title</a>
+				  <div class="title-wrapper">
+					<label>Note Title</label>
+					<input type="text" id="noteTitleArea" value="" maxlength="64">
+				  </div>
+				  <div class="buttons">
+					<input type="submit" id="addNote" class="btn" value="Save">
+					<a href="javascript:;" id="cancelNote">Cancel</a>
+					<div class="clearfix">
+					</div>
+				  </div>
+				  <input type="hidden" id="getNoteKey" value="">
+				</div>
+				<div class="clearfix"></div>
 
-                    </div>
-                    <div class="dialog-tabs-item">
-                        <div class="addUserAndGroup"><a href="javascript:;" class="addUser">Manage User</a> | <a href="javascript:;" class="addGroup">Manage Group</a></div>
-                        <div class="clearfix"></div>
+			  </div>
+			  <div class="clearfix"></div>
+            <label>Attachments</label>
 
-                        <div class="half-block left">
-                            <div class="canReadAndWrite">
-                                <input type="radio" name="whoCanRW" value="everyOne" <%=(model.whoCanRW == "everyOne") ? 'checked="checked"':''%> checked="checked" />Everyone<br>
-                                <input type="radio" name="whoCanRW" value="owner" <%=(model.whoCanRW=="owner")?'checked="checked"':''%>/>Owner<br>
-                                <input type="radio" name="whoCanRW" value="group" <%=(model.whoCanRW=="group")?'checked="checked"':''%>/>Owner, Users and Users in Groups
-                            </div>
-                        </div>
-                        <div class="half-block left">
-                            <dl class="project-owner-info">
-                                <dt><label for="allUsers">Owner</label></dt>
-                                <dd>
-
-                                    <select id="allUsers"></select>
-
-                                </dd>
-                            </dl>
-                        </div>
-
-
-                        <div class="addUserDialog">
-
-                            <div class="formTitle">
-                                <h3 class="left">Choose Users</h3>
-                                <div class="clearfix"></div>
-                            </div>
-                            <div class="groupsChooser">
-                                <div class="left">
-                                    <ul id="sourceUsers" class="source"></ul>
-                                </div>
-                                <div class="left">
-                                    <div class="swich"></div>
-                                </div>
-                                <div class="left">
-                                    <ul id="targetUsers" class="target"></ul>
-                                </div>
-                            </div>
-
-                            <div class="clearfix"></div>
-                        </div>
-                        <div class="addGroupDialog">
-                            <div class="formTitle">
-                                <h3 class="left">Choose Groups</h3>
-                                <div class="clearfix"></div>
-                            </div>
-                            <div class="groupsChooser">
-                                <div class="left">
-                                    <ul id="sourceGroups" class="source"></ul>
-                                </div>
-                                <div class="left">
-                                    <div class="swich"></div>
-                                </div>
-                                <div class="left">
-                                    <ul id="targetGroups" class="target"></ul>
-                                </div>
-                            </div>
-                            <div class="clearfix"></div>
-                        </div>
-
-                        <table class="groupsAndUser">
-                            <tr>
-                                <th>Groups and Users</th>
-                                <th></th>
-                            </tr>
-                        </table>
-                        <div class="clearfix"></div>
-                    </div>
-                    <div class="clearfix"></div>
-                </div>
+            <div id="attachBody">
+              <ul class="attachContainer">
+                <% var n = model.attachments.length-1;
+                   model.attachments.reverse();
+                   _.each(model.attachments, function(data,key){ %>
+                <li class="attachFile_<%=data['_id'] %>"><a href="download/<%=data['shortPas']%>"><%=data['name'] %></a> (<%=data['size'] %>&nbsp;Mb) <%=data['uploaderName'] %>  <%=data['uploadDate'] %>
+                  <a id="<%=data['_id'] %>" href="javascript:;" class="deleteAttach">Delete</a>
+                </li>
+                <% }); model.attachments.reverse(); %>
+              </ul>
             </div>
-        </fieldset>
-        <!--      <div class="half-block left withPaddingLeft">
-                <div class="formTitle">
-                  <h3 class="left">Mailings</h3>
-                  <div class="clearfix"></div>
-                </div>
-                <dl class="opp-info">
-                  <dt><label>Opt-Out</label></dt><dd><input type="checkbox" id="optout" <%= (model.optout)? 'checked="checked"':''%>  /></dd>
-                  <dt><label for="contactName">Contact Name</label></dt><dd><input type="text" class="name" id="first" value="<%=model.contactName.first%>" disabled maxlength="32"/></dd>
-                  <dt>&nbsp;</dt><dd><input type="text" class="name" id="last" value="<%=model.contactName.last%>" disabled maxlength="32"/></dd>
-                  <dt><label for="func">Function</label></dt><dd><input type="text" id="func" value="<%=model.func%>" maxlength="32"/></dd>
-                  <dt><label for="mobile">Mobile</label></dt><dd><input type="text" id="mobile" value="<%=model.phones.mobile%>" maxlength="32"/></dd>
-                  <dt><label for="name">Fax</label></dt><dd><input type="text" id="fax" value="<%=model.phones.fax%>" maxlength="32"/></dd>
-
-                </dl>
-              </div>
-              <div class="half-block left withPaddingLeft">
-                <div class="formTitle">
-                  <h3 class="left">Misc</h3>
-                  <div class="clearfix"></div>
-                </div>
-                <dl class="opp-info">
-                  <dt><label>Active</label></dt><dd><input type="checkbox" id="active" <%= (model.active)? 'checked="checked"':''%>  /></dd>
-                  <dt><label>Referred By</label></dt><dd><input type="text" id="reffered" value="<%=model.reffered%>" maxlength="32"/></dd>
-
-                </dl>
-              </div>
-
-            </div>
-
             <div class="clearfix"></div>
-            -->
-    </form>
+            <div class="input-file">Attach<input type="file" value="Choose File" class="inputAttach" name="attachfile"></div>
+            <div class="progress" style="float:left;">
+              <div class="bar">
+                <span class="progress_status"></span>
+              </div>
+            </div>
+		  </div>
+			
+<div class="clearfix"></div>
+                  </div>
+<div class="clearfix"></div>
+                  <div class="dialog-tabs-item">
+                      <div class="half-block left withPaddingLeft">
+                        <dl class="opprtunitie-lead-info">
+						  <!--                       <dt><label for="company">Company Name</label></dt><dd><input type="text" id="company" value="<%=(model.company && model.company.name) ? model.company.name.first : ''%>" disabled maxlength="32" /></dd> -->
+                          <dt><label for="street">Street</label></dt><dd><input type="text" id="street" class="address" name="street" value="<%=model.address.street%>" placeholder="Street..." maxlength="32"/></dd>
+						  <dt><label for="city">City</label></dt><dd><input type="text" id="city" class="address" name="city" value="<%=model.address.city%>" placeholder="City" maxlength="32"/></dd>
+						  <dt><label for="state">State</label></dt><dd><input type="text" id="state" class="address" name="state" value="<%=model.address.state%>" placeholder="State" maxlength="32"/></dd>
+                        </dl>
+                      </div>
+                      <div class="half-block left">
+                        <dl class="opprtunitie-lead-info">
+                          <dt><label for="zip">Zip</label></dt><dd><input type="text" id="zip" class="address" name="zip" value="<%=model.address.zip%>" placeholder="Zip" maxlength="32"/></dd>
+                          <dt><label for="country">Country</label></dt><dd><input type="text" id="country" class="address" name="country" value="<%=model.address.country%>" placeholder="Country" maxlength="32"/></dd>
+                        </dl>
+                      </div>
+
+				  </div>
+                  <div class="dialog-tabs-item">
+                      <div class="addUserAndGroup"><a href="javascript:;" class="addUser">Manage User</a> | <a href="javascript:;" class="addGroup">Manage Group</a></div>
+                      <div class="clearfix"></div>
+
+                      <div class="half-block left">
+                          <div class="canReadAndWrite">
+                              <input type="radio" name="whoCanRW" value="everyOne" <%=(model.whoCanRW=="everyOne")?'checked="checked"':''%> checked="checked"/>Everyone<br>
+                              <input type="radio" name="whoCanRW" value="owner" <%=(model.whoCanRW=="owner")?'checked="checked"':''%>/>Owner<br>
+                              <input type="radio" name="whoCanRW" value="group" <%=(model.whoCanRW=="group")?'checked="checked"':''%>/>Owner, Users and Users in Groups
+                          </div>
+                      </div>
+                      <div class="half-block left">
+                          <dl class="project-owner-info">
+                              <dt><label for="allUsers">Owner</label></dt><dd>
+
+                              <select id="allUsers">
+
+                              </select>
+
+                          </dd>
+                          </dl>
+                      </div>
+
+
+                      <div class="addUserDialog">
+
+                          <div class="formTitle">
+                              <h3 class="left">Choose Users</h3>
+                              <div class="clearfix"></div>
+                          </div>
+                          <div class="groupsChooser">
+                              <div class="left">
+                                  <ul id="sourceUsers" class="source">
+
+                                  </ul>
+                              </div>
+                              <div class="left">
+                                  <div class="swich"></div>
+                              </div>
+                              <div class="left">
+                                  <ul id="targetUsers" class="target">
+
+                                  </ul>
+                              </div>
+                          </div>
+
+                          <div class="clearfix"></div>
+                      </div>
+                      <div class="addGroupDialog">
+                          <div class="formTitle">
+                              <h3 class="left">Choose Groups</h3>
+                              <div class="clearfix"></div>
+                          </div>
+                          <div class="groupsChooser">
+                              <div class="left">
+                                  <ul id="sourceGroups" class="source">
+
+                                  </ul>
+                              </div>
+                              <div class="left">
+                                  <div class="swich"></div>
+                              </div>
+                              <div class="left">
+                                  <ul id="targetGroups" class="target">
+
+                                  </ul>
+                              </div>
+                          </div>
+                          <div class="clearfix"></div>
+                      </div>
+
+                      <table class="groupsAndUser">
+                          <tr>
+                              <th>Groups and Users</th><th></th>
+                          </tr>
+                      </table>
+                      <div class="clearfix"></div>
+                  </div>
+                  <div class="clearfix"></div>
+              </div>
+          </div>
+      </fieldset>
+<!--      <div class="half-block left withPaddingLeft">
+		<div class="formTitle">
+		  <h3 class="left">Mailings</h3>
+		  <div class="clearfix"></div>
+		</div>
+		<dl class="opp-info">
+		  <dt><label>Opt-Out</label></dt><dd><input type="checkbox" id="optout" <%= (model.optout)? 'checked="checked"':''%>  /></dd>
+		  <dt><label for="contactName">Contact Name</label></dt><dd><input type="text" class="name" id="first" value="<%=model.contactName.first%>" disabled maxlength="32"/></dd>
+		  <dt>&nbsp;</dt><dd><input type="text" class="name" id="last" value="<%=model.contactName.last%>" disabled maxlength="32"/></dd>
+		  <dt><label for="func">Function</label></dt><dd><input type="text" id="func" value="<%=model.func%>" maxlength="32"/></dd>
+		  <dt><label for="mobile">Mobile</label></dt><dd><input type="text" id="mobile" value="<%=model.phones.mobile%>" maxlength="32"/></dd>
+		  <dt><label for="name">Fax</label></dt><dd><input type="text" id="fax" value="<%=model.phones.fax%>" maxlength="32"/></dd>
+
+		</dl>
+	  </div>
+	  <div class="half-block left withPaddingLeft">
+		<div class="formTitle">
+		  <h3 class="left">Misc</h3>
+		  <div class="clearfix"></div>
+		</div>
+		<dl class="opp-info">
+		  <dt><label>Active</label></dt><dd><input type="checkbox" id="active" <%= (model.active)? 'checked="checked"':''%>  /></dd>
+		  <dt><label>Referred By</label></dt><dd><input type="text" id="reffered" value="<%=model.reffered%>" maxlength="32"/></dd>
+
+		</dl>
+	  </div>
+
+	</div>
+	
+    <div class="clearfix"></div>
+	-->
+  </form>
 </div>
