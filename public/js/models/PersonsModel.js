@@ -43,7 +43,6 @@ function (common, Validation) {
 
         validate: function (attrs) {
             var errors = [];
-
             Validation.checkNameField(errors, true, attrs.name.first, "First name");
             Validation.checkNameField(errors, true, attrs.name.last, "Last name");
             Validation.checkPhoneField(errors, false, attrs.phones.phone, "Phone");
@@ -53,6 +52,7 @@ function (common, Validation) {
             Validation.checkCountryCityStateField(errors, false, attrs.address.state, "State");
             Validation.checkCountryCityStateField(errors, false, attrs.address.city, "City");
             Validation.checkCountryCityStateField(errors, false, attrs.jobPosition, "Job position");
+            Validation.checkSkypeField(errors, false, attrs.skype, "Skype");
             Validation.checkZipField(errors, false, attrs.address.zip, "Zip");
             Validation.checkStreetField(errors, false, attrs.address.street, "Street");
             Validation.checkEmailField(errors, false, attrs.email, "Email");

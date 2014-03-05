@@ -40,8 +40,6 @@ define([
                 "click .checkbox": "checked",
                 "click .person-checkbox:not(.disabled)": "personsSalesChecked",
                 "click .details": "toggle",
-                "mouseover .social a": "socialActive",
-                "mouseout .social a": "socialNotActive",
                 "click .company": "gotoCompanyForm",
                 "change #inputAttach": "addAttach",
                 "click #addNote": "addNote",
@@ -471,22 +469,6 @@ define([
                     height: "toggle"
                 }, 250, function () {
 
-                });
-            },
-
-            socialActive: function (e) {
-                e.preventDefault();
-                $(e.target).stop().animate({
-                    'background-position-y': '-38px'
-
-                }, 300, function () {
-                });
-            },
-            socialNotActive: function (e) {
-                e.preventDefault();
-                $(e.target).stop().animate({
-                    'background-position-y': '0px'
-                }, 300, function () {
                 });
             },
 
