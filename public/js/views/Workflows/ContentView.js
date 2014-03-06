@@ -83,9 +83,9 @@ define([
 								common.checkBackboneFragment("easyErp/Workflows");
 
 							}
-                        } else {
-                            Backbone.history.navigate("home", { trigger: true });
-                        }
+                            } else {
+                                alert(xhr.responseJSON.error);
+                            }
                     }
 				   });
 			   },
