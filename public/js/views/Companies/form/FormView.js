@@ -208,7 +208,7 @@ define([
 
             editClick: function (e) {
                 e.preventDefault();
-				var maxlength=$("#" + $(e.target).parent().parent()[0].id).find(".no-long").attr("data-maxlength")||32;
+                var maxlength = $("#" + $(e.target).parent().parent()[0].id).find(".no-long").attr("data-maxlength") || 32;
                 $('.quickEdit #editInput').remove();
                 $('.quickEdit #cancelSpan').remove();
                 $('.quickEdit #saveSpan').remove();
@@ -219,7 +219,7 @@ define([
                 $('#editSpan').remove();
                 this.text = $('#' + parent[0].id).text();
                 $("#" + parent[0].id).text('');
-                $("#" + parent[0].id).append('<input id="editInput" maxlength="'+maxlength+'" type="text" class="left"/>');
+                $("#" + parent[0].id).append('<input id="editInput" maxlength="' + maxlength + '" type="text" class="left"/>');
                 $('#editInput').val(this.text);
                 $("#" + parent[0].id).append('<span id="saveSpan"><a href="#">c</a></span>');
 
@@ -285,7 +285,8 @@ define([
                                 return note;
                             }
                         });
-                        currentModel.save({ 'notes': newNotes },
+                        if (confirm("You realy want to remove note? ")) {
+                            currentModel.save({ 'notes': newNotes },
                                 {
                                     headers: {
                                         mid: 39
@@ -298,6 +299,7 @@ define([
                                         console.log('bot');
                                     }
                                 });
+                        }
                         break;
                     }
                 }
@@ -311,7 +313,7 @@ define([
                     alert("Note Content can not be empty");
                 }
                 else {
-                if (val.replace(/ /g,'') || title.replace(/ /g,'')) {
+                    if (val.replace(/ /g, '') || title.replace(/ /g, '')) {
                         var notes = this.formModel.get('notes');
                         var arrKeyStr = $('#getNoteKey').attr("value");
                         var noteObj = {
@@ -428,29 +430,31 @@ define([
                 return file.size < App.File.MAXSIZE;
             },
             deleteAttach: function (e) {
-                var target = $(e.target);
-                if (target.closest("li").hasClass("attachFile")) {
-                    target.closest(".attachFile").remove();
-                } else {
-                    var id = e.target.id;
-                    var currentModel = this.formModel;
-                    var attachments = currentModel.get('attachments');
-                    var newAttachments = _.filter(attachments, function (attach) {
-                        if (attach._id != id) {
-                            return attach;
-                        }
-                    });
-                    var fileName = $('.attachFile_' + id + ' a')[0].innerHTML;
-                    currentModel.save({ 'attachments': newAttachments, fileName: fileName },
-                        {
-                            headers: {
-                                mid: 39
-                            },
-                            patch: true,//Send only changed attr(add Roma)
-                            success: function () {
-                                $('.attachFile_' + id).remove();
+                if (confirm("You realy want to remove file? ")) {
+                    var target = $(e.target);
+                    if (target.closest("li").hasClass("attachFile")) {
+                        target.closest(".attachFile").remove();
+                    } else {
+                        var id = e.target.id;
+                        var currentModel = this.formModel;
+                        var attachments = currentModel.get('attachments');
+                        var newAttachments = _.filter(attachments, function (attach) {
+                            if (attach._id != id) {
+                                return attach;
                             }
                         });
+                        var fileName = $('.attachFile_' + id + ' a')[0].innerHTML;
+                        currentModel.save({ 'attachments': newAttachments, fileName: fileName },
+                            {
+                                headers: {
+                                    mid: 39
+                                },
+                                patch: true,//Send only changed attr(add Roma)
+                                success: function () {
+                                    $('.attachFile_' + id).remove();
+                                }
+                            });
+                    }
                 }
             },
 

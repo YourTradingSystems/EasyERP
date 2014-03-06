@@ -23,14 +23,13 @@
   <div class="clearfix"></div>
 
   <div id="noteBody">
-    <% var n = notes.length-1;
-       notes.reverse();
+    <% notes.reverse();
        _.each(notes, function(val,key){ %>
     <div id="<%=val['_id'] %>" class="noteContainer">
       <div class="noteTitle"><%=val['title'].replace(/</g,"&#60;").replace(/>/g,"&#62;")  %></div>
       <div class="noteText"><%=val['note'].replace(/</g,"&#60;").replace(/>/g,"&#62;") %></div>
       <div>
-		<!--<a class="name" href="javascript:;"><%=val['author'] %></a>--><span class="blue"><%=val['author']%> </span><span class="date"><%=val['date'] %></span>
+		<!--<a class="name" href="javascript:;"><%=val['author'] %></a>--><a class="name" href="javascript:;"><%=val['author']%> </a><span class="date"><%=val['date'] %></span>
         <div class="right">
           <span>
             <a href="javascript:;" id="edit_<%=val['_id']%>" data-id="<%=val['_id']%>" class="editDelNote editNote" >Edit</a>
@@ -50,8 +49,7 @@
 	<label>Attachments</label>
 	<div id="attachBody">
        <ul class="attachContainer">
-               <% var n = attachments.length-1;
-        		attachments.reverse();
+               <% attachments.reverse();
         		_.each(attachments, function(data,key){ %>
        <li class="attachFile_<%=data['_id'] %>"><a href="download/<%=data['shortPas']%>"><%=data['name'] %></a> (<%=data['size'] %>&nbsp;Mb) <%=data['uploaderName'] %>  <%=data['uploadDate'] %>
               <a id="<%=data['_id'] %>" href="javascript:;" class="deleteAttach">Delete</a>
@@ -63,7 +61,7 @@
     <form enctype="multipart/form-data" id="addAttachments" action="" method="POST">
         <div class="input-file">
             Attach
-            <input type="file" value="Choose File" id="inputAttach" name="attachfile">
+            <input type="file" value="Choose File" id="inputAttach" class="inputAttach" name="attachfile">
             
         </div>
      <div class="progress" style="float:left;">

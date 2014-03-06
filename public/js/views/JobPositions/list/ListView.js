@@ -168,11 +168,14 @@ define([
             },
 
             getTotalLength: function (currentNumber, itemsNumber) {
-                dataService.getData('/totalCollectionLength/JobPositions', { currentNumber: currentNumber, newCollection: this.newCollection }, function (response, context) {
-                    var page = context.page || 1;
-                    context.listLength = response.count || 0;
-                    context.pageElementRender(response.count, itemsNumber, page);//prototype in main.js
-                }, this);
+                    dataService.getData('/totalCollectionLength/JobPositions', {
+                        currentNumber: currentNumber,
+                        newCollection: this.newCollection
+                    }, function (response, context) {
+                        var page = context.page || 1;
+                        context.listLength = response.count || 0;
+                        context.pageElementRender(response.count, itemsNumber, page);//prototype in main.js
+                    }, this);
             },
 
             render: function () {
@@ -306,6 +309,12 @@ define([
                 var holder = this.$el;
                 holder.find("#listTable").empty();
                 holder.append(new listItemView({ collection: newModels, page: holder.find("#currentShowPage").val(), itemsNumber: holder.find("span#itemsNumber").text() }).render());
+                var pagenation = holder.find('.pagination');
+                if (newModels.length !== 0) {
+                    pagenation.show();
+                } else {
+                    pagenation.hide();
+                }
                 $("#top-bar-deleteBtn").hide();
                 $('#check_all').prop('checked', false);
                 holder.find('#timeRecivingDataFromServer').remove();
@@ -362,6 +371,12 @@ define([
                         var holder = this.$el;
                         var created = holder.find('#timeRecivingDataFromServer');
                         created.before(new listItemView({ collection: this.collection, page: holder.find("#currentShowPage").val(), itemsNumber: holder.find("span#itemsNumber").text()}).render());//added two parameters page and items number
+                    }
+                    var pagenation = this.$el.find('.pagination');
+                    if (this.collection.length === 0) {
+                            pagenation.hide();
+                    } else {
+                            pagenation.show();
                     }
             },
             deleteItems: function () {

@@ -52,6 +52,7 @@ define([
 
             hideDialog: function () {
                 $(".edit-dialog").remove();
+                $(".crop-images-dialog").remove();
             },
             showEdit: function () {
                 $(".upload").animate({

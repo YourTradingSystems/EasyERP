@@ -41,7 +41,7 @@ define([
                 "click .person-checkbox:not(.disabled)": "personsSalesChecked",
                 "click .details": "toggle",
                 "click .company": "gotoCompanyForm",
-                "change #inputAttach": "addAttach",
+                "change .inputAttach": "addAttach",
                 "click #addNote": "addNote",
                 "click .editDelNote": "editDelNote",
                 "click #cancelNote": "cancelNote",
@@ -120,27 +120,11 @@ define([
 
                 Backbone.history.fragment = "";
                 Backbone.history.navigate("#easyErp/Persons/form/" + this.formModel.id, { trigger: true });
-                /*       e.preventDefault();
-
-                 var parent = $(e.target).parent().parent();
-
-                 if ($("#" + parent[0].id).hasClass('with-checkbox')) {
-                 $("#" + parent[0].id + " input").prop('disabled', true);
-                 } else if (parent[0].id == 'email') {
-                 $("#" + parent[0].id).append('<a href="mailto:' + this.text + '" class="no-long">' + this.text + '</a>');
-                 } else {
-                 $("#" + parent[0].id).prepend("<span class='no-long'>"+this.text+"</span>");
-                 }
-                 $("#" + parent[0].id).find(".no-long").css({width:"auto"});
-                 $("#" + parent[0].id).removeClass('quickEdit');
-                 $('#editInput').remove();
-                 $('#cancelSpan').remove();
-                 $('#saveSpan').remove();*/
             },
 
             editClick: function (e) {
-				var maxlength=$("#" + $(e.target).parent().parent()[0].id).find(".no-long").attr("data-maxlength")||32;
-				
+                var maxlength = $("#" + $(e.target).parent().parent()[0].id).find(".no-long").attr("data-maxlength") || 32;
+
                 e.preventDefault();
                 $('.quickEdit #editInput').remove();
                 $('.quickEdit #cancelSpan').remove();
@@ -162,9 +146,6 @@ define([
                 $("#" + parent[0].id).addClass('quickEdit');
                 $('#editSpan').remove();
                 var objIndex = parent[0].id.split('_');
-                // this.text =  $('#' + parent[0].id).text();
-                //console.log(this.formModel.get("phones").phone);
-
                 if (objIndex.length > 1) {
                     this.text = this.formModel.get(objIndex[0])[objIndex[1]];
                     console.log(this.text);
@@ -186,8 +167,8 @@ define([
                     $("#" + parent[0].id + " input").removeAttr('disabled');
                 } else {
                     $("#" + parent[0].id).text('');
-					console.log(maxlength);
-                    $("#" + parent[0].id).append('<input id="editInput" maxlength="'+maxlength+'" type="text" class="left"/>');
+                    console.log(maxlength);
+                    $("#" + parent[0].id).append('<input id="editInput" maxlength="' + maxlength + '" type="text" class="left"/>');
                 }
                 $('#editInput').val(this.text);
                 this.prevQuickEdit = parent[0];
@@ -231,9 +212,9 @@ define([
                         Backbone.history.navigate("#easyErp/Persons/form/" + model.id, { trigger: true });
                     },
                     error: function (model, response) {
-                    if (response)
-                        alert(response.error);
-                }
+                        if (response)
+                            alert(response.error);
+                    }
                 });
             },
 
@@ -289,66 +270,63 @@ define([
                 e.preventDefault();
                 var val = $('#noteArea').val().replace(/</g, "&#60;").replace(/>/g, "&#62;");
                 var title = $('#noteTitleArea').val().replace(/</g, "&#60;").replace(/>/g, "&#62;");
-                if (val.replace(/ /g,'') || title.replace(/ /g,'')) {
-                    var formModel = this.formModel;
-                    var notes = formModel.get('notes');
-                    var arrKeyStr = $('#getNoteKey').attr("value");
-                    var noteObj = {
-                        note: '',
-                        title: ''
-                    };
-                    if (arrKeyStr) {
-                        var editNotes = _.map(notes, function (note) {
-                            if (note._id == arrKeyStr) {
-                                note.note = val;
-                                note.title = title;
-                            }
-                            return note;
-                        });
-                        formModel.save({ 'notes': editNotes },
-                            {
-                                headers: {
-                                    mid: 39
-                                },
-                                patch: true,
-                                success: function () {
-                                    $('#noteBody').val($('#' + arrKeyStr).find('.noteText').html(val));
-                                    $('#noteBody').val($('#' + arrKeyStr).find('.noteTitle').html(title));
-                                    $('#getNoteKey').attr("value", '');
+                if (!val) { //textarrea notes not be empty
+                    alert("Note Content can not be empty");
+                } else {
+                    if (val.replace(/ /g, '') || title.replace(/ /g, '')) {
+                        var formModel = this.formModel;
+                        var notes = formModel.get('notes');
+                        var arrKeyStr = $('#getNoteKey').attr("value");
+                        var noteObj = {
+                            note: '',
+                            title: ''
+                        };
+                        if (arrKeyStr) {
+                            var editNotes = _.map(notes, function(note) {
+                                if (note._id == arrKeyStr) {
+                                    note.note = val;
+                                    note.title = title;
                                 }
+                                return note;
                             });
+                            formModel.save({ 'notes': editNotes },
+                                {
+                                    headers: {
+                                        mid: 39
+                                    },
+                                    patch: true,
+                                    success: function() {
+                                        $('#noteBody').val($('#' + arrKeyStr).find('.noteText').html(val));
+                                        $('#noteBody').val($('#' + arrKeyStr).find('.noteTitle').html(title));
+                                        $('#getNoteKey').attr("value", '');
+                                    }
+                                });
+                        } else {
+                            noteObj.note = val;
+                            noteObj.title = title;
+                            notes.push(noteObj);
+                            formModel.save({ 'notes': notes },
+                                {
+                                    headers: {
+                                        mid: 39
+                                    },
+                                    patch: true,
+                                    wait: true,
+                                    success: function(models, data) {
+                                        $('#noteBody').empty();
+                                        data.notes.forEach(function(item) {
+                                            var date = common.utcDateToLocaleDate(item.date);
+                                            $('#noteBody').prepend(_.template(addNoteTemplate, { id: item._id, title: item.title, val: item.note, author: item.author, date: date }));
+                                        });
+                                    }
+                                });
+                        }
+                        $('#noteArea').val('');
+                        $('#noteTitleArea').val('');
                     } else {
-                        noteObj.note = val;
-                        noteObj.title = title;
-                        notes.push(noteObj);
-                        formModel.save({ 'notes': notes },
-                            {
-                                headers: {
-                                    mid: 39
-                                },
-                                patch: true,
-                                wait: true,
-                                success: function (models, data) {
-                                    $('#noteBody').empty();
-                                    data.notes.forEach(function (item) {
-                                        /*                                    	   var key = notes.length - 1;
-                                         var notes_data = response.notes;
-                                         var date = common.utcDateToLocaleDate(response.notes[key].date);
-                                         var author = currentModel.get('name').first;
-                                         var id = response.notes[key]._id;
-                                         $('#noteBody').prepend(_.template(addNoteTemplate, { val: val, title: title, author: author, data: notes_data, date: date, id: id }));*/
-                                        var date = common.utcDateToLocaleDate(item.date);
-                                        //notes.push(item);
-                                        $('#noteBody').prepend(_.template(addNoteTemplate, { id: item._id, title: item.title, val: item.note, author: item.author, date: date }));
-                                    });
-                                }
-                            });
+                        return false;
                     }
-                    $('#noteArea').val('');
-                    $('#noteTitleArea').val('');
-                }else{
-					return false;
-				}
+                }
             },
 
             addAttach: function (event) {
@@ -357,8 +335,8 @@ define([
                 var currentModelId = currentModel["id"];
                 var addFrmAttach = $("#addAttachments");
                 var addInptAttach = $("#inputAttach")[0].files[0];
-
                 if (!this.fileSizeIsAcceptable(addInptAttach)) {
+                    $('#inputAttach').val('');
                     alert('File you are trying to attach is too big. MaxFileSize: ' + App.File.MaxFileSizeDisplay);
                     return;
                 }
@@ -419,29 +397,31 @@ define([
             },
 
             deleteAttach: function (e) {
-                var target = $(e.target);
-                if (target.closest("li").hasClass("attachFile")) {
-                    target.closest(".attachFile").remove();
-                } else {
-                    var id = e.target.id;
-                    var currentModel = this.formModel;
-                    var attachments = currentModel.get('attachments');
-                    var newAttachments = _.filter(attachments, function (attach) {
-                        if (attach._id != id) {
-                            return attach;
-                        }
-                    });
-                    var fileName = $('.attachFile_' + id + ' a')[0].innerHTML;
-                    currentModel.save({ 'attachments': newAttachments, fileName: fileName },
-                        {
-                            headers: {
-                                mid: 39
-                            },
-                            patch: true,//Send only changed attr(add Roma)
-                            success: function () {
-                                $('.attachFile_' + id).remove();
+                if (confirm("You realy want to remove file? ")) {
+                    var target = $(e.target);
+                    if (target.closest("li").hasClass("attachFile")) {
+                        target.closest(".attachFile").remove();
+                    } else {
+                        var id = e.target.id;
+                        var currentModel = this.formModel;
+                        var attachments = currentModel.get('attachments');
+                        var newAttachments = _.filter(attachments, function(attach) {
+                            if (attach._id != id) {
+                                return attach;
                             }
                         });
+                        var fileName = $('.attachFile_' + id + ' a')[0].innerHTML;
+                        currentModel.save({ 'attachments': newAttachments, fileName: fileName },
+                            {
+                                headers: {
+                                    mid: 39
+                                },
+                                patch: true,//Send only changed attr(add Roma)
+                                success: function() {
+                                    $('.attachFile_' + id).remove();
+                                }
+                            });
+                    }
                 }
             },
 

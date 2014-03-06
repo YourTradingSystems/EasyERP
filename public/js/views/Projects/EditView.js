@@ -1,5 +1,6 @@
 define([
     "text!templates/Projects/EditTemplate.html",
+    'views/Notes/NoteView',
     "custom",
     "common",
     "dataService",
@@ -7,7 +8,7 @@ define([
     'text!templates/Notes/AddNote.html',
 	"populate"
 ],
-    function (EditTemplate, custom, common, dataService, addAttachTemplate, addNoteTemplate, populate) {
+    function (EditTemplate, noteView, custom, common, dataService, addAttachTemplate, addNoteTemplate, populate) {
 
         var EditView = Backbone.View.extend({
             contentType: "Projects",
@@ -36,10 +37,6 @@ define([
                 "change .inputAttach": "addAttach",
                 "click #addNote": "addNote",
                 "click .editDelNote": "editDelNote",
-                "click #cancelNote": "cancelNote",
-                "click #noteArea": "expandNote",
-                "click .addTitle": "showTitle",
-                "click .editNote": "editNote",
                 "click #health a": "showHealthDd",
                 "click #health ul li div": "chooseHealthDd",
                 "click .newSelectList li:not(.miniStylePagination)": "chooseOption",
@@ -81,40 +78,40 @@ define([
                 $(e.target).parent().find("ul").toggle();
                 return false;
             },
-			updateAssigneesPagination:function(el){
-				var pag = el.find(".userPagination .text");
-				el.find(".userPagination .nextUserList").remove();
-				el.find(".userPagination .prevUserList").remove();
-				el.find(".userPagination .nextGroupList").remove();
-				el.find(".userPagination .prevGroupList").remove();
+            updateAssigneesPagination: function (el) {
+                var pag = el.find(".userPagination .text");
+                el.find(".userPagination .nextUserList").remove();
+                el.find(".userPagination .prevUserList").remove();
+                el.find(".userPagination .nextGroupList").remove();
+                el.find(".userPagination .prevGroupList").remove();
 
-				var list = el.find("ul");
-				var count = list.find("li").length;
-				var s ="";
-				var page  = parseInt(list.attr("data-page"));
-				if (page>1){
-					el.find(".userPagination").prepend("<a class='prevUserList' href='javascript:;'>« prev</a>");
-				}
-				if (count===0){
-					s+="0-0 of 0";
-				}else{
-					if ((page)*20-1<count){
-						s+=((page-1)*20+1)+"-"+((page)*20)+" of "+count;
-					}else{
-						s+=((page-1)*20+1)+"-"+(count)+" of "+count;
-					}
-				}
-				
-				if (page<count/20){
-					el.find(".userPagination").append("<a class='nextUserList' href='javascript:;'>next »</a>");
-				}
-				el.find("ul li").hide();
-				for (var i=(page-1)*20;i<20*page;i++){
-					el.find("ul li").eq(i).show();
-				}
- 
-				pag.text(s);
-			},
+                var list = el.find("ul");
+                var count = list.find("li").length;
+                var s = "";
+                var page = parseInt(list.attr("data-page"));
+                if (page > 1) {
+                    el.find(".userPagination").prepend("<a class='prevUserList' href='javascript:;'>« prev</a>");
+                }
+                if (count === 0) {
+                    s += "0-0 of 0";
+                } else {
+                    if ((page) * 20 - 1 < count) {
+                        s += ((page - 1) * 20 + 1) + "-" + ((page) * 20) + " of " + count;
+                    } else {
+                        s += ((page - 1) * 20 + 1) + "-" + (count) + " of " + count;
+                    }
+                }
+
+                if (page < count / 20) {
+                    el.find(".userPagination").append("<a class='nextUserList' href='javascript:;'>next »</a>");
+                }
+                el.find("ul li").hide();
+                for (var i = (page - 1) * 20; i < 20 * page; i++) {
+                    el.find("ul li").eq(i).show();
+                }
+
+                pag.text(s);
+            },
 
 
             editDelNote: function (e) {
@@ -126,31 +123,35 @@ define([
                 var notes = currentModel.get('notes');
 
                 switch (type) {
-                    case "edit": {
-                        var id_int_holder = $('#' + id_int);
-                        $('#noteArea').val(id_int_holder.find('.noteText').text());
-                        $('#noteTitleArea').val(id_int_holder.find('.noteTitle').text());
-                        $('#getNoteKey').attr("value", id_int);
-                        break;
-                    }
-                    case "del": {
-                        var newNotes = _.filter(notes, function (note) {
-                            if (note._id != id_int) {
-                                return note;
+                    case "edit":
+                        {
+                            var id_int_holder = $('#' + id_int);
+                            $('#noteArea').val(id_int_holder.find('.noteText').text());
+                            $('#noteTitleArea').val(id_int_holder.find('.noteTitle').text());
+                            $('#getNoteKey').attr("value", id_int);
+                            break;
+                        }
+                    case "del":
+                        {
+                            var newNotes = _.filter(notes, function (note) {
+                                if (note._id != id_int) {
+                                    return note;
+                                }
+                            });
+                            if (confirm("You realy want to remove note? ")) {
+                                currentModel.save({ 'notes': newNotes },
+                                    {
+                                        headers: {
+                                            mid: 39
+                                        },
+                                        patch: true,
+                                        success: function () {
+                                            $('#' + id_int).remove();
+                                        }
+                                    });
+                                break;
                             }
-                        });
-                        currentModel.save({ 'notes': newNotes },
-                                {
-                                    headers: {
-                                        mid: 39
-                                    },
-                                    patch: true,
-                                    success: function () {
-                                        $('#' + id_int).remove();
-                                    }
-                                });
-                        break;
-                    }
+                        }
                 }
             },
 
@@ -161,81 +162,62 @@ define([
                 var val = noteArea_holder.val().replace(/</g, "&#60;").replace(/>/g, "&#62;");
                 var title = noteTitleArea_holder.val().replace(/</g, "&#60;").replace(/>/g, "&#62;");
                 if (!val) {//textarrea notes not be empty
-                	alert("Note Content can not be empty");
+                    alert("Note Content can not be empty");
                 }
                 else {
-                if (val.replace(/ /g,'') || title.replace(/ /g,'')) {
-                    var notes = this.currentModel.get('notes');
-                    var arrKeyStr = $('#getNoteKey').attr("value");
-                    var noteObj = {
-                        note: '',
-                        title: ''
-                    };
-                    if (arrKeyStr) {
-                        var editNotes = _.map(notes, function (note) {
-                            if (note._id == arrKeyStr) {
-                                note.note = val;
-                                note.title = title;
-                            }
-                            return note;
-                        });
-                        this.currentModel.save({ 'notes': editNotes },
-                            {
-                                headers: {
-                                    mid: 39
-                                },
-                                patch: true,
-                                success: function () {
-                                    var arrKeyStr_holder = $('#' + arrKeyStr);
-                                    var noteBody_holder = $('#noteBody');
-                                    noteBody_holder.val(arrKeyStr_holder.find('.noteText').html(val));
-                                    noteBody_holder.val(arrKeyStr_holder.find('.noteTitle').html(title));
-                                    $('#getNoteKey').attr("value", '');
+                    if (val.replace(/ /g, '') || title.replace(/ /g, '')) {
+                        var notes = this.currentModel.get('notes');
+                        var arrKeyStr = $('#getNoteKey').attr("value");
+                        var noteObj = {
+                            note: '',
+                            title: ''
+                        };
+                        if (arrKeyStr) {
+                            var editNotes = _.map(notes, function (note) {
+                                if (note._id == arrKeyStr) {
+                                    note.note = val;
+                                    note.title = title;
                                 }
+                                return note;
                             });
-                    } else {
-                        noteObj.note = val;
-                        noteObj.title = title;
-                        notes.push(noteObj);
-                        this.currentModel.set();
-                        this.currentModel.save({ 'notes': notes },
-                            {
-                                headers: {
-                                    mid: 39
-                                },
-                                patch: true,
-                                success: function (models, data) {
-                                    $('#noteBody').empty();
-                                    data.notes.forEach(function (item) {
-                                        var date = common.utcDateToLocaleDate(item.date);
-                                        $('#noteBody').prepend(_.template(addNoteTemplate, { id: item._id, title: item.title, val: item.note, author: item.author, date: date }));
-                                    });
-                                }
-                            });
+                            this.currentModel.save({ 'notes': editNotes },
+                                {
+                                    headers: {
+                                        mid: 39
+                                    },
+                                    patch: true,
+                                    success: function () {
+                                        var arrKeyStr_holder = $('#' + arrKeyStr);
+                                        var noteBody_holder = $('#noteBody');
+                                        noteBody_holder.val(arrKeyStr_holder.find('.noteText').html(val));
+                                        noteBody_holder.val(arrKeyStr_holder.find('.noteTitle').html(title));
+                                        $('#getNoteKey').attr("value", '');
+                                    }
+                                });
+                        } else {
+                            noteObj.note = val;
+                            noteObj.title = title;
+                            notes.push(noteObj);
+                            this.currentModel.set();
+                            this.currentModel.save({ 'notes': notes },
+                                {
+                                    headers: {
+                                        mid: 39
+                                    },
+                                    patch: true,
+                                    success: function (models, data) {
+                                        $('#noteBody').empty();
+                                        data.notes.forEach(function (item) {
+                                            var date = common.utcDateToLocaleDate(item.date);
+                                            $('#noteBody').prepend(_.template(addNoteTemplate, { id: item._id, title: item.title, val: item.note, author: item.author, date: date }));
+                                        });
+                                    }
+                                });
+                        }
                     }
-                }
                     noteArea_holder.val('');
                     noteTitleArea_holder.val('');
                 }
-            },
-
-            editNote: function () {
-                $(".title-wrapper").show();
-                $("#noteArea").attr("placeholder", "").parents(".addNote").addClass("active");
-            },
-
-            expandNote: function (e) {
-                if (!$(e.target).parents(".addNote").hasClass("active")) {
-                    $(e.target).attr("placeholder", "").parents(".addNote").addClass("active");
-                    $(".addTitle").show();
-                }
-            },
-
-            cancelNote: function (e) {
-                $(e.target).parents(".addNote").find("#noteArea").attr("placeholder", "Add a Note...").parents(".addNote").removeClass("active");
-                $(e.target).parents(".addNote").find("#noteArea").val("");
-                $(".title-wrapper").hide();
-                $(".addTitle").hide();
             },
 
             saveNote: function (e) {
@@ -249,11 +231,6 @@ define([
                 }
             },
 
-            showTitle: function (e) {
-                $(e.target).hide().parents(".addNote").find(".title-wrapper").show().find("input").focus();
-            },
-
-
             fileSizeIsAcceptable: function (file) {
                 if (!file) { return false; }
                 return file.size < App.File.MAXSIZE;
@@ -266,6 +243,7 @@ define([
                 var addFrmAttach = $("#editProjectForm");
                 var addInptAttach = $(".input-file .inputAttach")[0].files[0];
                 if (!this.fileSizeIsAcceptable(addInptAttach)) {
+                    $('#inputAttach').val('');
                     alert('File you are trying to attach is too big. MaxFileSize: ' + App.File.MaxFileSizeDisplay);
                     return;
                 }
@@ -319,68 +297,70 @@ define([
             },
 
             deleteAttach: function (e) {
-                var target = $(e.target);
-                if (target.closest("li").hasClass("attachFile")) {
-                    target.closest(".attachFile").remove();
-                } else {
-                    var id = e.target.id;
-                    var currentModel = this.currentModel;
-                    var attachments = currentModel.get('attachments');
-                    var newAttachments = _.filter(attachments, function (attach) {
-                        if (attach._id != id) {
-                            return attach;
-                        }
-                    });
-                    var fileName = $('.attachFile_' + id + ' a')[0].innerHTML;
-                    currentModel.save({ 'attachments': newAttachments, fileName: fileName},
-                        {
-                            headers: {
-                                mid: 39
-                            },
-                            patch: true,//Send only changed attr(add Roma)
-                            success: function () {
-                                $('.attachFile_' + id).remove();
+                if (confirm("You realy want to remove file? ")) {
+                    var target = $(e.target);
+                    if (target.closest("li").hasClass("attachFile")) {
+                        target.closest(".attachFile").remove();
+                    } else {
+                        var id = e.target.id;
+                        var currentModel = this.currentModel;
+                        var attachments = currentModel.get('attachments');
+                        var newAttachments = _.filter(attachments, function (attach) {
+                            if (attach._id != id) {
+                                return attach;
                             }
                         });
+                        var fileName = $('.attachFile_' + id + ' a')[0].innerHTML;
+                        currentModel.save({ 'attachments': newAttachments, fileName: fileName },
+                            {
+                                headers: {
+                                    mid: 39
+                                },
+                                patch: true,//Send only changed attr(add Roma)
+                                success: function () {
+                                    $('.attachFile_' + id).remove();
+                                }
+                            });
+                    }
                 }
             },
             nextUserList: function (e, page) {
-				$(e.target).closest(".left").find("ul").attr("data-page",parseInt($(e.target).closest(".left").find("ul").attr("data-page"))+1);
-				e.data.self.updateAssigneesPagination($(e.target).closest(".left"));
+                $(e.target).closest(".left").find("ul").attr("data-page", parseInt($(e.target).closest(".left").find("ul").attr("data-page")) + 1);
+                e.data.self.updateAssigneesPagination($(e.target).closest(".left"));
 
-			},
+            },
 
             prevUserList: function (e, page) {
-				$(e.target).closest(".left").find("ul").attr("data-page",parseInt($(e.target).closest(".left").find("ul").attr("data-page"))-1);
-				e.data.self.updateAssigneesPagination($(e.target).closest(".left"));
+                $(e.target).closest(".left").find("ul").attr("data-page", parseInt($(e.target).closest(".left").find("ul").attr("data-page")) - 1);
+                e.data.self.updateAssigneesPagination($(e.target).closest(".left"));
             },
 
             nextGroupList: function (e) {
-				$(e.target).closest(".left").find("ul").attr("data-page",parseInt($(e.target).closest(".left").find("ul").attr("data-page"))+1);
-				e.data.self.updateAssigneesPagination($(e.target).closest(".left"));
+                $(e.target).closest(".left").find("ul").attr("data-page", parseInt($(e.target).closest(".left").find("ul").attr("data-page")) + 1);
+                e.data.self.updateAssigneesPagination($(e.target).closest(".left"));
             },
 
             prevGroupList: function (e) {
-				$(e.target).closest(".left").find("ul").attr("data-page",parseInt($(e.target).closest(".left").find("ul").attr("data-page"))-1);
-				e.data.self.updateAssigneesPagination($(e.target).closest(".left"));
+                $(e.target).closest(".left").find("ul").attr("data-page", parseInt($(e.target).closest(".left").find("ul").attr("data-page")) - 1);
+                e.data.self.updateAssigneesPagination($(e.target).closest(".left"));
             },
             addUsers: function (e) {
                 e.preventDefault();
-				$(e.target).parents("ul").find("li:not(:visible)").eq(0).show();
-				var div =$(e.target).parents(".left");
+                $(e.target).parents("ul").find("li:not(:visible)").eq(0).show();
+                var div = $(e.target).parents(".left");
                 $(e.target).closest(".ui-dialog").find(".target").append($(e.target));
-				e.data.self.updateAssigneesPagination(div);
-				div =$(e.target).parents(".left");
-				e.data.self.updateAssigneesPagination(div);
+                e.data.self.updateAssigneesPagination(div);
+                div = $(e.target).parents(".left");
+                e.data.self.updateAssigneesPagination(div);
             },
 
             removeUsers: function (e) {
                 e.preventDefault();
-				var div =$(e.target).parents(".left");
+                var div = $(e.target).parents(".left");
                 $(e.target).closest(".ui-dialog").find(".source").append($(e.target));
-				e.data.self.updateAssigneesPagination(div);
-				div =$(e.target).parents(".left");
-				e.data.self.updateAssigneesPagination(div);
+                e.data.self.updateAssigneesPagination(div);
+                div = $(e.target).parents(".left");
+                e.data.self.updateAssigneesPagination(div);
 
             },
             chooseUser: function (e) {
@@ -411,7 +391,7 @@ define([
                 $(id).find("li").each(function () {
                     groupsAndUser_holder.append("<tr data-type='" + id.replace("#", "") + "' data-id='" + $(this).attr("id") + "'><td>" + $(this).text() + "</td><td class='text-right'></td></tr>");
                 });
-                if ($(".groupsAndUser tr").length <2) {
+                if ($(".groupsAndUser tr").length < 2) {
                     groupsAndUser_holder.hide();
                 }
             },
@@ -441,14 +421,14 @@ define([
                     }
 
                 });
-				this.updateAssigneesPagination($("#sourceUsers").closest(".left"));
-				this.updateAssigneesPagination($("#targetUsers").closest(".left"));
-                $("#targetUsers").on("click", "li", {self:this},this.removeUsers);
-                $("#sourceUsers").on("click", "li", {self:this},this.addUsers);
-                $(document).on("click", ".nextUserList",{self:this}, function (e) {
+                this.updateAssigneesPagination($("#sourceUsers").closest(".left"));
+                this.updateAssigneesPagination($("#targetUsers").closest(".left"));
+                $("#targetUsers").on("click", "li", { self: this }, this.removeUsers);
+                $("#sourceUsers").on("click", "li", { self: this }, this.addUsers);
+                $(document).on("click", ".nextUserList", { self: this }, function (e) {
                     self.nextUserList(e);
                 });
-                $(document).on("click", ".prevUserList",{self:this}, function (e) {
+                $(document).on("click", ".prevUserList", { self: this }, function (e) {
                     self.prevUserList(e);
                 });
 
@@ -478,14 +458,14 @@ define([
                     }
 
                 });
-				this.updateAssigneesPagination($("#sourceGroups").closest(".left"));
-				this.updateAssigneesPagination($("#targetGroups").closest(".left"));
-                $("#targetGroups").on("click", "li", {self:this},this.removeUsers);
-                $("#sourceGroups").on("click", "li", {self:this},this.addUsers);
-                $(document).on("click", ".nextGroupList",{self:this}, function (e) {
+                this.updateAssigneesPagination($("#sourceGroups").closest(".left"));
+                this.updateAssigneesPagination($("#targetGroups").closest(".left"));
+                $("#targetGroups").on("click", "li", { self: this }, this.removeUsers);
+                $("#sourceGroups").on("click", "li", { self: this }, this.addUsers);
+                $(document).on("click", ".nextGroupList", { self: this }, function (e) {
                     self.nextUserList(e);
                 });
-                $(document).on("click", ".prevGroupList",{self:this}, function (e) {
+                $(document).on("click", ".prevGroupList", { self: this }, function (e) {
                     self.prevUserList(e);
                 });
             },
@@ -575,7 +555,7 @@ define([
                     StartDate: startDate,
                     TargetEndDate: TargetEndDate
                 };
-				var workflowStart = this.currentModel.get('workflow');
+                var workflowStart = this.currentModel.get('workflow');
                 this.currentModel.save(data, {
                     headers: {
                         mid: mid
@@ -601,11 +581,11 @@ define([
                             tr_holder.eq(8).find(".stageSelect").text(self.$el.find("#workflowsDd").text());
                             tr_holder.eq(9).find(".health-container a").attr("class", "health" + health).attr("data-value", health);
                             tr_holder.eq(11).text(model.toJSON().editedBy.date + " (" + model.toJSON().editedBy.user.login + ")");
-							if (data.workflow!=workflowStart){
-								Backbone.history.fragment = "";
-								Backbone.history.navigate(window.location.hash.replace("#",""), { trigger: true });
+                            if (data.workflow != workflowStart) {
+                                Backbone.history.fragment = "";
+                                Backbone.history.navigate(window.location.hash.replace("#", ""), { trigger: true });
 
-							}
+                            }
                         } else {
                             var currentModel_holder = $("#" + self.currentModel.toJSON()._id);
                             currentModel_holder.find(".project-text span").eq(0).text(projectName);
@@ -617,19 +597,19 @@ define([
                                 common.getImagesPM([projectmanager], "/getEmployeesImages", "#" + self.currentModel.toJSON()._id);
                         }
                     },
-					error: function (model, xhr) {
+                    error: function (model, xhr) {
                         self.hideDialog();
-						if (xhr && (xhr.status === 401||xhr.status === 403)) {
-							if (xhr.status === 401){
-								Backbone.history.navigate("login", { trigger: true });
-							}else{
-								alert("You do not have permission to perform this action");								
-							}
+                        if (xhr && (xhr.status === 401 || xhr.status === 403)) {
+                            if (xhr.status === 401) {
+                                Backbone.history.navigate("login", { trigger: true });
+                            } else {
+                                alert("You do not have permission to perform this action");
+                            }
                         } else {
                             Backbone.history.navigate("home", { trigger: true });
                         }
                     }
-					
+
                 });
             },
 
@@ -644,31 +624,31 @@ define([
                             mid: mid
                         },
                         success: function (model) {
-							model= model.toJSON();
-							var viewType = custom.getCurrentVT();
-							switch (viewType) {
-							case 'list':
-								{
-									$("tr[data-id='" + model._id + "'] td").remove();
-								}
-								break;
-							case 'thumbnails':
-								{
-									$("#" + model._id).remove();
-			                        $('.edit-project-dialog').remove();
-			                        $(".add-group-dialog").remove();
-			                        $(".add-user-dialog").remove();
-								}
-							}
-							self.hideDialog();
+                            model = model.toJSON();
+                            var viewType = custom.getCurrentVT();
+                            switch (viewType) {
+                                case 'list':
+                                    {
+                                        $("tr[data-id='" + model._id + "'] td").remove();
+                                    }
+                                    break;
+                                case 'thumbnails':
+                                    {
+                                        $("#" + model._id).remove();
+                                        $('.edit-project-dialog').remove();
+                                        $(".add-group-dialog").remove();
+                                        $(".add-user-dialog").remove();
+                                    }
+                            }
+                            self.hideDialog();
                         },
-                        error: function (model,err) {
-							if (err.status===403){
-								alert("You do not have permission to perform this action");
-							}else{
-								$('.edit-dialog').remove();
-								Backbone.history.navigate("home", { trigger: true });
-							}
+                        error: function (model, err) {
+                            if (err.status === 403) {
+                                alert("You do not have permission to perform this action");
+                            } else {
+                                $('.edit-dialog').remove();
+                                Backbone.history.navigate("home", { trigger: true });
+                            }
                         }
                     });
                 }
@@ -680,7 +660,7 @@ define([
                 });
                 var self = this;
                 this.$el = $(formString).dialog({
-					closeOnEscape: false,
+                    closeOnEscape: false,
                     autoOpen: true,
                     resizable: false,
                     title: "Edit Project",
@@ -704,6 +684,11 @@ define([
                         }
                     }
                 });
+                var notDiv = this.$el.find('#divForNote');
+                notDiv.append(
+                 new noteView({
+                     model: this.currentModel
+                 }).render().el);
                 common.populateUsersForGroups('#sourceUsers', '#targetUsers', this.currentModel.toJSON(), this.page);
                 common.populateUsers("#allUsers", "/UsersForDd", this.currentModel.toJSON(), null, true);
                 common.populateDepartmentsList("#sourceGroups", "#targetGroups", "/DepartmentsForDd", this.currentModel.toJSON(), this.pageG);
@@ -740,7 +725,7 @@ define([
                     dateFormat: "d M, yy",
                     changeMonth: true,
                     changeYear: true,
-                    minDate: (model.StartDate)? model.StartDate : 0
+                    minDate: (model.StartDate) ? model.StartDate : 0
                 });
                 this.delegateEvents(this.events);
 
