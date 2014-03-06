@@ -356,6 +356,7 @@ define([
                 $(".edit-dialog").remove();
                 $(".add-group-dialog").remove();
                 $(".add-user-dialog").remove();
+                $(".crop-images-dialog").remove();
             },
 
             render: function () {

@@ -278,6 +278,7 @@ define([
                 $(".create-dialog").remove();
                 $(".add-group-dialog").remove();
                 $(".add-user-dialog").remove();
+                $(".crop-images-dialog").remove();
             },
 
             saveItem: function () {
@@ -396,18 +397,22 @@ define([
 					closeOnEscape: false,
                     autoOpen:true,
                     resizable:true,
-					dialogClass:"edit-dialog",
-					title: "Edit Company",
+					dialogClass:"create-dialog",
+					title: "Create Company",
 					width:"80%",
                     buttons: [
                         {
                             text: "Create",
-                            click: function () { self.saveItem(); }
+                            click: function () {
+                                self.saveItem();
+                            }
                         },
 
 						{
-							text: "Cancel",
-							click: function () { $(this).dialog().remove(); }
+						    text: "Cancel",
+						    click: function () {
+                                self.hideDialog();
+                            }
 						}]
 
                 });

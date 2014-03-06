@@ -206,6 +206,7 @@ define([
                 $(".edit-companies-dialog").remove();
                 $(".add-group-dialog").remove();
                 $(".add-user-dialog").remove();
+                $(".crop-images-dialog").remove();
             },
             showEdit: function () {
                 $(".upload").animate({
@@ -357,7 +358,7 @@ define([
 					closeOnEscape: false,
                     autoOpen: true,
                     resizable: false,
-                    dialogClass: "edit-dialog",
+                    dialogClass: "edit-companies-dialog",
                     width: "80%",
                     //height: 513,
                     title: 'Edit Company',
@@ -365,15 +366,16 @@ define([
                         {
                             text: "Save",
                             click: function () { self.saveItem(); }
-                        },{
-                        text: "Cancel",
-                        click: function () { $(this).dialog().remove(); }
-                    },
-                    {
-                        text: "Delete",
-                        class: "btn",
-                        click: self.deleteItem
-                    }],
+                        },
+
+						{
+							text: "Cancel",
+							click: function () { self.hideDialog(); }
+						},
+						{
+							text: "Delete",
+							click: self.deleteItem }
+						],
                     //closeOnEscape: false,
                     modal: true
                 });

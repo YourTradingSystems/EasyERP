@@ -416,6 +416,7 @@
                 $(".edit-dialog").remove();
                 $(".add-group-dialog").remove();
                 $(".add-user-dialog").remove();
+                $(".crop-images-dialog").remove();
             },
             showEdit: function () {
                 $(".upload").animate({

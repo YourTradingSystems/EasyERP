@@ -241,6 +241,7 @@ define([
                 $('.edit-person-dialog').remove();
                 $(".add-group-dialog").remove();
                 $(".add-user-dialog").remove();
+                $(".crop-images-dialog").remove();
             },
             showEdit: function () {
                 $(".upload").animate({
@@ -385,7 +386,6 @@ define([
             render: function () {
                 var self = this;
 				console.log(this.currentModel.toJSON());
-                console.log('render persons dialog');
                 var formString = this.template({
                     model: this.currentModel.toJSON()
                 });
@@ -393,7 +393,7 @@ define([
 					closeOnEscape: false,
                     autoOpen: true,
                     resizable: true,
-                    dialogClass: "edit-dialog",
+                    dialogClass: "edit-person-dialog",
                     title: "Edit Person",
                     width: "900px",
                     buttons: [
@@ -404,7 +404,7 @@ define([
 
 						{
 							text: "Cancel",
-							click: function () { $(this).dialog().remove(); }
+							click: function () { self.hideDialog();  }
 						},
 						{
 							text: "Delete",

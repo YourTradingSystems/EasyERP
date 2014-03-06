@@ -56,7 +56,8 @@ define([
                 var tBody = currentEl.find('#listTable');
                 tBody.empty();
                 var itemView = new listItemView({ collection: this.collection,page: currentEl.find("#currentShowPage").val(), itemsNumber: currentEl.find("span#itemsNumber").text() });
-
+                $("#top-bar-deleteBtn").hide();
+                $('#check_all').prop('checked', false);
                 tBody.append(itemView.render());
             },
 
@@ -137,7 +138,7 @@ define([
                 $(e.target).closest("button").next("ul").toggle();
                 return false;
             },
-//modified for filter Vasya
+            //modified for filter Vasya
             getTotalLength: function (currentNumber, itemsNumber,filter) {
                     dataService.getData('/totalCollectionLength/Employees', {
                         currentNumber: currentNumber,
@@ -195,13 +196,14 @@ define([
                 currentEl.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
             },
             //modified for filter Vasya
-            previousPage: function (event) {
+        previousPage: function (event) {
                 event.preventDefault();
+                $("#top-bar-deleteBtn").hide();
+                $('#check_all').prop('checked', false);
                 this.prevP({
                     sort: this.sort,
                     filter: this.filter,
                     newCollection: this.newCollection,
-                    parrentContentId: this.parrentContentId
                 });
                 dataService.getData('/totalCollectionLength/Employees', {
                     filter: this.filter,
@@ -211,23 +213,24 @@ define([
                     context.listLength = response.count || 0;
                 }, this);
             },
-            //modified for filter Vasya
-            nextPage: function (event) {
-                    event.preventDefault();
-                    this.nextP({
-                        sort: this.sort,
-                        filter: this.filter,
-                        newCollection: this.newCollection,
-                        parrentContentId: this.parrentContentId
-                    });
-                    dataService.getData('/totalCollectionLength/Employees', {
-                        filter: this.filter,
-                        newCollection: this.newCollection,
-                        parrentContentId: this.parrentContentId
-                    }, function (response, context) {
-                        context.listLength = response.count || 0;
-                    }, this);
-            },
+        //modified for filter Vasya
+        nextPage: function (event) {
+                event.preventDefault();
+                $("#top-bar-deleteBtn").hide();
+                $('#check_all').prop('checked', false);
+                this.nextP({
+                    sort: this.sort,
+                    filter: this.filter,
+                    newCollection: this.newCollection,
+                });
+                dataService.getData('/totalCollectionLength/Employees', {
+                    filter: this.filter,
+                    newCollection: this.newCollection,
+                    parrentContentId: this.parrentContentId
+                }, function (response, context) {
+                    context.listLength = response.count || 0;
+                }, this);
+        },
 
             //first last page in paginations
             firstPage: function (event) {
@@ -240,6 +243,7 @@ define([
                     newCollection: this.newCollection
                 });
                 dataService.getData('/totalCollectionLength/Employees', {
+                    sort: this.sort,
                     filter: this.filter,
                     newCollection: this.newCollection
                 }, function (response, context) {
@@ -263,7 +267,6 @@ define([
                     context.listLength = response.count || 0;
                 }, this);
             },  //end first last page in paginations
-
             //modified for filter Vasya
             switchPageCounter: function (event) {
                     event.preventDefault();
@@ -307,21 +310,21 @@ define([
             },
             //modified for filter Vasya
             showMoreContent: function (newModels) {
-                    var holder = this.$el;
-                    holder.find("#listTable").empty();
-                    var itemView = new listItemView({ collection: newModels, page: holder.find("#currentShowPage").val(), itemsNumber: holder.find("span#itemsNumber").text() });
-                    holder.append(itemView.render());
-                    itemView.undelegateEvents();
-                    var pagenation = holder.find('.pagination');
-                    if (newModels.length !== 0) {
-                        pagenation.show();
-                    } else {
-                        pagenation.hide();
-                    }
-                    $("#top-bar-deleteBtn").hide();
-                    $('#check_all').prop('checked', false);
-                    holder.find('#timeRecivingDataFromServer').remove();
-                    holder.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
+                var holder = this.$el;
+                holder.find("#listTable").empty();
+                var itemView = new listItemView({ collection: newModels, page: holder.find("#currentShowPage").val(), itemsNumber: holder.find("span#itemsNumber").text() });
+                holder.append(itemView.render());
+                itemView.undelegateEvents();
+                var pagenation = holder.find('.pagination');
+                if (newModels.length !== 0) {
+                    pagenation.show();
+                } else {
+                    pagenation.hide();
+                }
+                $("#top-bar-deleteBtn").hide();
+                $('#check_all').prop('checked', false);
+                holder.find('#timeRecivingDataFromServer').remove();
+                holder.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
             },
             //modified for filter Vasya
             showMoreAlphabet: function (newModels) {
