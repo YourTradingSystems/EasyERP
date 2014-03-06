@@ -672,7 +672,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                                                     populate('createdBy.user', 'login').
                                                     populate('department', 'departmentName').
                                                     populate('editedBy.user', 'login').
-                                                    populate('workflow', 'name');
+                                                    populate('workflow', 'name status');
                                             }
                                                 break;
                                             case ('thumbnails'): {

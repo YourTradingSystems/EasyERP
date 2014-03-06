@@ -61,7 +61,7 @@ define([
            var getWorkflow = function (nameId, statusId, url, data, field, content, isCreate) {
                dataService.getData(url, data, function (response) {
                    content.responseObj[nameId] = _.map(response.data, function (item) {
-                       return { _id: item._id, name: item[field] };
+                       return { _id: item._id, name: item[field], status:item.status };
                    });
                    var wNames = $.map(response.data, function (item) {
                        return item.wName;

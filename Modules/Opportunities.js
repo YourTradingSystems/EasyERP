@@ -646,7 +646,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                                           query.where('workflow').in([]);
                                     }
                                         query.populate('customer', 'name').
-                                            populate('workflow', '_id name').
+                                            populate('workflow', '_id name status').
                                             populate('salesPerson', 'name').
                                             populate('createdBy.user', 'login').
                                             populate('editedBy.user', 'login');
@@ -662,7 +662,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
 
                                         query.select("_id createdBy editedBy name workflow contactName phones campaign source email contactName").
                                             populate('company', 'name').
-                                            populate('workflow', "name").
+                                            populate('workflow', "name status").
                                             populate('createdBy.user', 'login').
                                             populate('editedBy.user', 'login');
                                     }

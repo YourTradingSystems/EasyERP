@@ -49,6 +49,20 @@ define([
                         break;
                 }
             });
+            $(document).on("keypress", ".onlyNumber", function (e) {
+                var charCode = (e.which) ? e.which : e.keyCode;
+                if (charCode > 31 && (charCode < 48 || charCode > 57))
+                    return false;
+                return true;
+			});
+            $(window).on("resize", function (e) {
+				$("#ui-datepicker-div").hide();
+//				$(".hasDatepicker").datepicker("destroy");
+			});
+            $(document).on("paste", ".onlyNumber", function (e) {
+                return false;
+			});
+ 
         },
 
         goToProfiles: function () {

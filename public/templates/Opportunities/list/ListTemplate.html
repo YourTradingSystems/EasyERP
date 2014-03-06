@@ -1,5 +1,5 @@
     <% opportunitiesCollection.forEach(function(opportunity, index){ %>
-        <tr data-index="<%= index %>" data-id="<%=opportunity._id%>" class="stage-<%=(opportunity.workflow) ? opportunity.workflow.name.toLowerCase() : ''%>">
+        <tr data-index="<%= index %>" data-id="<%=opportunity._id%>" class="stage-<%=(opportunity.workflow) ? opportunity.workflow.status.toLowerCase() : ''%>">
             <td class="notForm"><input type="checkbox" value="<%=opportunity._id%>" class="checkbox" /></td>
             <td><%=startNumber + index + 1 %></td>
             <td><%=opportunity.creationDate%></td>

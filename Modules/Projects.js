@@ -1837,7 +1837,7 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                                     populate('assignedTo', 'name').
                                     populate('editedBy.user', 'login').
                                     populate('createdBy.user', 'login').
-                                    populate('workflow', 'name _id').
+                                    populate('workflow', 'name _id status').
                                     skip((data.page - 1) * data.count).
                                     limit(data.count).
                                     exec(function (err, result) {

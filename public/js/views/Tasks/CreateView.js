@@ -30,9 +30,7 @@ define([
                    "click .newSelectList li.miniStylePagination .prev:not(.disabled)": "prevSelect",
                    "click": "hideNewSelect",
                    "change .inputAttach": "addAttach",
-                   "click .deleteAttach": "deleteAttach",
-                   "keypress #logged, #estimated": "isNumberKey",
-                   "paste #logged, #estimated": "preventPaste"
+                   "click .deleteAttach": "deleteAttach"
                },
                addAttach: function (event) {
                    var s = $(".inputAttach:last").val().split("\\")[$(".inputAttach:last").val().split('\\').length - 1];
@@ -217,16 +215,6 @@ define([
                },
                chooseOption: function (e) {
                    $(e.target).parents("dd").find(".current-selected").text($(e.target).text()).attr("data-id", $(e.target).attr("id"));
-               },
-               isNumberKey: function (evt) {
-                   var charCode = (evt.which) ? evt.which : event.keyCode;
-                   if (charCode > 31 && (charCode < 48 || charCode > 57))
-                       return false;
-                   return true;
-               },
-               preventPaste: function (e) {
-                   //prevent paste event in #estimate and logged fields
-                   e.preventDefault();
                },
                render: function () {
                    var projectID = (window.location.hash).split('/')[3];

@@ -1,5 +1,5 @@
 <% leadsCollection.forEach(function(lead, index){ %>
-<tr data-id="<%=lead._id%>" class="stage-<%=(lead.workflow) ? lead.workflow.name.toLowerCase() : ''%>">
+<tr data-id="<%=lead._id%>" class="stage-<%=(lead.workflow) ? lead.workflow.status.toLowerCase() : ''%>">
     <td class="notForm"><input type="checkbox" value="<%=lead._id%>" class="checkbox" /></td>
     <td><%=startNumber + index + 1%></td>
     <td><%=lead.name%></td>
