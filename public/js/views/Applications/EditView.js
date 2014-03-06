@@ -534,6 +534,11 @@
 									kanban_holder.find(".application-header .right").text(data.proposedSalary+"$");
                                 kanban_holder.find(".application-content p.center").text(self.$el.find("#jobPositionDd").text());
                                 kanban_holder.find(".application-content p.right").text(nextAction);
+								if (new Date()>new Date(nextAction)){
+                                kanban_holder.find(".application-content p.right").addClass("red");
+								}else{
+                                kanban_holder.find(".application-content p.right").removeClass("red");
+								}
 
                                 if (result && result.sequence){
 									$("#" + data.workflowStart).find(".item").each(function () {
