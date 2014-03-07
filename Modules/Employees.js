@@ -634,6 +634,8 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                                             case ('list'): {
 												if (data.sort) {
 													query.sort(data.sort);
+												}else{
+													query.sort({"editedBy.date":-1});
 												}
 
                                                 query.select('_id name createdBy editedBy department jobPosition manager dateBirth skype workEmail workPhones jobType').
@@ -665,7 +667,9 @@ var Employee = function (logWriter, mongoose, event, department, models) {
 
                                                  if (data.sort) {
                                                      query.sort(data.sort);
-                                                 }
+                                                 }else{
+													 query.sort({"editedBy.date":-1});
+												 }
                                                 query.select('_id name createdBy editedBy jobPosition manager workEmail workPhones creationDate workflow personalEmail department jobType sequence').
                                                     populate('manager', 'name').
                                                     populate('jobPosition', 'name').

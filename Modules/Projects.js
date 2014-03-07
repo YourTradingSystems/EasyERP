@@ -726,7 +726,9 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                                 }
                                 if (data.sort) {
                                     query.sort(data.sort);
-                                }
+                                }else{
+									query.sort({"editedBy.date":-1});
+								}
                                 query.select("_id createdBy editedBy workflow projectName health customer progress StartDate EndDate TargetEndDate").
                                     populate('createdBy.user', 'login').
                                     populate('editedBy.user', 'login').

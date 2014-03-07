@@ -23,6 +23,6 @@
     </td>
     <td><progress name="taskProgress" max="100" value="<%=task.progress%>" /></td>
     <td><%=(task.createdBy.user) ? task.createdBy.date + " (" + task.createdBy.user.login + ")" : ''%></td>
-    <td><%=(task.editedBy.user) ? task.editedBy.date + " (" + task.editedBy.user.login + ")" : ''%></td>
+    <td><%=(task.editedBy&&task.editedBy.date) ? (task.editedBy.date + ((task.editedBy.user)?(" (" + task.editedBy.user.login + ")"):"")) : ''%></td>
 </tr>
 <% }) %>

@@ -41,14 +41,6 @@ require.config({
 });
 
 require(['app'], function (app) {
-    Backbone.Collection.prototype.next = function () {
-        this.setElement(this.at(this.indexOf(this.getElement()) + 1));
-        return this;
-    };
-    Backbone.Collection.prototype.prev = function () {
-        this.setElement(this.at(this.indexOf(this.getElement()) - 1));
-        return this;
-    };
     Backbone.Collection.prototype.getElement = function (id) {
         return (id) ? this.get(id) : ((this.currentElement) ? this.currentElement : this.at(0));
     };

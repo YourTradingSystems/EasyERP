@@ -624,7 +624,9 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                                 var query = models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).find().where('_id').in(result);
                                 if (data.sort) {
                                       query.sort(data.sort);
-                                }
+                                }else{
+									query.sort({"editedBy.date":-1});
+								}
                                 switch (data.contentType) {
                                     case ('Opportunities'): {
                                     if (data && data.filter && data.filter.workflow) {

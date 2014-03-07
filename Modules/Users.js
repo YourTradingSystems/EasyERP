@@ -279,7 +279,9 @@ var Users = function (logWriter, mongoose, models, department) {
         var query = models.get(req.session.lastDb - 1, 'Users', userSchema).find({}, { __v: 0, upass: 0 });
         if (data.sort) {
                 query.sort(data.sort);
-        }
+        }else{
+			query.sort({"lastAccess":-1});
+		}
         query.populate('profile');
         query.skip((data.page - 1) * data.count).limit(data.count);
         query.exec(function (err, result) {
