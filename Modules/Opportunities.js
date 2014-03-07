@@ -417,6 +417,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
         if (data.source) {
 
             var c = new Date() - data.dataRange * 24 * 60 * 60 * 1000;
+			console.log(data.dataRange);
             var a = new Date(c);
             models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).aggregate({ $match: { $and: [{ createdBy: { $ne: null },source: {$ne:""}, $or: [{ isConverted: true }, { isOpportunitie: false }] }, { 'createdBy.date': { $gte: a } }] } }, { $group: { _id: { source: "$source", isOpportunitie: "$isOpportunitie" }, count: { $sum: 1 } } }, { $project: { "source": "$_id.source", count: 1, "isOpp": "$_id.isOpportunitie", _id: 0 } }).exec(function (err, result) {
                 if (err) {
@@ -440,7 +441,9 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                 myItem["$project"]["year"]["$year"] = "$convertedDate";
             }
             var c = new Date() - data.dataRange * 24 * 60 * 60 * 1000;
+			console.log(data.dataRange);
             var a = new Date(c);
+			console.log(a);
             models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).aggregate(
 				{
 				    $match: {

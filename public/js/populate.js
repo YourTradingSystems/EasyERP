@@ -151,7 +151,7 @@ define([
                var start = (currentPage - 1) * elementVisible;
                var end = Math.min(currentPage * elementVisible, data.length);
                var allPages = Math.ceil(data.length / elementVisible);
-               parent.append(_.template(selectTemplate, { collection: data.slice(start, end), currentPage: currentPage, allPages: allPages, start: start, end: end, dataLength: data.length, elementVisible: elementVisible }));
+               parent.append(_.template(selectTemplate, { collection: data.slice(start, end), currentPage: currentPage, allPages: allPages, start: start, end: end, dataLength: data.length, elementVisible: elementVisible,  }));
            };
 
            var showSelectPriority = function (e, prev, next, context) {

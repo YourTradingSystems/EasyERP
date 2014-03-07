@@ -642,12 +642,19 @@
                                        tr_holder.parent().attr("class", "stage-" + self.$("#workflowDd").text().toLowerCase())
                                        tr_holder.eq(3).text(name);
                                        tr_holder.eq(4).text(parseInt(expectedRevenueValue));
-                                       tr_holder.eq(5).text(self.$("#customerDd").text());
+									   if (customerId){
+										   tr_holder.eq(5).text(self.$("#customerDd").text());
+									   }else{
+										   tr_holder.eq(5).text("");
+									   }
                                        tr_holder.eq(6).text(nextAction.date);
                                        tr_holder.eq(7).text(nextAction.desc);
                                        tr_holder.eq(8).find("a").text(self.$("#workflowDd").text());
-                                       if (salesPersonId)
+                                       if (salesPersonId){
                                            tr_holder.eq(9).text(self.$("#salesPersonDd").text());
+									   }else{
+										   tr_holder.eq(9).text("");
+									   }
                                        if (data.workflow) {
                                            Backbone.history.fragment = "";
                                            Backbone.history.navigate(window.location.hash.replace("#", ""), { trigger: true });
@@ -661,8 +668,16 @@
                                        kanban_holder.find(".opportunity-header h4").text(name);
                                        kanban_holder.find(".opportunity-header h3").text("$" + parseInt(expectedRevenueValue));
                                        kanban_holder.find(".opportunity-content p.right").text(nextAction.date);
-                                       kanban_holder.find(".opportunity-content p.left").eq(0).text(self.$("#customerDd").text());
-                                       kanban_holder.find(".opportunity-content p.left").eq(1).text(self.$("#salesPersonDd").text());
+									   if (customerId){
+										   kanban_holder.find(".opportunity-content p.left").eq(0).text(self.$("#customerDd").text());
+									   }else{
+										   kanban_holder.find(".opportunity-content p.left").eq(0).text("");
+									   }
+									   if (salesPersonId){
+										   kanban_holder.find(".opportunity-content p.left").eq(1).text(self.$("#salesPersonDd").text());
+									   }else{
+										   kanban_holder.find(".opportunity-content p.left").eq(1).text("");
+									   }
 
                                        if (result && result.sequence) {
                                            $("#" + data.workflowStart).find(".item").each(function () {

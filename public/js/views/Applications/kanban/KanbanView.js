@@ -71,7 +71,6 @@
 			el.closest("table").css({"min-height":($(window).height()-110)+"px"});
             this.$(".column").sortable("enable");
             this.$(".column.fold").sortable("disable");
-			this.resize();
 		},
 			isNumberKey: function(evt){
 				var charCode = (evt.which) ? evt.which : event.keyCode;
@@ -232,16 +231,6 @@
 
 				}
 			},
-			resize:function(){
-				if ($("table.kanban").length!=0&&$(window).width()<$("table.kanban").width()){
-					$("#mainmenu-holder").width($("table.kanban").width());
-					$("#top-bar").width($("table.kanban").width());
-				}
-				else{
-					$("#mainmenu-holder").width($(window).width());
-					$("#top-bar").width($(window).width());
-				}
-			},
             render: function () {
 				var self = this;
                 var workflows = this.workflowsCollection.toJSON();
@@ -298,8 +287,6 @@
                 }).disableSelection();
                 this.$el.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
 				$(document).on("keypress","#cPerPage",this.isNumberKey);
-				$(window).on("resize",this.resize);
-				this.resize();
 				this.$el.unbind();
                 return this;
             }
