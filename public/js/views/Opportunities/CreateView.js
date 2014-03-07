@@ -517,20 +517,7 @@ define([
 
                     },
                     error: function (model, xhr) {
-						if (xhr && (xhr.status === 401||xhr.status === 403)) {
-							if (xhr.status === 401){
-								Backbone.history.navigate("login", { trigger: true });
-							}else{
-								alert("You do not have permission to perform this action");								
-							}
-                        } else {
-						if (xhr&&xhr.status === 400&&xhr.responseJSON){
-							alert(xhr.responseJSON.error);
-						}else{
-							Backbone.history.navigate("easyErp/Opportunities", { trigger: true });
-						}
-                        }
-
+    					self.errorNotification(xhr);
                     }
                 });
             },

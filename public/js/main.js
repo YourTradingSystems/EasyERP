@@ -70,7 +70,23 @@ require(['app'], function (app) {
         }
 
     };
-
+    Backbone.View.prototype.errorNotification = function (xhr){
+		if (xhr){
+			if (xhr.status === 401||xhr.status === 403) {
+				if (xhr.status === 401){
+					Backbone.history.navigate("login", { trigger: true });
+				}else{
+					alert("You do not have permission to perform this action");								
+				}
+			} else {
+				if (xhr.responseJSON){
+					alert(xhr.responseJSON.error);
+				}else{
+                    Backbone.history.navigate("home", { trigger: true });
+				}
+			}
+		}
+	};
     Backbone.View.prototype.pageElementRender = function (totalCount, itemsNumber, currentPage) {
         //var itemsNumber = this.defaultItemsNumber;
         $("#itemsNumber").text(itemsNumber);

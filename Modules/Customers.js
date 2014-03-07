@@ -188,51 +188,7 @@
                     res.send(400, { error: 'Person.create Incorrect Incoming Data' });
                     return;
                 } else {
-                   var query = {};
-                 /*   if (data.type) {
-                        switch (data.type) {
-                            case "Person":
-                                {
-                                    query = { $and: [{ 'name.first': data.name.first }, { 'name.last': data.name.last }, { type: 'Person' }] };
-                                }
-                                break;
-                            case "Company":
-                                {
-                                    query = { $and: [{ 'name.first': data.name.first }, { 'name.last': data.name.last }, { type: 'Company' }] };
-                                }
-                                break;
-                        }
-                    }
-                    models.get(req.session.lastDb - 1, "Customers", customerSchema).find(query, function (error, doc) {
-                        if (error) {
-                            logWriter.log('Person.js. create Person.find' + error);
-                            res.send(500, { error: 'Person.create find error' });
-                        } else {
-                            if (doc.length > 0) {
-                                res.send(500, { error: 'Person with same name alredy existds' });
-                            } else if (doc.length === 0) {
-                                savetoBd(data);
-                            }
-                        }
-                    });*/
-                    //Removed Persons same name Validation
-                    if (data.type == "Company") {
-                        query = { $and: [{ 'name.first': data.name.first }, { 'name.last': data.name.last }, { type: 'Company' }] };
-                        models.get(req.session.lastDb - 1, "Customers", customerSchema).find(query, function (error, doc) {
-                            if (error) {
-                                logWriter.log('Person.js. create Person.find' + error);
-                                res.send(500, { error: 'Person.create find error' });
-                            } else {
-                                if (doc.length > 0) {
-                                    res.send(500, { error: 'Person with same name alredy existds' });
-                                } else if (doc.length === 0) {
-                                    savetoBd(data);
-                                }
-                            }
-                        });
-
-                    }
-                    else savetoBd(data);
+                    savetoBd(data);
                 }
                 function savetoBd(data) {
                     try {
@@ -1122,36 +1078,37 @@
 
         update: function (req, _id, remove, data, res) {
             try {
-                delete data._id;
-                delete data.createdBy;
-                if (data.notes && data.notes.length != 0 && !remove) {
-                    var obj = data.notes[data.notes.length - 1];
-                    obj._id = mongoose.Types.ObjectId();
-                    obj.date = new Date();
-                    data.notes[data.notes.length - 1] = obj;
-                }
-                if (data.company && data.company._id) {
-                    data.company = data.company._id;
-                }
-                if (data.department && data.department._id) {
-                    data.department = data.department._id;
-                }
-                if (data.salesPurchases && data.salesPurchases.salesPerson && data.salesPurchases.salesPerson._id) {
-                    data.salesPurchases.salesPerson = data.salesPurchases.salesPerson._id;
-                }
-                if (data.salesPurchases && data.salesPurchases.salesTeam && data.salesPurchases.salesTeam._id) {
-                    data.salesPurchases.salesTeam = data.salesPurchases.salesTeam._id;
-                }
-                models.get(req.session.lastDb - 1, "Customers", customerSchema).findByIdAndUpdate({ _id: _id }, data, function (err, customers) {
-                    if (err) {
-                        console.log(err);
-                        logWriter.log("Customer.js update customer.update " + err);
-                        res.send(500, { error: "Can't update customer" });
-                    } else {
-                        console.log(customers);
-                        res.send(200, customers);
-                    }
-                });
+				delete data._id;
+				delete data.createdBy;
+				if (data.notes && data.notes.length != 0 && !remove) {
+					var obj = data.notes[data.notes.length - 1];
+					obj._id = mongoose.Types.ObjectId();
+					obj.date = new Date();
+					data.notes[data.notes.length - 1] = obj;
+				}
+				if (data.company && data.company._id) {
+					data.company = data.company._id;
+				}
+				if (data.department && data.department._id) {
+					data.department = data.department._id;
+				}
+				if (data.salesPurchases && data.salesPurchases.salesPerson && data.salesPurchases.salesPerson._id) {
+					data.salesPurchases.salesPerson = data.salesPurchases.salesPerson._id;
+				}
+				if (data.salesPurchases && data.salesPurchases.salesTeam && data.salesPurchases.salesTeam._id) {
+					data.salesPurchases.salesTeam = data.salesPurchases.salesTeam._id;
+				}
+				models.get(req.session.lastDb - 1, "Customers", customerSchema).findByIdAndUpdate({ _id: _id }, data, function (err, customers) {
+					if (err) {
+						console.log(err);
+						logWriter.log("Customer.js update customer.update " + err);
+						res.send(500, { error: "Can't update customer" });
+					} else {
+						console.log(customers);
+						res.send(200, customers);
+					}
+				});
+
             }
             catch (Exception) {
                 console.log(Exception);

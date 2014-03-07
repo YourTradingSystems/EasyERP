@@ -191,22 +191,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                 res.send(400, { error: 'Opprtunities.create Incorrect Incoming Data' });
                 return;
             } else {
-                var query = (data.jobkey) ? { $and: [{ name: data.name }, { jobkey: data.jobkey }] } : { name: data.name };
-                models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).find(query, function (error, doc) {
-                    if (error) {
-                        console.log(error);
-                        logWriter.log('Opprtunities.js. create opportunitie.find' + error);
-                        res.send(500, { error: 'Opprtunities.create find error' });
-                    }
-                    if (doc.length > 0) {
-                        if (doc[0].name === data.name) {
-                            logWriter.log('Opprtunities.js. createLead Dublicate Leads' + data.name);
-                            res.send(400, { error: 'An Opportunities with the same Name already exists' });
-                        }
-                    } else if (doc.length === 0) {
-                        savetoDb(data);
-                    }
-                });
+                savetoDb(data);
             }
 
             function savetoDb(data) {
