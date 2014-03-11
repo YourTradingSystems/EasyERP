@@ -62,14 +62,7 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
             date: { type: Date, default: Date.now }
         },
         notes: { type: Array, default: [] },
-        attachments: [{
-            id: { type: Number, default: '' },
-            name: { type: String, default: '' },
-            path: { type: String, default: '' },
-            size: Number,
-            uploaderName: { type: String, default: '' },
-            uploadDate: { type: Date, default: Date.now }
-        }],
+        attachments: { type: Array, default: [] },
         editedBy: {
             user: { type: ObjectId, ref: 'Users', default: null },
             date: { type: Date, default: Date.now }
@@ -1562,7 +1555,7 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                                 res.send(500, { error: 'Task.save BD error' });
                             } else {
                                 event.emit('updateContent', req, res, _task.project, 'create', _task);
-                                res.send(201, { success: 'An new Task crate success', task: _task });
+                                res.send(201, { success: 'An new Task crate success', id: _task._id });
                             }
                         });
                     });

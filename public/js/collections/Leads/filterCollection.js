@@ -1,8 +1,7 @@
 ﻿define([
-    'models/LeadsModel',
-    'common'
+    'models/LeadsModel'
 ],
-    function (LeadsModel, common) {
+    function (LeadsModel) {
         var LeadsCollection = Backbone.Collection.extend({
             model: LeadsModel,
             url: "/Leads/",
@@ -59,6 +58,7 @@
                     data: filterObject,
                     waite: true,
                     success: function (models) {
+                        console.log('Fetch from Server --->' + models.length);
                         that.page ++;
                         that.trigger('showmore', models);
                     },

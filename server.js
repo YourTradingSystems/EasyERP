@@ -193,7 +193,6 @@ app.get('/download/:path', function (req, res) {
 });
 
 function uploadFileArray(req, res, callback) {
-    console.log(req);
     var files = [];
     if (req.files && !req.files.attachfile.length) {
         req.files.attachfile = [req.files.attachfile];

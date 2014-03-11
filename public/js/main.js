@@ -448,6 +448,7 @@ require(['app'], function (app) {
     };
 
     Backbone.View.prototype.deleteRender = function (deleteCounter, deletePage, dataObject) {
+        console.log('deleteRender: deleteCounter=' + deleteCounter + '  this.collectionLength=' + this.collectionLength);
         this.startTime = new Date();
         $("#top-bar-deleteBtn").hide();
         var itemsNumber = parseInt($("#itemsNumber").text());
@@ -481,8 +482,7 @@ require(['app'], function (app) {
                 var gridEnd = deletePage * itemsNumber;
                 if (this.listLength <= gridEnd) {
                     $("#grid-end").text(this.listLength);
-                }
-                else {
+                } else {
                     $("#grid-end").text(gridEnd);
                 }
                 //end
@@ -524,6 +524,7 @@ require(['app'], function (app) {
                     page: deletePage
                 };
                 if (dataObject) _.extend(serchObject, dataObject);
+                console.log('triger showMore');
                 this.collection.showMore(serchObject);
                 this.changeLocationHash(deletePage, itemsNumber);
             }

@@ -91,21 +91,21 @@ define([
                     sortClass = "sortDn";
                 }
                 switch (sortClass) {
-                        case "sortDn":
-                            {
-								target$.parent().find("th").removeClass('sortDn').removeClass('sortUp');
-                                target$.removeClass('sortDn').addClass('sortUp');
-                                sortConst = 1;
-                            }
-                            break;
-                        case "sortUp":
-                            {
-								target$.parent().find("th").removeClass('sortDn').removeClass('sortUp');
-                                target$.removeClass('sortUp').addClass('sortDn');
-                                sortConst = -1;
-                            }
-                            break;
-                    }
+                    case "sortDn":
+                        {
+                            target$.parent().find("th").removeClass('sortDn').removeClass('sortUp');
+                            target$.removeClass('sortDn').addClass('sortUp');
+                            sortConst = 1;
+                        }
+                        break;
+                    case "sortUp":
+                        {
+                            target$.parent().find("th").removeClass('sortDn').removeClass('sortUp');
+                            target$.removeClass('sortUp').addClass('sortDn');
+                            sortConst = -1;
+                        }
+                        break;
+                }
                 sortObject[sortBy] = sortConst;
                 this.fetchSortCollection(sortObject);
                 this.changeLocationHash(1, this.defaultItemsNumber);
@@ -187,7 +187,7 @@ define([
             },
 
             chooseOption: function (e) {
-				var self = this;
+                var self = this;
                 var target$ = $(e.target);
                 var targetElement = target$.parents("td");
                 var id = targetElement.attr("id");
@@ -200,7 +200,7 @@ define([
                     patch: true,
                     validate: false,
                     success: function () {
-						self.showFilteredPage();
+                        self.showFilteredPage();
                     }
                 });
 
@@ -328,7 +328,7 @@ define([
                     context.listLength = response.count || 0;
                 }, this);
             },  //end first last page in paginations
-//modified for filter Vasya
+            //modified for filter Vasya
             switchPageCounter: function (event) {
                 event.preventDefault();
                 this.startTime = new Date();
@@ -400,7 +400,7 @@ define([
                 $("#top-bar-deleteBtn").hide();
                 $('#check_all').prop('checked', false);
                 tBody.empty();
-                var itemView = new listItemView({ collection: this.collection, page: currentEl.find("#currentShowPage").val(), itemsNumber: currentEl.find("span#itemsNumber").text()});
+                var itemView = new listItemView({ collection: this.collection, page: currentEl.find("#currentShowPage").val(), itemsNumber: currentEl.find("span#itemsNumber").text() });
 
                 tBody.append(itemView.render());
             },
@@ -409,7 +409,7 @@ define([
                 var holder = this.$el;
                 var tBody = holder.find('#listTable');
                 tBody.empty();
-                var itemView = new listItemView({ collection: newModels,page: holder.find("#currentShowPage").val(), itemsNumber: holder.find("span#itemsNumber").text() });
+                var itemView = new listItemView({ collection: newModels, page: holder.find("#currentShowPage").val(), itemsNumber: holder.find("span#itemsNumber").text() });
                 tBody.append(itemView.render());
                 itemView.undelegateEvents();
                 var pagenation = holder.find('.pagination');
@@ -440,9 +440,9 @@ define([
                     var checkLength = $("input.checkbox:checked").length;
                     if ($("input.checkbox:checked").length > 0) {
                         $("#top-bar-deleteBtn").show();
-                            if (checkLength == this.collection.length) {
-                                    $('#check_all').prop('checked', true);
-                            }
+                        if (checkLength == this.collection.length) {
+                            $('#check_all').prop('checked', true);
+                        }
                     }
                     else {
                         $("#top-bar-deleteBtn").hide();
@@ -455,10 +455,9 @@ define([
                 dataService.getData('/totalCollectionLength/Projects', {
                     filter: this.filter,
                     newCollection: this.newCollection
-                },
-                    function (response, context) {
-                        context.listLength = response.count || 0;
-                    }, this);
+                }, function (response, context) {
+                    context.listLength = response.count || 0;
+                }, this);
                 this.deleteRender(deleteCounter, deletePage, {
                     filter: this.filter,
                     newCollection: this.newCollection
@@ -470,9 +469,9 @@ define([
                 }
                 var pagenation = this.$el.find('.pagination');
                 if (this.collection.length === 0) {
-                        pagenation.hide();
+                    pagenation.hide();
                 } else {
-                        pagenation.show();
+                    pagenation.show();
                 }
             },
 
@@ -481,42 +480,42 @@ define([
                     mid = 39,
                     model;
                 var localCounter = 0;
-				this.collectionLength = this.collection.length;
-				var count = $("#listTable input:checked").length;
+                this.collectionLength = this.collection.length;
+                var count = $("#listTable input:checked").length;
                 $.each($("tbody input:checked"), function (index, checkbox) {
                     model = that.collection.get(checkbox.value);
                     model.destroy({
                         headers: {
                             mid: mid
                         },
-						wait:true,
-						success:function(){
-							that.listLength--;
-							localCounter++;
+                        wait: true,
+                        success: function () {
+                            that.listLength--;
+                            localCounter++;
 
-							if (index==count-1){
-								that.defaultItemsNumber = $("#itemsNumber").text();
-								that.deleteCounter =localCounter;
-								that.deletePage = $("#currentShowPage").val();
-								that.deleteItemsRender(that.deleteCounter, that.deletePage);
+                            if (index == count - 1) {
+                                that.defaultItemsNumber = $("#itemsNumber").text();
+                                that.deleteCounter = localCounter;
+                                that.deletePage = $("#currentShowPage").val();
+                                that.deleteItemsRender(that.deleteCounter, that.deletePage);
 
-							}
-						},
-						error: function (model, res) {
-							if(res.status===403&&index===0){
-								alert("You do not have permission to perform this action");
-							}
-							that.listLength--;
-							localCounter++;
-							if (index==count-1){
-								that.defaultItemsNumber = $("#itemsNumber").text();
-								that.deleteCounter =localCounter;
-								that.deletePage = $("#currentShowPage").val();
-								that.deleteItemsRender(that.deleteCounter, that.deletePage);
+                            }
+                        },
+                        error: function (model, res) {
+                            if (res.status === 403 && index === 0) {
+                                alert("You do not have permission to perform this action");
+                            }
+                            that.listLength--;
+                            localCounter++;
+                            if (index == count - 1) {
+                                that.defaultItemsNumber = $("#itemsNumber").text();
+                                that.deleteCounter = localCounter;
+                                that.deletePage = $("#currentShowPage").val();
+                                that.deleteItemsRender(that.deleteCounter, that.deletePage);
 
-							}
+                            }
 
-						}
+                        }
                     });
                 });
             }
