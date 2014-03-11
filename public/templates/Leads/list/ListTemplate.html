@@ -11,7 +11,8 @@
     <td id='<%=lead._id%>'>
       <a href="javascript:;" class="stageSelect"><%=(lead.workflow) ? lead.workflow.name : 'Undefinded'%></a>
     </td>
-    <td><%=(lead.createdBy && lead.createdBy.user) ? lead.createdBy.user.login + " (" +  lead.createdBy.date + ")" : "" %></td>
-    <td><%=(lead.editedBy && lead.editedBy.user ) ? lead.editedBy.user.login + " (" +  lead.editedBy.date  + ")" : "" %></td>
-</tr>0
+    <td><%=lead.createdBy.user?(lead.createdBy.date + ' (' + lead.createdBy.user.login + ')'):(lead.createdBy.date?lead.createdBy.date:'')%></td>
+    <td><%=(lead.editedBy&&lead.editedBy.date)?( lead.editedBy.date + ((lead.editedBy.user) ?(' (' + lead.editedBy.user.login + ')') : '')):''%></td>
+
+</tr>
 <% }) %>
