@@ -1080,7 +1080,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                 logWriter.log("Employees.js remove employee.remove " + err);
                 res.send(500, { error: "Can't remove Employees" });
             } else {
-                if (!result.isEmployee) {
+                if (result && !result.isEmployee) {
                     event.emit('updateSequence', models.get(req.session.lastDb - 1, "Employees", employeeSchema), "sequence", result.sequence, 0, result.workflow, result.workflow, false, true, function () {
                         res.send(200, { success: 'Employees removed' });
                     });
