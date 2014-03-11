@@ -219,7 +219,7 @@ define([
                         workflow: target.attr("id"),
                         sequence: -1,
                         sequenceStart: model.toJSON().sequence,
-                        workflowStart: model.toJSON().workflow._id
+                        workflowStart: model.toJSON().workflow?model.toJSON().workflow._id:null
                     },
                     {
                         headers:

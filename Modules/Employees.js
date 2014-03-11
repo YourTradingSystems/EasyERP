@@ -100,6 +100,9 @@ var Employee = function (logWriter, mongoose, event, department, models) {
 
 
        if (data.filter && data.filter.workflow) {
+		   data.filter.workflow = data.filter.workflow.map(function(item){
+			   return item==="null"?null:item;
+		   });
             optionsObject['workflow'] = { $in: data.filter.workflow.objectID() };
        } else if (data && !data.newCollection) {
             optionsObject['workflow'] = { $in: [] };
@@ -659,6 +662,9 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                                         switch (viewType) {
                                             case ('list'): {
                                                 if (data && data.filter && data.filter.workflow) {
+													data.filter.workflow = data.filter.workflow.map(function(item){
+														return item==="null"?null:item;
+													});
                                                       console.log(data.filter.workflow);
                                                       query.where('workflow').in(data.filter.workflow);
                                                 } else if (data && (!data.newCollection || data.newCollection === 'false')) {

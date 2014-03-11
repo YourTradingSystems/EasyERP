@@ -8,7 +8,7 @@
         <a href="javascript:;" data-id="<%=task.project._id%>" class="project"><%=task.project.projectName%></a>
     </td>
     <td id='stages_<%=task._id%>'>
-        <a href="javascript:;" class="stageSelect"><%=(task.workflow) ? task.workflow.name : ''%></a>
+        <a href="javascript:;" class="stageSelect"><%=(task.workflow) ? task.workflow.name : 'Undefinded'%></a>
     </td>
     <td><%=(task.assignedTo) ? task.assignedTo.name.first + ' ' + task.assignedTo.name.last : ''%></td>
     <td><%=task.estimated%></td>

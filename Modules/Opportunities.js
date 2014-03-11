@@ -84,11 +84,14 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
         }
 
         var contentType = req.params.contentType;
-
         var optionsObject = {};
          //modified for filter Vasya
          if (data.filter && data.filter.workflow) {
-               optionsObject['workflow'] = { $in: data.filter.workflow.objectID() };
+			 data.filter.workflow = data.filter.workflow.map(function(item){
+				 return item==="null"?null:item;
+			 });
+
+             optionsObject['workflow'] = { $in: data.filter.workflow.objectID() };
          } else if (data && !data.newCollection) {
                optionsObject['workflow'] = { $in: [] };
          }
@@ -627,7 +630,13 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                                 }else{
 									query.sort({"editedBy.date":-1});
 								}
+                                if (data && data.filter && data.filter.workflow) {
+									data.filter.workflow = data.filter.workflow.map(function(item){
+										return item==="null"?null:item;
+									});
+								}
                                 switch (data.contentType) {
+  
                                     case ('Opportunities'): {
                                     if (data && data.filter && data.filter.workflow) {
                                           console.log(data.filter.workflow);
@@ -641,10 +650,9 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                                             populate('createdBy.user', 'login').
                                             populate('editedBy.user', 'login');
                                     }
-                                        break;
+                                    break;
                                     case ('Leads'): {
                                     if (data && data.filter && data.filter.workflow) {
-                                          console.log(data.filter.workflow);
                                           query.where('workflow').in(data.filter.workflow);
                                     } else if (data && (!data.newCollection || data.newCollection === 'false')) {
                                           query.where('workflow').in([]);
@@ -1313,7 +1321,9 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
 
         updateOnlySelectedFields: updateOnlySelectedFields,
 
-        remove: remove
+        remove: remove,
+
+		opportunitiesSchema:opportunitiesSchema
     }
 };
 module.exports = Opportunities;

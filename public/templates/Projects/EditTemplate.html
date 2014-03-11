@@ -50,18 +50,11 @@
                 <dd>
 				  <a id="customerDd" data-id="<%=model.customer?model.customer._id:''%>" class="current-selected" href="javascript:;"><%=model.customer?(model.customer.name.first+' '+model.customer.name.last):'Select'%></a>
                 </dd>
-                <!--<dt>
-                  <label for="workflowNamesDd">Workflow Name</label>
-                </dt>
-                <dd>
-                  <select id="workflowNamesDd">
-                  </select>
-                </dd>-->
                 <dt>
-                                    <label for="workflowsDd">Status</label>
-                                </dt>
+                  <label for="workflowsDd">Status</label>
+                </dt>
                   <dd>
-                      <a id="workflowsDd" data-id="<%=(model.workflow) ? model.workflow._id : ''%>" class="current-selected" href="javascript:;"><%=(model.workflow)?model.workflow.name:'Select'%></a>
+                      <a id="workflowsDd" data-id="<%=(model.workflow) ? model.workflow._id : ''%>" class="current-selected" href="javascript:;"><%=(model.workflow)?model.workflow.name:'Undefinded'%></a>
                   </dd>
                   <dt><label for="health">Health</label></dt>
                   <dd id="health">
@@ -98,9 +91,9 @@
 
 			<div class="half-block left">
               <div class="canReadAndWrite">
-                                <input type="radio" name="whoCanRW" value="everyOne"><%=(model.whoCanRW=="everyOne")?'checked="checked"':''%> checked="checked"/>Everyone<br>
-                                <input type="radio" name="whoCanRW" value="owner"><%=(model.whoCanRW=="owner")?'checked="checked"':''%>/>Owner<br>
-                                <input type="radio" name="whoCanRW" value="group"><%=(model.whoCanRW=="group")?'checked="checked"':''%>/>Owner, Users and Users in Groups
+                                <input type="radio" name="whoCanRW" value="everyOne" <%=(model.whoCanRW=="everyOne")?'checked="checked"':''%> />Everyone<br>
+                                <input type="radio" name="whoCanRW" value="owner" <%=(model.whoCanRW=="owner")?'checked="checked"':''%> />Owner<br>
+                                <input type="radio" name="whoCanRW" value="group" <%=(model.whoCanRW=="group")?'checked="checked"':''%> />Owner, Users and Users in Groups
               </div>
 			</div>
 			<div class="half-block left">

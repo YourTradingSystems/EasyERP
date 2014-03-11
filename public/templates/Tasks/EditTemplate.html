@@ -16,7 +16,7 @@
             <input type="text" name="summary" class="input-title-long blueback projectSummary" id="summaryEdit" value="<%=model.summary%>" required maxlength="32" />
             <div class="half-block left withPaddingLeftProject taskNote">
                 <div class="">
-                    <textarea type="text" name="description" class="taskDescriptionCreate" placeholder="Add a Description" id="description" required  maxlength="500"><%=model.description%> </textarea>
+                    <textarea type="text" name="description" class="taskDescriptionEdit" placeholder="Add a Description" id="description" required  maxlength="500"><%=model.description%> </textarea>
                 </div>
             </div>
             <div class="half-block left withPaddingRightProject">
@@ -26,14 +26,9 @@
                         <dd>
                             <a id="projectDd" data-shortdesc="<%=model.project.projectShortDesc%>" data-id="<%=model.project._id%>" class="current-selected" href="javascript:;"><%=model.project.projectName%></a>
                         </dd>
-                        <dt><label for="workflowNamesDd">Workflow</label></dt>
-                        <dd>
-                            <a id="workflowNamesDd" data-id="<%=model.workflow.wName%>" class="current-selected" href="javascript:;"><%=model.workflow.wName%></a>
-
-                        </dd>
                         <dt><label for="workflowsDd">Stage </label></dt>
                         <dd>
-                            <a id="workflowsDd" data-id="<%=model.workflow._id%>" class="current-selected" href="javascript:;"><%=model.workflow.name%></a>
+						  <a id="workflowsDd" data-id="<%=(model.workflow) ? model.workflow._id : ''%>" class="current-selected" href="javascript:;"><%=(model.workflow)?model.workflow.name:'Undefinded'%></a>
                         </dd>
 
                         <dt><label>Type </label></dt>

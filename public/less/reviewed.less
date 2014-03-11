@@ -1722,8 +1722,10 @@ input::-ms-clear {
 		width:210px;
       }
       &.taskDescriptionEdit {
-        height: 210px;
+        height: 188px;
 		margin-top:8px !important;
+		margin-left:1px;
+		width:210px;
       }
       &.projectDescriptionCreate {
         height: 230px;
@@ -2900,6 +2902,7 @@ dl {
     display: block;
     background: #fff;
     clear: both;
+	position:relative;
   }
 }
 
@@ -4640,4 +4643,12 @@ input::-webkit-inner-spin-button {
 }
 #convert-dialog-form{
 	display:none;
+}
+.canReadAndWrite{
+	line-height:22px;
+	input{
+		clear:both;
+		display:block;
+		float:left;
+	}
 }

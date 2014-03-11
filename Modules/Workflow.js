@@ -1,4 +1,4 @@
-var Workflow = function (logWriter, mongoose, models) {
+var Workflow = function (logWriter, mongoose, models, event) {
 
     var workflowSchema = mongoose.Schema({
         wId: String,
@@ -271,6 +271,7 @@ var Workflow = function (logWriter, mongoose, models) {
                     logWriter.log("workflow.js remove workflow.remove " + err);
                     res.send(500, { error: "Can't remove Company" });
                 } else {
+					event.emit('removeWorkflow', req, workflow.wId, workflow._id);
 					updateSequence(models.get(req.session.lastDb - 1, "workflows", workflowSchema), "sequence", workflow.sequence, workflow.sequence, workflow.wId, false, true, function(sequence){
 						res.send(200, { success: 'workflow removed' });
 					});

@@ -620,7 +620,7 @@
                        whoCanRW: whoCanRW
                    };
                    var currentWorkflow = this.currentModel.get('workflow');
-                   if (currentWorkflow._id && (currentWorkflow._id != workflow)) {
+                   if (currentWorkflow && currentWorkflow._id && (currentWorkflow._id != workflow)) {
                        data['workflow'] = workflow;
                        data['sequence'] = -1;
                        data['sequenceStart'] = this.currentModel.toJSON().sequence;

@@ -719,7 +719,10 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                             if (!err) {
                                 var query = models.get(req.session.lastDb - 1, "Project", ProjectSchema).find().where('_id').in(result);
                                 if (data && data.filter && data.filter.workflow) {
-                                    console.log(data.filter.workflow);
+									data.filter.workflow = data.filter.workflow.map(function(item){
+										return item==="null"?null:item;
+									});
+
                                     query.where('workflow').in(data.filter.workflow);
                                 } else if (data && (!data.newCollection || data.newCollection === 'false')) {
                                     query.where('workflow').in([]);
@@ -931,7 +934,10 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
 
                             var query = models.get(req.session.lastDb - 1, "Project", ProjectSchema).find().where('_id').in(result);
                                 if (data && data.filter && data.filter.workflow) {
-                                    console.log(data.filter.workflow);
+									data.filter.workflow = data.filter.workflow.map(function(item){
+										return item==="null"?null:item;
+									});
+
                                     query.where('workflow').in(data.filter.workflow);
                                 } else if (data && (!data.newCollection || data.newCollection === 'false')) {
                                     query.where('workflow').in([]);
@@ -996,6 +1002,9 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
             addObj['_id'] = newObjectId(data.parrentContentId);
         }
         if (data && data.type !== 'Tasks' && data.filter && data.filter.workflow) {
+			 data.filter.workflow = data.filter.workflow.map(function(item){
+				 return item==="null"?null:item;
+			 });
             addObj['workflow'] = { $in: data.filter.workflow.objectID() };
         } else if (data && !data.newCollection) {
             addObj['workflow'] = { $in: [] };
@@ -1060,6 +1069,10 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                                     var query = models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).
                                         where('project').in(projectsId.objectID());
                                     if (data && data.filter && data.filter.workflow) {
+										data.filter.workflow = data.filter.workflow.map(function(item){
+											return item==="null"?null:item;
+										});
+
                                         query.where('workflow').in(data.filter.workflow);
                                     } else if (data && (!data.newCollection || data.newCollection === 'false')) {
                                         query.where('workflow').in([]);
@@ -1824,6 +1837,10 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                                 var query = models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).
                                     where('project').in(projectsId.objectID());
                                 if (data && data.filter && data.filter.workflow) {
+									data.filter.workflow = data.filter.workflow.map(function(item){
+										return item==="null"?null:item;
+									});
+
                                     console.log(data.filter.workflow);
                                     query.where('workflow').in(data.filter.workflow);
                                 } else if (data && (!data.newCollection || data.newCollection === 'false')) {

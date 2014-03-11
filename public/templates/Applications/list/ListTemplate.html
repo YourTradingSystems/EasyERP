@@ -9,7 +9,7 @@
             <td class = "notForm"><a href="skype:<%=application.workPhones.phone%>?call"><%=application.workPhones.phone%></a></td>
             <td><%=(application.jobPosition) ? application.jobPosition.name : ''%></td>
 			<td id='<%=application._id%>' data-sequence='<%=application.sequence%>'>
-			  <a href="javascript:;" class="stageSelect" data-id="<%=(application.workflow) ? application.workflow._id : ''%>"><%=(application.workflow) ? application.workflow.name : 'Select'%></a>
+			  <a href="javascript:;" class="stageSelect" data-id="<%=(application.workflow) ? application.workflow._id : ''%>"><%=(application.workflow) ? application.workflow.name : 'Undefinded'%></a>
 			</td>
             <td><%=application.jobType%></td>
             <td><%=(application.createdBy && application.createdBy.user) ? application.createdBy.user.login + " (" + application.createdBy.date + ")" : ''%></td>

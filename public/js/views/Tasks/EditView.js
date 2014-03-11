@@ -340,13 +340,13 @@
                       sequenceStart: this.currentModel.toJSON().sequence
                   };
                   var currentWorkflow = this.currentModel.get('workflow');
-                  if (currentWorkflow._id && (currentWorkflow._id != workflow)) {
+                  if (currentWorkflow && currentWorkflow._id && (currentWorkflow._id != workflow)) {
                       data['workflow'] = workflow;
                       data['sequence'] = -1;
                       data['workflowStart'] = this.currentModel.toJSON().workflow._id
                   };
                   var currentProject = this.currentModel.get('project');
-                  if (currentProject._id && (currentProject._id != project)) {
+                  if (currentProject && currentProject._id && (currentProject._id != project)) {
                       data['project'] = project;
                   };
 

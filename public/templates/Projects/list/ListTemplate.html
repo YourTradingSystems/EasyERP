@@ -9,7 +9,7 @@
     <td><%=project.TargetEndDate%></td>
     <td><progress name="projectProgress" max="100" value="<%=project.progress%>" /></td>
     <td id='<%=project._id%>'>
-        <a href="javascript:;" class="stageSelect"><%=(project.workflow) ? project.workflow.name : ''%></a>
+        <a href="javascript:;" class="stageSelect"><%=(project.workflow) ? project.workflow.name : 'Undefinded'%></a>
     </td>
     <td id="health" data-id="<%=project._id%>">
         <div class="health-container">
