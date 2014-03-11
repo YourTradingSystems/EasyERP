@@ -429,9 +429,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                 myItem["$project"]["year"]["$year"] = "$convertedDate";
             }
             var c = new Date() - data.dataRange * 24 * 60 * 60 * 1000;
-			console.log(data.dataRange);
             var a = new Date(c);
-			console.log(a);
             models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).aggregate(
 				{
 				    $match: {
