@@ -62,8 +62,8 @@
                           <li id="other">other</li>
 						</ul>
                       </dd>
-                      <dt><label for="workflowsDd">Workflow</label></dt><dd id="selectWorkflow">
-						<a id="workflowsDd" data-id="<%=model.workflow._id%>" class="current-selected" href="javascript:;"><%=model.workflow.name%></a>
+                      <dt><label for="workflowsDd">Stage</label></dt><dd id="selectWorkflow">
+                      <a id="workflowsDd" data-id="<%=(model.workflow) ? model.workflow._id : ''%>" class="current-selected" href="javascript:;"><%=(model.workflow)?model.workflow.name:'Undefinded'%></a>
 					  </dd>
                      <dt><label for="jobTypeDd">Job type</label></dt>
                       <dd>

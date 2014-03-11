@@ -206,6 +206,7 @@ define([
                 $(".edit-companies-dialog").remove();
                 $(".add-group-dialog").remove();
                 $(".add-user-dialog").remove();
+                $(".crop-images-dialog").remove();
             },
             showEdit: function () {
                 $(".upload").animate({
@@ -241,6 +242,7 @@ define([
                 this.$(".tab").hide().eq(index).show();
             },
             saveItem: function (event) {
+				var self = this;
                 if(event) event.preventDefault();
                 var mid = 39;
 
@@ -309,15 +311,7 @@ define([
                         Backbone.history.navigate("#easyErp/Companies/form/" + model.id, { trigger: true });
                     },
                     error: function (model, xhr) {
-						if (xhr && (xhr.status === 401||xhr.status === 403)) {
-							if (xhr.status === 401){
-								Backbone.history.navigate("login", { trigger: true });
-							}else{
-								alert("You do not have permission to perform this action");								
-							}
-                        } else {
-                            Backbone.history.navigate("home", { trigger: true });
-                        }
+						self.errorNotification(xhr);
                     }
 
                 });
@@ -357,7 +351,7 @@ define([
 					closeOnEscape: false,
                     autoOpen: true,
                     resizable: false,
-                    dialogClass: "edit-dialog",
+                    dialogClass: "edit-companies-dialog",
                     width: "80%",
                     //height: 513,
                     title: 'Edit Company',
@@ -365,15 +359,16 @@ define([
                         {
                             text: "Save",
                             click: function () { self.saveItem(); }
-                        },{
-                        text: "Cancel",
-                        click: function () { $(this).dialog().remove(); }
-                    },
-                    {
-                        text: "Delete",
-                        class: "btn",
-                        click: self.deleteItem
-                    }],
+                        },
+
+						{
+							text: "Cancel",
+							click: function () { self.hideDialog(); }
+						},
+						{
+							text: "Delete",
+							click: self.deleteItem }
+						],
                     //closeOnEscape: false,
                     modal: true
                 });

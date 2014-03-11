@@ -320,16 +320,7 @@ define([
                         Backbone.history.navigate("easyErp/JobPositions", { trigger: true });
                     },
                     error: function (model, xhr) {
-                        self.hideDialog();
-						if (xhr && (xhr.status === 401||xhr.status === 403)) {
-							if (xhr.status === 401){
-								Backbone.history.navigate("login", { trigger: true });
-							}else{
-								alert("You do not have permission to perform this action");								
-							}
-                        } else {
-                            Backbone.history.navigate("home", { trigger: true });
-                        }
+    					self.errorNotification(xhr);
                     }
                 });
 
@@ -353,13 +344,8 @@ define([
                                 $('.edit-dialog').remove();
                                 Backbone.history.navigate("easyErp/" + self.contentType, { trigger: true });
                             },
-                            error: function (model, err) {
-								if (err.status===403){
-									alert("You do not have permission to perform this action");
-								}else{
-									$('.edit-dialog').remove();
-									Backbone.history.navigate("home", { trigger: true });
-								}
+                            error: function (model, xhr) {
+    							self.errorNotification(xhr);
                             }
                         });
                 }

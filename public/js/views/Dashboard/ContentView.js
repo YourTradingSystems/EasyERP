@@ -23,7 +23,7 @@ define([
                    "click .choseDateRange .item": "newRange",
                    "click .choseDateRangeSource .item": "newRangeSource",
                    "click .choseDateItem .item": "newItem",
-				   'click .chart-tabs a': 'changeTab',
+				   'click .chart-tabs a': 'changeTab'
                },
 			   changeTab:function(e){
 				   $(e.target).closest(".chart-tabs").find("a.active").removeClass("active");
@@ -243,11 +243,64 @@ define([
 						   .y(function (d) { return y2(d.count); })
 						   .interpolate("monotone");
 //                       data.sort(function (a, b) { return d3.ascending(a.source, b.source); });
+					   if(self.dateItem == "DW"){
+						   var dt = _.unique(_.map(data, function(item){
+							   return item.source;
+						   }));
+						   for (var i=1;i<8;i++){
+							   if (dt.indexOf(i)===-1)
+								   data.push({count: 0, date: [0],isOpp: true, source: i,year: 2014});
+								   data.push({count: 0, date: [0],source: i,isOpp: true,year: 2014});
+						   }
+                       data.sort(function (a, b) { return d3.ascending(a.source, b.source); });
+
+					   }
+					   if(self.dateItem == "DM"){
+						   var dt = _.unique(_.map(data, function(item){
+							   return item.source;
+						   }));
+						   for (var i=1;i<32;i++){
+							   if (dt.indexOf(i)===-1)
+								   data.push({count: 0, date: [0],isOpp: true, source: i,year: 2014});
+								   data.push({count: 0, date: [0],source: i,isOpp: true,year: 2014});
+						   }
+                       data.sort(function (a, b) { return d3.ascending(a.source, b.source); });
+
+					   }
+				   if(self.dateItem == "M" && self.dateRange == 365){
+						   var dt = _.unique(_.map(data, function(item){
+							   return item.source;
+						   }));
+						   for (var i=1;i<13;i++){
+							   if (dt.indexOf(i)===-1)
+								   data.push({count: 0, date: [0],isOpp: true, source: i,year: 2014});
+								   data.push({count: 0, date: [0],source: i,isOpp: true,year: 2014});
+						   }
+                       data.sort(function (a, b) { return d3.ascending(a.source, b.source); });
+
+					   }
 					   if(self.dateItem == "D"){
+						   
+						   var dt = _.unique(_.map(data, function(item){
+							   return item.source;
+						   }));
+						   for (var i=0;i<self.dateRange;i++){
+							   var now = new Date(new Date()-i * 24 * 60 * 60 * 1000);
+							   var start = new Date(now.getFullYear(), 0, 0);
+							   var diff = now - start;
+							   var oneDay = 1000 * 60 * 60 * 24;
+							   var dayofYera = Math.floor(diff / oneDay);
+							   if (dt.indexOf(dayofYera)===-1)
+								   data.push({count: 0, date: [now],isOpp: true, source: dayofYera,year: now.getFullYear()});
+								   data.push({count: 0, date: [now],source: dayofYera,isOpp: true,year: now.getFullYear()});
+						   }
 						   data = _.map(data, function(item){
 							   item.source = item.source+item.year*10000;
 							   return item;
 						   });
+
+                       data.sort(function (a, b) { return d3.ascending(a.source, b.source); });
+
 					   }
 					   data.forEach(function(item){
 						   self.numberToDate[item.source] = item.date[0]
@@ -269,7 +322,8 @@ define([
 					   }));
 					   unicSource = _.unique(unicSource);
 					   unicSource.sort(function (a, b) { return d3.ascending(a, b); });
-
+					   console.log("unicSource");
+					   console.log(unicSource);
 					   dataAll = []
 					   for (var z=0;z<unicSource.length;z++){
 						   var d1 = 0;
@@ -292,6 +346,8 @@ define([
 						   }
 						   dataAll.push(({source:unicSource[z],count:d1+d2}));
 					   }
+					   console.log("dataAll");
+					   console.log(dataAll);
                        var maxval = d3.max(data1, function (d) { return d.count; });
 					   data1 = dataAll;
                        var scale = 1;

@@ -1,5 +1,5 @@
 <% leadsCollection.forEach(function(lead, index){ %>
-<tr data-id="<%=lead._id%>" class="stage-<%=(lead.workflow) ? lead.workflow.name.toLowerCase() : ''%>">
+<tr data-id="<%=lead._id%>" class="stage-<%=(lead.workflow) ? lead.workflow.status.toLowerCase() : ''%>">
     <td class="notForm"><input type="checkbox" value="<%=lead._id%>" class="checkbox" /></td>
     <td><%=startNumber + index + 1%></td>
     <td><%=lead.name%></td>
@@ -9,9 +9,9 @@
     <td><%=lead.campaign%></td>
     <td><%=lead.source%></td>
     <td id='<%=lead._id%>'>
-      <a href="javascript:;" class="stageSelect"><%=(lead.workflow) ? lead.workflow.name : ''%></a>
+      <a href="javascript:;" class="stageSelect"><%=(lead.workflow) ? lead.workflow.name : 'Undefinded'%></a>
     </td>
     <td><%=(lead.createdBy && lead.createdBy.user) ? lead.createdBy.user.login + " (" +  lead.createdBy.date + ")" : "" %></td>
     <td><%=(lead.editedBy && lead.editedBy.user ) ? lead.editedBy.user.login + " (" +  lead.editedBy.date  + ")" : "" %></td>
-</tr>
+</tr>0
 <% }) %>

@@ -28,7 +28,7 @@ define([
                 }
                 if (response.createdBy)
                     response.createdBy.date = common.utcDateToLocaleDateTime(response.createdBy.date);
-                if (response.editedBy)
+                if (response.editedBy&&response.editedBy.date)
                     response.editedBy.date = common.utcDateToLocaleDateTime(response.editedBy.date);
                 if (response && response.notes) {
                     _.map(response.notes, function (notes) {

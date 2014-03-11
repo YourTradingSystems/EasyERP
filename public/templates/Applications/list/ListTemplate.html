@@ -1,5 +1,5 @@
     <% applicationsCollection.forEach(function(application, index){ %>
-        <tr data-index="<%= index + 1 %>" data-id="<%=application._id%>" class="stage-<%=(application.workflow) ? application.workflow.name.toLowerCase().replace(' ','') : ''%>">
+        <tr data-index="<%= index + 1 %>" data-id="<%=application._id%>" class="stage-<%=(application.workflow) ? application.workflow.status.toLowerCase().replace(' ','') : ''%>">
             <td class = "notForm"><input type="checkbox" value="<%=application._id%>" class="checkbox" /></td>
             <td><%=startNumber + index + 1 %></td>
             <!-- <td><%=application.creationDate%></td> -->
@@ -9,7 +9,7 @@
             <td class = "notForm"><a href="skype:<%=application.workPhones.phone%>?call"><%=application.workPhones.phone%></a></td>
             <td><%=(application.jobPosition) ? application.jobPosition.name : ''%></td>
 			<td id='<%=application._id%>' data-sequence='<%=application.sequence%>'>
-			  <a href="javascript:;" class="stageSelect" data-id="<%=(application.workflow) ? application.workflow._id : ''%>"><%=(application.workflow) ? application.workflow.name : 'Select'%></a>
+			  <a href="javascript:;" class="stageSelect" data-id="<%=(application.workflow) ? application.workflow._id : ''%>"><%=(application.workflow) ? application.workflow.name : 'Undefinded'%></a>
 			</td>
             <td><%=application.jobType%></td>
             <td><%=(application.createdBy && application.createdBy.user) ? application.createdBy.user.login + " (" + application.createdBy.date + ")" : ''%></td>

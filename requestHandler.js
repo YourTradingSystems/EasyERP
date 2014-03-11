@@ -7,7 +7,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         access = require("./Modules/additions/access.js")(profile.schema, users, models, logWriter),
         employee = require("./Modules/Employees.js")(logWriter, mongoose, event, department, models),
         customer = require("./Modules/Customers.js")(logWriter, mongoose, models, department),
-        workflow = require("./Modules/Workflow.js")(logWriter, mongoose, models),
+        workflow = require("./Modules/Workflow.js")(logWriter, mongoose, models, event),
         project = require("./Modules/Projects.js")(logWriter, mongoose, department, models, workflow, event),
         jobPosition = require("./Modules/JobPosition.js")(logWriter, mongoose, employee, department, models),
         degrees = require("./Modules/Degrees.js")(logWriter, mongoose, models),
@@ -19,6 +19,38 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         jobType = require("./Modules/JobType.js")(logWriter, mongoose, models),
         birthdays = require("./Modules/Birthdays.js")(logWriter, mongoose, employee, models, event);
 
+	//binding for remove Workflow
+	event.on('removeWorkflow',function (req, wId, id) {
+		var query;
+		switch(wId){
+			case "Opportunities":
+			case "Leads":
+			query = models.get(req.session.lastDb - 1, "Opportunities", opportunities.opportunitiesSchema);
+			break;
+			case "Projects":
+			query = models.get(req.session.lastDb - 1, "Project", project.ProjectSchema);
+			break;
+			case "Tasks":
+			query = models.get(req.session.lastDb - 1, "Tasks", project.TasksSchema);
+			break;
+			case "Applications":
+			query = models.get(req.session.lastDb - 1, "Employees", employee.employeeSchema);
+			break;
+			case "Jobpositions":
+			query = models.get(req.session.lastDb - 1, 'JobPosition', jobPosition.jobPositionSchema);
+			break;
+
+		}
+		if (query){
+			query.update({workflow:id},{workflow:null},{multi:true}).exec(function(err,result){
+				if (err) {
+					console.log(err);
+					logWriter.log("Removed workflow update " + err);
+				}
+				console.log(result);
+			});
+		}
+	});
 	//binding for Sequence
 	event.on('updateSequence',function (model, sequenceField, start, end, workflowStart, workflowEnd, isCreate, isDelete, callback) {
         var query;
@@ -85,12 +117,16 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         var _arrayOfID = [];
         var newObjectId = mongoose.Types.ObjectId;
         for (var i = 0; i < this.length; i++) {
-            if (typeof this[i] == 'object' && this[i].hasOwnProperty('_id')) {
+            if (this[i] && typeof this[i] == 'object' && this[i].hasOwnProperty('_id')) {
                 _arrayOfID.push(this[i]._id);
             } else {
                 if (typeof this[i] == 'string' && this[i].length === 24) {
                     _arrayOfID.push(newObjectId(this[i]));
                 }
+                if (this[i] === null) {
+                    _arrayOfID.push(null);
+                }
+
             }
         }
         return _arrayOfID;

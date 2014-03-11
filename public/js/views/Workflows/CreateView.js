@@ -78,8 +78,8 @@ define([
                     	self.hideDialog();
                     	common.checkBackboneFragment("easyErp/Workflows", { trigger: true });
                     },
-                    error: function () {
-                        Backbone.history.navigate("easyErp", { trigger: true });
+                    error: function (model, xhr) {
+    					self.errorNotification(xhr);
                     }
                 });
             },

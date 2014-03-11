@@ -240,6 +240,12 @@ define([
                 var holder = this.$el;
                 holder.find("#listTable").empty();
                 holder.append(new listItemView({ collection: newModels, page: holder.find("#currentShowPage").val(), itemsNumber: holder.find("span#itemsNumber").text() }).render());
+                var pagenation = holder.find('.pagination');
+                if (newModels.length !== 0) {
+                    pagenation.show();
+                } else {
+                    pagenation.hide();
+                }
                 $("#top-bar-deleteBtn").hide();
                 $('#check_all').prop('checked', false);
                 holder.find('#timeRecivingDataFromServer').remove();

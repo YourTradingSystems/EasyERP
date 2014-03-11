@@ -84,11 +84,14 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
         }
 
         var contentType = req.params.contentType;
-
         var optionsObject = {};
          //modified for filter Vasya
          if (data.filter && data.filter.workflow) {
-               optionsObject['workflow'] = { $in: data.filter.workflow.objectID() };
+			 data.filter.workflow = data.filter.workflow.map(function(item){
+				 return item==="null"?null:item;
+			 });
+
+             optionsObject['workflow'] = { $in: data.filter.workflow.objectID() };
          } else if (data && !data.newCollection) {
                optionsObject['workflow'] = { $in: [] };
          }
@@ -191,22 +194,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                 res.send(400, { error: 'Opprtunities.create Incorrect Incoming Data' });
                 return;
             } else {
-                var query = (data.jobkey) ? { $and: [{ name: data.name }, { jobkey: data.jobkey }] } : { name: data.name };
-                models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).find(query, function (error, doc) {
-                    if (error) {
-                        console.log(error);
-                        logWriter.log('Opprtunities.js. create opportunitie.find' + error);
-                        res.send(500, { error: 'Opprtunities.create find error' });
-                    }
-                    if (doc.length > 0) {
-                        if (doc[0].name === data.name) {
-                            logWriter.log('Opprtunities.js. createLead Dublicate Leads' + data.name);
-                            res.send(400, { error: 'An Opportunities with the same Name already exists' });
-                        }
-                    } else if (doc.length === 0) {
-                        savetoDb(data);
-                    }
-                });
+                savetoDb(data);
             }
 
             function savetoDb(data) {
@@ -417,6 +405,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
         if (data.source) {
 
             var c = new Date() - data.dataRange * 24 * 60 * 60 * 1000;
+			console.log(data.dataRange);
             var a = new Date(c);
             models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).aggregate({ $match: { $and: [{ createdBy: { $ne: null },source: {$ne:""}, $or: [{ isConverted: true }, { isOpportunitie: false }] }, { 'createdBy.date': { $gte: a } }] } }, { $group: { _id: { source: "$source", isOpportunitie: "$isOpportunitie" }, count: { $sum: 1 } } }, { $project: { "source": "$_id.source", count: 1, "isOpp": "$_id.isOpportunitie", _id: 0 } }).exec(function (err, result) {
                 if (err) {
@@ -636,8 +625,16 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                                 var query = models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).find().where('_id').in(result);
                                 if (data.sort) {
                                       query.sort(data.sort);
-                                }
+                                }else{
+									query.sort({"editedBy.date":-1});
+								}
+                                if (data && data.filter && data.filter.workflow) {
+									data.filter.workflow = data.filter.workflow.map(function(item){
+										return item==="null"?null:item;
+									});
+								}
                                 switch (data.contentType) {
+  
                                     case ('Opportunities'): {
                                     if (data && data.filter && data.filter.workflow) {
                                           console.log(data.filter.workflow);
@@ -646,15 +643,14 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                                           query.where('workflow').in([]);
                                     }
                                         query.populate('customer', 'name').
-                                            populate('workflow', '_id name').
+                                            populate('workflow', '_id name status').
                                             populate('salesPerson', 'name').
                                             populate('createdBy.user', 'login').
                                             populate('editedBy.user', 'login');
                                     }
-                                        break;
+                                    break;
                                     case ('Leads'): {
                                     if (data && data.filter && data.filter.workflow) {
-                                          console.log(data.filter.workflow);
                                           query.where('workflow').in(data.filter.workflow);
                                     } else if (data && (!data.newCollection || data.newCollection === 'false')) {
                                           query.where('workflow').in([]);
@@ -662,7 +658,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
 
                                         query.select("_id createdBy editedBy name workflow contactName phones campaign source email contactName").
                                             populate('company', 'name').
-                                            populate('workflow', "name").
+                                            populate('workflow', "name status").
                                             populate('createdBy.user', 'login').
                                             populate('editedBy.user', 'login');
                                     }
@@ -1323,7 +1319,9 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
 
         updateOnlySelectedFields: updateOnlySelectedFields,
 
-        remove: remove
+        remove: remove,
+
+		opportunitiesSchema:opportunitiesSchema
     }
 };
 module.exports = Opportunities;

@@ -278,6 +278,7 @@ define([
                 $(".create-dialog").remove();
                 $(".add-group-dialog").remove();
                 $(".add-user-dialog").remove();
+                $(".crop-images-dialog").remove();
             },
 
             saveItem: function () {
@@ -373,16 +374,7 @@ define([
 							Backbone.history.navigate("easyErp/Companies", { trigger: true });
                         },
                         error: function (models, xhr) {
-                            self.hideDialog();
-						if (xhr && (xhr.status === 401||xhr.status === 403)) {
-							if (xhr.status === 401){
-								Backbone.history.navigate("login", { trigger: true });
-							}else{
-								alert("You do not have permission to perform this action");								
-							}
-                        } else {
-                            Backbone.history.navigate("home", { trigger: true });
-                        }
+							self.errorNotification(xhr);
 						}
                     });
 
@@ -396,18 +388,22 @@ define([
 					closeOnEscape: false,
                     autoOpen:true,
                     resizable:true,
-					dialogClass:"edit-dialog",
-					title: "Edit Company",
+					dialogClass:"create-dialog",
+					title: "Create Company",
 					width:"80%",
                     buttons: [
                         {
                             text: "Create",
-                            click: function () { self.saveItem(); }
+                            click: function () {
+                                self.saveItem();
+                            }
                         },
 
 						{
-							text: "Cancel",
-							click: function () { $(this).dialog().remove(); }
+						    text: "Cancel",
+						    click: function () {
+                                self.hideDialog();
+                            }
 						}]
 
                 });

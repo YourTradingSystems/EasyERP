@@ -368,7 +368,9 @@ var JobPosition = function (logWriter, mongoose, employee, department, models) {
 								console.log(data);
                                 if (data.sort) {
                                     query.sort(data.sort);
-                                }
+                                }else{
+									query.sort({"editedBy.date":-1});
+								}
                                 query.select("_id createdBy editedBy name department totalForecastedEmployees numberOfEmployees expectedRecruitment workflow").
                                     populate('createdBy.user', 'login').
                                     populate('editedBy.user', 'login').

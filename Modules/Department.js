@@ -1,5 +1,6 @@
 var Department = function (logWriter, mongoose, models) {
     var ObjectId = mongoose.Schema.Types.ObjectId;
+    var newObjectId = mongoose.Types.ObjectId;
     var DepartmentSchema = mongoose.Schema({
         departmentName: { type: String, default: 'emptyDepartment' },
         parentDepartment: { type: ObjectId, ref: 'Department', default: null },
@@ -359,7 +360,23 @@ var Department = function (logWriter, mongoose, models) {
             res.send(500, { error: 'Department updated error' });
         }
     }
+	
+	function removeAllChild(req,arrId,callback){
+		if (arrId.length>0){
+			models.get(req.session.lastDb - 1, 'Department', DepartmentSchema).find({ parentDepartment: {$in: arrId} },{_id:1},function(err,res){
+				models.get(req.session.lastDb - 1, 'Department', DepartmentSchema).find({ parentDepartment: {$in: arrId} },{multi:true}).remove().exec(function (err, result) {
+					arrId = res.map(function(item){
+						return item._id;
+					});
+					removeAllChild(req,arrId, callback);
+			});
 
+			});
+		}else{
+			if (callback)callback();
+		}
+	}
+	
     function remove(req, _id, res) {
         models.get(req.session.lastDb - 1, 'Department', DepartmentSchema).remove({ _id: _id }, function (err, result) {
             if (err) {
@@ -367,7 +384,9 @@ var Department = function (logWriter, mongoose, models) {
                 logWriter.log("Department.js remove department.remove " + err);
                 res.send(500, { error: "Can't remove Department" });
             } else {
-                res.send(200, { success: 'Department removed' });
+				removeAllChild(req, [_id].objectID(),function(){
+					res.send(200, { success: 'Department removed' });
+				});
             }
         });
     };

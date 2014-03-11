@@ -1,5 +1,5 @@
 <% tasksCollection.forEach(function(task, index){ %>
-<tr data-index="<%=index%>" data-id="<%= task._id%>" class="stage-<%=(task.workflow) ? task.workflow.name.toLowerCase() : ''%>">
+<tr data-index="<%=index%>" data-id="<%= task._id%>" class="stage-<%=(task.workflow) ? task.workflow.status.toLowerCase() : ''%>">
     <td><input type="checkbox" value="<%=task._id%>" class="checkbox" /></td>
     <td><%=startNumber + index + 1%></td>
     <td><%=(task.project) ? task.project.projectShortDesc : ''%><%=task.taskCount%></td>
@@ -8,7 +8,7 @@
         <a href="javascript:;" data-id="<%=task.project._id%>" class="project"><%=task.project.projectName%></a>
     </td>
     <td id='stages_<%=task._id%>'>
-        <a href="javascript:;" class="stageSelect"><%=(task.workflow) ? task.workflow.name : ''%></a>
+        <a href="javascript:;" class="stageSelect"><%=(task.workflow) ? task.workflow.name : 'Undefinded'%></a>
     </td>
     <td><%=(task.assignedTo) ? task.assignedTo.name.first + ' ' + task.assignedTo.name.last : ''%></td>
     <td><%=task.estimated%></td>
@@ -23,6 +23,6 @@
     </td>
     <td><progress name="taskProgress" max="100" value="<%=task.progress%>" /></td>
     <td><%=(task.createdBy.user) ? task.createdBy.date + " (" + task.createdBy.user.login + ")" : ''%></td>
-    <td><%=(task.editedBy.user) ? task.editedBy.date + " (" + task.editedBy.user.login + ")" : ''%></td>
+    <td><%=(task.editedBy&&task.editedBy.date) ? (task.editedBy.date + ((task.editedBy.user)?(" (" + task.editedBy.user.login + ")"):"")) : ''%></td>
 </tr>
 <% }) %>

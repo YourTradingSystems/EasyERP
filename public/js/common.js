@@ -75,7 +75,11 @@
             inputFile.prop('accept', "image/*");
             inputFile.on('change', function (e) {
             	e.preventDefault();
-                var file = inputFile[0].files[0];
+
+                var file = inputFile[0].files[0];//fix type file
+                var filesExt = ['jpg', 'gif', 'png', 'jpeg'];//fix type file
+                var parts = $(inputFile).val().split('.');//fix type file
+                if(filesExt.join().search(parts[parts.length - 1]) != -1){//fix type file
                 var fr = new FileReader();
                 fr.onload = function () {
                     var src = /*"data:image/jpeg;base64," +*/fr.result; /*btoa(fr.result);*/
@@ -138,7 +142,7 @@
                         }
 
                     });
-                    
+
                 };
                 inputFile.val('');
 
@@ -146,9 +150,12 @@
                 // fixed for IE
                 fr.readAsDataURL(file);
 
+                } else {
+                       alert('Invalid file type!');
+                }
             });
             canvasDrawing({ model: model }, context);
-           
+
         };
         var displayControlBtnsByActionType = function (actionType, viewType) {
             $("#saveDiscardHolder").hide();

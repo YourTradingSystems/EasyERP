@@ -181,16 +181,7 @@ define([
 							
                         },
                     error: function (model, xhr) {
-						if (xhr && (xhr.status === 401||xhr.status === 403)) {
-							if (xhr.status === 401){
-								Backbone.history.navigate("login", { trigger: true });
-							}else{
-								alert("You do not have permission to perform this action");
-								common.checkBackboneFragment("easyErp/Profiles");
-							}
-                        } else {
-                            Backbone.history.navigate("home", { trigger: true });
-                        }
+    					self.errorNotification(xhr);
                     }
 
                     });
@@ -212,12 +203,8 @@ define([
 							   Backbone.history.fragment = "";
 							   Backbone.history.navigate("#easyErp/Profiles", { trigger: true });
 						   },
-						   error: function (model, err) {
-							   if(err.status===403){
-								   alert("You do not have permission to perform this action");
-							   }else{
-								   Backbone.history.navigate("easyErp", { trigger: true });
-							   }
+						   error: function (model, xhr) {
+    						   self.errorNotification(xhr);
 						   }
                     });
                 //Navigate to page to hide the edit and delete buttons

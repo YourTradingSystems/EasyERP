@@ -39,6 +39,7 @@
             Validation.checkPhoneField(errors, false, attrs.workPhones.phone, "Phone");
             Validation.checkPhoneField(errors, false, attrs.workPhones.mobile, "Mobile");
             Validation.checkEmailField(errors, false, attrs.workEmail,"Email");//Email Validation Added
+            Validation.checkEmailField(errors, false, attrs.personalEmail,"Email");//Email Validation Added
             Validation.checkCountryCityStateField(errors, false, attrs.workAddress.country, "Country");
             Validation.checkCountryCityStateField(errors, false, attrs.workAddress.state, "State");
             Validation.checkCountryCityStateField(errors, false, attrs.workAddress.city, "City");

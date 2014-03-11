@@ -52,6 +52,7 @@
             },
             hideDialog: function () {
                 $(".edit-dialog").remove();
+                $(".crop-images-dialog").remove();
             },
             showEdit: function () {
                 $(".upload").animate({
@@ -89,16 +90,7 @@
                         Backbone.history.navigate("easyErp/" + self.contentType, { trigger: true });
                     },
                     error: function (model, xhr) {
-                        self.hideDialog();
-						if (xhr && (xhr.status === 401||xhr.status === 403)) {
-							if (xhr.status === 401){
-								Backbone.history.navigate("login", { trigger: true });
-							}else{
-								alert("You do not have permission to perform this action");								
-							}
-                        } else {
-                            Backbone.history.navigate("home", { trigger: true });
-                        }
+    					self.errorNotification(xhr);
                     },
 
                     confirmPass: $('#confirmpassword').val(),
@@ -121,12 +113,8 @@
                                 $('.edit-dialog').remove();
                                 Backbone.history.navigate("easyErp/" + self.contentType, { trigger: true });
                             },
-                            error: function (model, res) {
-								if (res.status===403){
-									alert("You do not have permission to perform this action");
-								}else{
-									alert(JSON.parse(res.responseText).error);
-								}
+                            error: function (model, xhr) {
+    							self.errorNotification(xhr);
                             }
                         });
                 }

@@ -100,6 +100,9 @@ var Employee = function (logWriter, mongoose, event, department, models) {
 
 
        if (data.filter && data.filter.workflow) {
+		   data.filter.workflow = data.filter.workflow.map(function(item){
+			   return item==="null"?null:item;
+		   });
             optionsObject['workflow'] = { $in: data.filter.workflow.objectID() };
        } else if (data && !data.newCollection) {
             optionsObject['workflow'] = { $in: [] };
@@ -634,6 +637,8 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                                             case ('list'): {
 												if (data.sort) {
 													query.sort(data.sort);
+												}else{
+													query.sort({"editedBy.date":-1});
 												}
 
                                                 query.select('_id name createdBy editedBy department jobPosition manager dateBirth skype workEmail workPhones jobType').
@@ -657,6 +662,9 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                                         switch (viewType) {
                                             case ('list'): {
                                                 if (data && data.filter && data.filter.workflow) {
+													data.filter.workflow = data.filter.workflow.map(function(item){
+														return item==="null"?null:item;
+													});
                                                       console.log(data.filter.workflow);
                                                       query.where('workflow').in(data.filter.workflow);
                                                 } else if (data && (!data.newCollection || data.newCollection === 'false')) {
@@ -665,14 +673,16 @@ var Employee = function (logWriter, mongoose, event, department, models) {
 
                                                  if (data.sort) {
                                                      query.sort(data.sort);
-                                                 }
+                                                 }else{
+													 query.sort({"editedBy.date":-1});
+												 }
                                                 query.select('_id name createdBy editedBy jobPosition manager workEmail workPhones creationDate workflow personalEmail department jobType sequence').
                                                     populate('manager', 'name').
                                                     populate('jobPosition', 'name').
                                                     populate('createdBy.user', 'login').
                                                     populate('department', 'departmentName').
                                                     populate('editedBy.user', 'login').
-                                                    populate('workflow', 'name');
+                                                    populate('workflow', 'name status');
                                             }
                                                 break;
                                             case ('thumbnails'): {

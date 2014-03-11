@@ -38,12 +38,6 @@
                             <dt><label for="state">State</label></dt><dd><input type="text" id="state" class="address" placeholder="State" name="state" value="<%=model.address.state%>" maxlength="32"/></dd>
                             <dt><label for="zip">Zip</label></dt><dd><input type="text" id="zip" class="address" name="zip" placeholder="Zip" value="<%=model.address.zip%>" maxlength="32"/></dd>
                             <dt><label for="country">Country</label></dt><dd><input type="text" id="country" class="address" name="country" placeholder="Country" value="<%=model.address.country%>" maxlength="32"/></dd>
-
-
-<!--                            <dt><label for="workflowNamesDd">Workflow Names </label></dt><dd>
-							<a id="workflowNamesDd" data-id="<%=model.workflow.wName%>" class="current-selected" href="javascript:;"><%=model.workflow.wName%></a>
-							</dd>-->
-
                         </dl>
                     </div>
                     <div class="half-block left">
@@ -54,7 +48,7 @@
                             <dt><label for="phone">Phone </label></dt><dd><input type="text" id="phone" value="<%=model.phones.phone%>" placeholder="Phone number" maxlength="32"/></dd>
                             <dt><label for="mobile">Mobile </label></dt><dd><input type="text" id="mobile" value="<%=model.phones.mobile%>" placeholder="Mobile number" maxlength="32"/></dd>
                             <dt><label for="selectWorkflow">Stage </label></dt><dd id="selectWorkflow">
-							    <a id="workflowsDd" data-id="<%=model.workflow._id%>" class="current-selected" href="javascript:;"><%=model.workflow.name%></a>
+							    <a id="workflowsDd" data-id="<%=model.workflo?model.workflow._id:''%>" class="current-selected" href="javascript:;"><%=model.workflow?model.workflow.name:'Undefinded'%></a>
 							</dd>
 
                             <dt><label for="priorityDd">Priority </label></dt>

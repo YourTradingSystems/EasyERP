@@ -219,7 +219,6 @@ function (thumbnailsItemTemplate, stagesTamplate, editView, createView, dataServ
         //modified for filter Vasya
         showMoreContent: function (newModels) {
             var holder = this.$el;
-            var content = holder.find("#thumbnailContent");
             var showMore = holder.find('#showMoreDiv');
             var created = holder.find('#timeRecivingDataFromServer');
             var content = holder.find(".thumbnailwithavatar");
@@ -229,9 +228,12 @@ function (thumbnailsItemTemplate, stagesTamplate, editView, createView, dataServ
 
             if (showMore.length != 0) {
                      showMore.before(this.template({  collection: this.collection.toJSON() }));
+				$(".filter-check-list").eq(1).remove();
+
                      showMore.after(created);
              } else {
-                     content.html(this.template({ collection: this.collection.toJSON() }));
+                 content.html(this.template({ collection: this.collection.toJSON() }));
+
              }
              this.asyncLoadImgs(newModels);
         },

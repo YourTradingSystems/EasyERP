@@ -257,6 +257,7 @@ define([
                 $(".edit-dialog").remove();
                 $(".add-group-dialog").remove();
                 $(".add-user-dialog").remove();
+                $(".crop-images-dialog").remove();
             },
             getWorkflowValue: function (value) {
                 var workflows = [];
@@ -454,16 +455,7 @@ define([
 
                     },
                     error: function (model, xhr) {
-                        self.hideDialog();
-						if (xhr && (xhr.status === 401||xhr.status === 403)) {
-							if (xhr.status === 401){
-								Backbone.history.navigate("login", { trigger: true });
-							}else{
-								alert("You do not have permission to perform this action");								
-							}
-                        } else {
-                            Backbone.history.navigate("home", { trigger: true });
-                        }
+    					self.errorNotification(xhr);
                     }
 
                 });

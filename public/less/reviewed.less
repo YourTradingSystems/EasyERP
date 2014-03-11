@@ -1397,7 +1397,10 @@ input::-ms-clear {
 					text-align:center;
 					height:17px;
 					border-bottom:2px solid silver;
-			
+
+					.text{
+						width:auto;
+					}
 					.fold-unfold{
 						display:none;
 					}
@@ -1719,8 +1722,10 @@ input::-ms-clear {
 		width:210px;
       }
       &.taskDescriptionEdit {
-        height: 210px;
+        height: 188px;
 		margin-top:8px !important;
+		margin-left:1px;
+		width:210px;
       }
       &.projectDescriptionCreate {
         height: 230px;
@@ -2888,15 +2893,16 @@ dl {
 #wrapper {
   //	width:inherit;
   .fullsize;
+  width:auto;
+  min-width:100%;
   position: absolute;
 
   #content-holder {
-    position: inherit;
     height: auto;
     display: block;
     background: #fff;
     clear: both;
-    width: 100%;
+	position:relative;
   }
 }
 
@@ -3848,6 +3854,10 @@ ul.dialog-tabs {
   }
   form {
     .notdialogform;
+	&#addAttachments{
+		width:100%;
+		max-width:100%;
+	}
   }
 }
 
@@ -4633,4 +4643,12 @@ input::-webkit-inner-spin-button {
 }
 #convert-dialog-form{
 	display:none;
+}
+.canReadAndWrite{
+	line-height:22px;
+	input{
+		clear:both;
+		display:block;
+		float:left;
+	}
 }
