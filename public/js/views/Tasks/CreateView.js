@@ -214,7 +214,7 @@ define([
                    this.$el = $(formString).dialog({
                        closeOnEscape: false,
                        dialogClass: "edit-dialog task-edit-dialog",
-                       width: 500,
+                       width: 600,
                        title: "Create Task",
                        buttons: {
                            save: {

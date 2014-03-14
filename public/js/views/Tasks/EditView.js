@@ -474,7 +474,7 @@
                   var self = this;
                   this.$el = $(formString).dialog({
                       dialogClass: "edit-dialog  task-edit-dialog",
-                      width: 500,
+                      width: 600,
                       title: this.currentModel.toJSON().project.projectShortDesc,
                       buttons: {
                           save: {
