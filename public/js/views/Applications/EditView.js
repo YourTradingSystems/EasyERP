@@ -58,6 +58,7 @@
                     throw new Error('Workflow "Refused" not found');
                 }
                 var id = workflow.get('_id');
+				var workflowStart = this.currentModel.get("workflow")&&this.currentModel.get("workflow")._id?this.currentModel.get("workflow")._id:this.currentModel.get("workflow");
                 this.currentModel.save({
                     workflow: id
                 }, {
@@ -73,6 +74,14 @@
 						case 'kanban':
 							{
                                     $(".column[data-id='" + id + "']").find(".columnNameDiv").after($("#" + model._id));
+                                      if (id) {
+                                           var counter = $(".column[data-id='" + id + "']").closest(".column").find(".totalCount");
+                                           counter.html(parseInt(counter.html()) + 1);
+                                           counter = $(".column[data-id='" + workflowStart + "']").closest(".column").find(".totalCount");
+                                           counter.html(parseInt(counter.html()) - 1);
+
+                                      }
+
 							}
 						}
 						self.hideDialog();
@@ -549,8 +558,16 @@
 									});
                                     kanban_holder.find(".inner").attr("data-sequence", result.sequence);
 								}
-
+                                if (data.workflow) {
                                     $(".column[data-id='" + data.workflow + "']").find(".columnNameDiv").after(kanban_holder);
+                                    var counter = $(".column[data-id='" + data.workflow + "']").closest(".column").find(".totalCount");
+                                    counter.html(parseInt(counter.html()) + 1);
+                                    counter = $(".column[data-id='" + data.workflowStart + "']").closest(".column").find(".totalCount");
+                                    counter.html(parseInt(counter.html()) - 1);
+
+                                }
+
+                                $(".column[data-id='" + data.workflow + "']").find(".columnNameDiv").after(kanban_holder);
 
                             }
                         }

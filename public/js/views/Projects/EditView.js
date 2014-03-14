@@ -240,7 +240,7 @@ define([
                 event.preventDefault();
                 var currentModel = this.currentModel;
                 var currentModelID = currentModel["id"];
-                var addFrmAttach = $("#editProjectForm");
+                var addFrmAttach = $("#addAttachments");
                 var addInptAttach = $(".input-file .inputAttach")[0].files[0];
                 if (!this.fileSizeIsAcceptable(addInptAttach)) {
                     $('#inputAttach').val('');

@@ -399,6 +399,14 @@
                                           kanban_holder.find(".inner").attr("data-sequence", result.sequence);
 
                                       $("#" + data.workflow).find(".columnNameDiv").after(kanban_holder);
+                                      if (data.workflow) {
+                                          $("#" + data.workflow).find(".columnNameDiv").after(kanban_holder);
+                                          var counter = $("#" + data.workflow).closest(".column").find(".totalCount");
+                                          counter.html(parseInt(counter.html()) + 1);
+                                          counter = $("#" + data.workflowStart).closest(".column").find(".totalCount");
+                                          counter.html(parseInt(counter.html()) - 1);
+
+                                      }
 
                                   }
                           }
