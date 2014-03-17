@@ -73,27 +73,7 @@
                   </div>
                   <div class="clearfix">
                   </div>
-                    <label>Attachments</label>
-
-                      <div id="attachBody">
-                        <ul class="attachContainer">
-                           <% var n = model.attachments.length-1;
-                              model.attachments.reverse();
-                            _.each(model.attachments, function(data,key){ %>
-                   <li class="attachFile_<%=data['_id'] %>"><a href="download/<%=data['shortPas']%>"><%=data['name'] %></a> (<%=data['size'] %>&nbsp;Mb) <%=data['uploaderName'] %>  <%=data['uploadDate'] %>
-                          <a id="<%=data['_id'] %>" href="javascript:;" class="deleteAttach">Delete</a>
-                   </li>
-                       <% }); model.attachments.reverse(); %>
-                        </ul>
-                      </div>
-                      <div class="clearfix"></div>
-                      <div class="input-file">Attach<input type="file" value="Choose File" id="inputAttach" class="inputAttach" name="attachfile"></div>
-                      <div class="progress" style="float:left;">
-                        <div class="bar">
-                          <span class="status"></span>
-                        </div>
-                      </div>
-
+				  <div class="attach-container"></div>
                   <div class="clearfix"></div>
                   <div class="cropImages form" style="display:none;">
                     <div class="formTitle">

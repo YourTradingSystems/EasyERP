@@ -30,6 +30,10 @@
                   <dt><label for="mobile">Mobile </label></dt>
                   <dd><input type="text" name="mobile" id="mobile" value="<%=model.phones.mobile%>" placeholder="Mobile Number" maxlength="32" /></dd>
                 </dl>
+                    <dt><label for="employeesDd">Assigned to</label></dt>
+                    <dd>
+					  <a id="employeesDd" data-id="<%=(model.salesPurchases.salesPerson)?model.salesPurchases.salesPerson._id:''%>" class="current-selected" href="javascript:;"><%=(model.salesPurchases.salesPerson)?(model.salesPurchases.salesPerson.name.first+" "+model.salesPurchases.salesPerson.name.last):"Select"%></a>
+                    </dd>
               </div>
               <div class="half-block left">
 
@@ -49,14 +53,14 @@
               </div>
               <div class="clearfix"></div>
             </div>
-            <div class="details right">...</div>
+<!--            <div class="details right">...</div> -->
             <div id="details-dialog">
-              <div class="formTitle">
+<!--              <div class="formTitle">
                 <h3 class="left">Sales &amp; Purchases</h3>
                 <div class="clearfix"></div>
               </div>
 			  <div class="avatarInfoContainer">
-                <div class="half-block left">
+               <div class="half-block left">
                   <dl class="person-info">
                     <dt><label for="employeesDd">Sales Person </label></dt>
                     <dd>
@@ -75,12 +79,8 @@
                     <dd>
 					  <a id="language" data-id="<%=(model.salesPurchases.salesTeam)?model.salesPurchases.language:''%>" class="current-selected" href="javascript:;"><%=(model.salesPurchases.language)?(model.salesPurchases.language):"Select"%></a>
                     </dd>
-<!--                <dt><label for="isCustomer">Customer </label></dt><dd><input type="checkbox" id="isCustomer" <%=(model.salesPurchases.isCustomer)? "checked='checked'":''%>/></dd>
-                    <dt><label for="isSupplier">Supplier </label></dt><dd><input type="checkbox" id="isSupplier" <%=(model.salesPurchases.isSupplier)? "checked='checked'":''%>/></dd>
-                    <dt><label for="active">Active </label></dt><dd><input type="checkbox" id="active" <%=(model.salesPurchases.active)? "checked='checked'":''%> /></dd>-->
-                  </dl>
                 </div>
-              </div>
+              </div>-->
             </div>
             <div class="clearfix"></div>
             <div class="cropImages form" style="display:none;">

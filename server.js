@@ -28,7 +28,6 @@ mainDb.once('open', function callback() {
     var main = mainDb.model('easyErpDBS', mainDBSchema);
     main.find().exec(function (err, result) {
         if (!err) {
-
             result.forEach(function (_db, index) {
                 var dbInfo = {
                     DBname: '',
@@ -194,6 +193,7 @@ app.get('/download/:path', function (req, res) {
 
 function uploadFileArray(req, res, callback) {
     var files = [];
+	console.log(req.files);
     if (req.files && !req.files.attachfile.length) {
         req.files.attachfile = [req.files.attachfile];
     }
