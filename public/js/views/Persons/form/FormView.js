@@ -190,15 +190,19 @@ define([
                 var objIndex = parent[0].id.split('_'); //replace change to split;
                 var currentModel = this.model;
                 var newModel = {};
-
+				var oldvalue = '';
                 if (objIndex.length > 1) {
                     var param = currentModel.get(objIndex[0]) || {};
                     param[objIndex[1]] = $('#editInput').val();
                     newModel[objIndex[0]] = param;
+					oldvalue = this.formModel.toJSON()[objIndex[0]][objIndex[1]];
                 } else {
                     newModel[objIndex[0]] = $('#editInput').val();
-                
-}				var oldvalue = this.formModel[objIndex[0]];
+					oldvalue = this.formModel.toJSON()[objIndex[0]];
+                }
+				console.log("oldvalue");
+				console.log(oldvalue);
+				console.log(objIndex[0]);
                 this.formModel.save(newModel, {
                     headers: {
                         mid: 39
@@ -209,7 +213,12 @@ define([
                         Backbone.history.navigate("#easyErp/Persons/form/" + model.id, { trigger: true });
                     },
                     error: function (model, response) {
-						self.formModel[objIndex[0]]=oldvalue;
+						alert();
+						if (objIndex.length > 1) {
+							self.formModel[objIndex[0]][objIndex[1]]=oldvalue;
+						} else {
+							self.formModel[objIndex[0]]=oldvalue;
+						}
                         if (response)
                             alert(response.error);
                     }
