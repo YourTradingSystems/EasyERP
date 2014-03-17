@@ -1,245 +1,175 @@
 <div class="form-holder">
   <form method="post" action="" id="createApplicationForm" class="form">
     <fieldset>
-        <div class="inner">
-            <ul class="dialog-tabs">
-                <li><a class="active" href="javascript:;">Main</a></li>
-                <li><a href="javascript:;">Assignees</a></li>
-            </ul>
+      <div class="inner">
+        <ul class="dialog-tabs">
+          <li><a class="active" href="javascript:;">Main</a></li>
+          <li><a href="javascript:;">Assignees</a></li>
+        </ul>
+        <div class="clearfix"></div>
+        <div class="dialog-tabs-items">
+          <div class="dialog-tabs-item active">
+            <div class="app-block left">
+              <div class="avatar left">
+                <div class="upload">
+                  Edit
+                  <input type="file" value="Edit" id="inputImg" accept="image/*">
+                </div>
+                <canvas id="avatar" width="140" height="140"></canvas>
+              </div>
+              <div class="app-block left marginLeft">
+                <dl class="app-empty-info">
+                  <dt><input type="text" class="name" id="first" placeholder="First name" required maxlength="32"/></dt><dd>&nbsp;</dd>
+                  <dt><input type="text" class="name" id="last" placeholder="Last name" required maxlength="32"/></dt><dd>&nbsp;</dd>
+                  <dt><input type="text" id="expectedSalary" placeholder="Expected Salary" maxlength="32"/></dt><dd>&nbsp;</dd>
+                  <dt><input type="text" id="proposedSalary" placeholder="Proposed Salary" maxlength="32"/></dt><dd>&nbsp;</dd>
+                </dl>
+
+
+              </div>
+            </div>
+            <div class="app-block right">
+              <dl class="app-normal-info">
+                <dt><label for="pemail">Email </label></dt><dd><input type="email" id="pemail" maxlength="48"/></dd>
+                <dt><label for="phone">Phone </label></dt><dd><input type="text" id="phone" maxlength="32"/></dd>
+                <dt><label for="tags">Tags </label></dt><dd><input type="text" id="tags" /></dd>
+                <dt><label for="nextAction">Next Action </label></dt><dd><input type="text" id="nextAction" maxlength="32" readonly/></dd>
+              </dl>
+            </div>
+
+
             <div class="clearfix"></div>
-            <div class="dialog-tabs-items">
-                <div class="dialog-tabs-item active">
-                  <div class="app-block left">
-                    <div class="avatar left">
-                      <div class="upload">
-                        Edit
-                        <input type="file" value="Edit" id="inputImg" accept="image/*">
-                      </div>
-                      <canvas id="avatar" width="140" height="140"></canvas>
-                    </div>
-                    <div class="app-block left marginLeft">
-                      <dl class="app-empty-info">
-                        <dt><input type="text" class="name" id="first" placeholder="First name" required maxlength="32"/></dt><dd>&nbsp;</dd>
-                        <dt><input type="text" class="name" id="last" placeholder="Last name" required maxlength="32"/></dt><dd>&nbsp;</dd>
-                        <dt><input type="text" id="expectedSalary" placeholder="Expected Salary" maxlength="32"/></dt><dd>&nbsp;</dd>
-                        <dt><input type="text" id="proposedSalary" placeholder="Proposed Salary" maxlength="32"/></dt><dd>&nbsp;</dd>
-                      </dl>
+            <div class="app-block left bottom">
+              <textarea id="otherInfo" placeholder="Fedback of interviews..."  maxlength="500"></textarea>
 
+            </div>
+            <div class="app-block right bottom">
+              <dl class="person-info">
+                <dt><label for="jobPositionDd">Applied Job </label></dt>
+                <dd>
+				  <a id="jobPositionDd" class="current-selected" href="javascript:;"></a>
+                </dd>
+                <dt><label for="departmentDd">Department</label></dt>
+                <dd>
+				  <a id="departmentDd" class="current-selected" href="javascript:;"></a>
+                </dd>
+                <dt><label for="sourceDd">Source </label></dt>
+                <dd>
+				  <a id="sourceDd" data-id="www.rabota.ua" class="current-selected" href="javascript:;">www.rabota.ua</a>
+				  <ul class="newSelectList hidden">
+                    <li id="www.rabota.ua">www.rabota.ua</li>
+                    <li id="www.work.ua">www.work.ua</li>
+                    <li id="www.ain.net">www.ain.net</li>
+                    <li id="other">other</li>
+				  </ul>
 
-                    </div>
-                  </div>
-                  <div class="app-block right">
-                    <dl class="app-normal-info">
-                      <dt><label for="pemail">Email </label></dt><dd><input type="email" id="pemail" maxlength="48"/></dd>
-                      <dt><label for="phone">Phone </label></dt><dd><input type="text" id="phone" maxlength="32"/></dd>
-                      <dt><label for="tags">Tags </label></dt><dd><input type="text" id="tags" /></dd>
-                      <!--			  <dt><label for="mobile">Mobile </label></dt><dd><input type="text" id="mobile" maxlength="32"/></dd>-->
-                      <dt><label for="nextAction">Next Action </label></dt><dd><input type="text" id="nextAction" maxlength="32" readonly/></dd>
-                    </dl>
-                  </div>
-                  <!--		  <div class="half-block left">
-                              <dl class="person-info">
-                                <dt><label for="subject">Subject</label></dt><dd><input type="text" class="title-input blueback" id="subject" required maxlength="32"/></dd>
-                                <dt><label for="first">Name</label></dt><dd><input type="text" class="name" id="first" placeholder="First" required maxlength="32"/></dd>
-                                <dt>&nbsp;</dt><dd><input type="text" class="name" id="last" placeholder="Last" required maxlength="32"/></dd>
-                              </dl>
-                  </div>-->
+                </dd>
+                <dt><label for="workflowsDd">Stage</label></dt><dd id="selectWorkflow">
+				  <a id="workflowsDd" class="current-selected" href="javascript:;"></a>
+				</dd>
+                <dt><label for="jobTypeDd">Job type</label></dt>
+                <dd>
+				  <a id="jobTypeDd" class="current-selected" href="javascript:;"></a>
+                </dd>
 
-                  <div class="clearfix"></div>
-                  <div class="app-block left bottom">
-                    <textarea id="otherInfo" placeholder="Fedback of interviews..."  maxlength="500"></textarea>
-
-                  </div>
-                  <div class="app-block right bottom">
-                    <dl class="person-info">
-                      <dt><label for="jobPositionDd">Applied Job </label></dt>
-                      <dd>
-						<a id="jobPositionDd" class="current-selected" href="javascript:;"></a>
-                      </dd>
-                      <dt><label for="departmentDd">Department</label></dt>
-                      <dd>
-						<a id="departmentDd" class="current-selected" href="javascript:;"></a>
-                      </dd>
-                      <dt><label for="sourceDd">Source </label></dt>
-                      <dd>
-						<a id="sourceDd" data-id="www.rabota.ua" class="current-selected" href="javascript:;">www.rabota.ua</a>
-						<ul class="newSelectList hidden">
-                          <li id="www.rabota.ua">www.rabota.ua</li>
-                          <li id="www.work.ua">www.work.ua</li>
-                          <li id="www.ain.net">www.ain.net</li>
-                          <li id="other">other</li>
-						</ul>
-
-                      </dd>
-                      <dt><label for="workflowsDd">Stage</label></dt><dd id="selectWorkflow">
-						<a id="workflowsDd" class="current-selected" href="javascript:;"></a>
-					  </dd>
-                      <dt><label for="jobTypeDd">Job type</label></dt>
-                      <dd>
-						<a id="jobTypeDd" class="current-selected" href="javascript:;"></a>
-                      </dd>
-
-                      <!--				  <dt><label for="degreesDd">Degree </label></dt><dd> <select id="degreesDd"> </select> </dd>
-                                          <dt><label for="relatedUsersDd">Responsible </label></dt>
-                      <dd>
-                        <select id="relatedUsersDd">
-
-                        </select>
-                      </dd>
-
-                      <dt><label for="referredBy">Referred By </label></dt><dd><input type="text" id="referredBy" maxlength="32"/></dd>
-                      -->
-                    </dl>
-                  </div>
-                  <div class="clearfix"></div>
-                    <label>Attachments</label>
-
-                      <div id="attachBody">
-                        <ul class="attachContainer">
-                        </ul>
-                      </div>
-                      <div class="clearfix">
-                      </div>
-                      <div class="input-file">
-                        Attach
-                        <input type="file" value="Choose File" class="inputAttach" name="attachfile">
-
-                      </div>
-                      <div class="progress" style="float:left;">
-                        <div class="bar">
-                          <span class="status"></span>
-                        </div>
-                      </div>
-
-                  <!--		  <div class="half-block left withPaddingLeft">
-                              <div class="formTitle">
-                                <h3 class="left">Contract</h3>
-                                <div class="clearfix"></div>
-                              </div>
-                              <dl class="person-info">
-                                <dt><label for="tags">Tags </label></dt><dd><input type="text" id="tags" /></dd>
-                              </dl>
-                  </div>
-
-                  <div class="half-block left withPaddingLeft">
-                    <div class="formTitle">
-                      <h3 class="left">Job</h3>
-                      <div class="clearfix"></div>
-                    </div>
-                    <dl class="person-info">
-                      <dt><label for="workflowNamesDd">Workflow Names </label></dt>
-                      <dd>
-                        <select id="workflowNamesDd">
-
-                        </select>
-                      </dd>
-                      <dt><label for="workflowsDd">Workflow</label></dt><dd id="selectWorkflow"><select id="workflowsDd"></select></dd>
-
-
-                    </dl>
-                  </div>
-                  <div class="clearfix">
-                  </div>-->
-                  <!--		  <div class="formTitle">
-                              <h3 class="left">Application Summary</h3>
-                              <div class="clearfix"></div>
-                  </div>
-                  <textarea id="otherInfo" placeholder="Fedback of interviews..."></textarea>-->
-	  
-	 <div class="cropImages form" style="display:none;">
-     	<div class="formTitle">
-			<h3 class="left">Crop Images</h3>
-		<div class="clearfix"></div>
-	  	</div><br />	
-      	<div class="image_input" style="float: left;margin-right: 20px;"></div>
-      	<img class="image_output" />
-      	<div class="clearfix"></div>
-      </div>
-                </div>
-                <div class="dialog-tabs-item">
-                    <div class="addUserAndGroup"><a href="javascript:;" class="addUser">Manage User</a> | <a href="javascript:;" class="addGroup">Manage Group</a></div>
-                    <div class="clearfix"></div>
-
-                    <div class="half-block left">
-                        <div class="canReadAndWrite">
-                            <input type="radio" name="whoCanRW" value="everyOne" checked="checked"/>Everyone<br>
-                            <input type="radio" name="whoCanRW" value="owner"/>Owner<br>
-                            <input type="radio" name="whoCanRW" value="group"/>Owner, Users and Users in Groups
-                        </div>
-                    </div>
-                    <div class="half-block left">
-                        <dl class="project-owner-info">
-                            <dt><label for="allUsers">Owner</label></dt><dd>
-
-                            <select id="allUsers">
-
-                            </select>
-
-                        </dd>
-                        </dl>
-                    </div>
-
-
-                    <div class="addUserDialog">
-
-                        <div class="formTitle">
-                            <h3 class="left">Choose Users</h3>
-                            <div class="clearfix"></div>
-                        </div>
-                        <div class="groupsChooser">
-                            <div class="left">
-                                <ul id="sourceUsers" class="source">
-
-                                </ul>
-                            </div>
-                            <div class="left">
-                                <div class="swich"></div>
-                            </div>
-                            <div class="left">
-                                <ul id="targetUsers" class="target">
-
-                                </ul>
-                            </div>
-                        </div>
-
-                        <div class="clearfix"></div>
-                    </div>
-                    <div class="addGroupDialog">
-                        <div class="formTitle">
-                            <h3 class="left">Choose Groups</h3>
-                            <div class="clearfix"></div>
-                        </div>
-
-                        <div class="groupsChooser">
-                            <div class="left">
-                                <ul id="sourceGroups" class="source">
-
-                                </ul>
-                            </div>
-                            <div class="left">
-                                <div class="swich"></div>
-                            </div>
-                            <div class="left">
-                                <ul id="targetGroups" class="target">
-
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="clearfix"></div>
-                    </div>
-
-                    <table class="groupsAndUser">
-                        <tr>
-                            <th>Groups and Users</th><th></th>
-                        </tr>
-                    </table>
-                    <div class="clearfix"></div>
-
-                    <div class="clearfix"></div>
-                </div>
+              </dl>
             </div>
             <div class="clearfix"></div>
+			<div class="attach-container"></div>
+			<div class="cropImages form" style="display:none;">
+     		  <div class="formTitle">
+				<h3 class="left">Crop Images</h3>
+				<div class="clearfix"></div>
+	  		  </div><br />	
+      		  <div class="image_input" style="float: left;margin-right: 20px;"></div>
+      		  <img class="image_output" />
+      		  <div class="clearfix"></div>
+			</div>
+          </div>
+          <div class="dialog-tabs-item">
+            <div class="addUserAndGroup"><a href="javascript:;" class="addUser">Manage User</a> | <a href="javascript:;" class="addGroup">Manage Group</a></div>
+            <div class="clearfix"></div>
+
+            <div class="half-block left">
+              <div class="canReadAndWrite">
+                <input type="radio" name="whoCanRW" value="everyOne" checked="checked"/>Everyone<br>
+                <input type="radio" name="whoCanRW" value="owner"/>Owner<br>
+                <input type="radio" name="whoCanRW" value="group"/>Owner, Users and Users in Groups
+              </div>
+            </div>
+            <div class="half-block left">
+              <dl class="project-owner-info">
+                <dt><label for="allUsers">Owner</label></dt><dd>
+
+                  <select id="allUsers">
+
+                  </select>
+
+                </dd>
+              </dl>
+            </div>
+
+
+            <div class="addUserDialog">
+
+              <div class="formTitle">
+                <h3 class="left">Choose Users</h3>
+                <div class="clearfix"></div>
+              </div>
+              <div class="groupsChooser">
+                <div class="left">
+                  <ul id="sourceUsers" class="source">
+
+                  </ul>
+                </div>
+                <div class="left">
+                  <div class="swich"></div>
+                </div>
+                <div class="left">
+                  <ul id="targetUsers" class="target">
+
+                  </ul>
+                </div>
+              </div>
+
+              <div class="clearfix"></div>
+            </div>
+            <div class="addGroupDialog">
+              <div class="formTitle">
+                <h3 class="left">Choose Groups</h3>
+                <div class="clearfix"></div>
+              </div>
+
+              <div class="groupsChooser">
+                <div class="left">
+                  <ul id="sourceGroups" class="source">
+
+                  </ul>
+                </div>
+                <div class="left">
+                  <div class="swich"></div>
+                </div>
+                <div class="left">
+                  <ul id="targetGroups" class="target">
+
+                  </ul>
+                </div>
+              </div>
+              <div class="clearfix"></div>
+            </div>
+
+            <table class="groupsAndUser">
+              <tr>
+                <th>Groups and Users</th><th></th>
+              </tr>
+            </table>
+            <div class="clearfix"></div>
+
+            <div class="clearfix"></div>
+          </div>
         </div>
+        <div class="clearfix"></div>
+      </div>
     </fieldset>
   </form>
 </div>

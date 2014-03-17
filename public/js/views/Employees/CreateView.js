@@ -2,9 +2,10 @@ define([
     "text!templates/Employees/CreateTemplate.html",
     "models/EmployeesModel",
     "common",
-    "populate"
+    "populate",
+    'views/Notes/AttachView'
 ],
-    function (CreateTemplate, EmployeeModel, common, populate) {
+    function (CreateTemplate, EmployeeModel, common, populate, attachView) {
 
         var CreateView = Backbone.View.extend({
             el: "#content-holder",
@@ -14,8 +15,6 @@ define([
             initialize: function () {
                 _.bindAll(this, "saveItem");
                 this.model = new EmployeeModel();
-                this.page=1;
-                this.pageG=1;
                 this.responseObj = {};
                 this.render();
             },
@@ -25,8 +24,6 @@ define([
                 "mouseenter .avatar": "showEdit",
                 "mouseleave .avatar": "hideEdit",
                 'keydown': 'keydownHandler',
-                "change .inputAttach": "addAttach",
-				"click .deleteAttach":"deleteAttach",
                 'click .dialog-tabs a': 'changeTab',
                 'click .addUser': 'addUser',
                 'click .addGroup': 'addGroup',
@@ -341,18 +338,8 @@ define([
                     homeAddress[el.attr("name")] = el.val();
                 });
                 // date parse 
-                var dateBirthSt = $.trim($("#dateBirth").val());
+                var dateBirthSt = $.trim(this.$el.find("#dateBirth").val());
                
-                var dateBirth = "";
-                if (dateBirthSt) {
-                	dateBirthArr = dateBirthSt.split("/");
-                    var newDateBirt = new Date();  
-                    newDateBirt.setFullYear(dateBirthArr[2]);
-                    newDateBirt.setMonth(dateBirthArr[1]-1);    
-                    newDateBirt.setDate(dateBirthArr[0]); 
-                    var fullDateBirt = newDateBirt.toUTCString();
-                    dateBirth = new Date(Date.parse(fullDateBirt)).toISOString();
-                }
                 var active = ($("#active").is(":checked")) ? true : false;
                 var sourceId = $("#sourceDd").data("id");
                 var usersId=[];
@@ -388,7 +375,7 @@ define([
                     passportNo: passportNo,
                     otherId: otherId,
                     homeAddress: homeAddress,
-                    dateBirth: dateBirth,
+                    dateBirth: dateBirthSt,
                     active: active,
                     source:sourceId,
                     groups: {
@@ -404,69 +391,7 @@ define([
                     },
                     wait: true,
                     success: function (model, response) {
-                        Backbone.history.fragment = '';
-                        var currentModelID = response.id || (new Date()).valueOf();
-						var addFrmAttach = $("#createEmployeeForm");
-						var fileArr= [];
-						var addInptAttach = '';
-						$("li .inputAttach").each(function(){
-							addInptAttach = $(this)[0].files[0];
-							fileArr.push(addInptAttach);
-							if(!self.fileSizeIsAcceptable(addInptAttach)){
-								alert('File you are trying to attach is too big. MaxFileSize: ' + App.File.MaxFileSizeDisplay);
-								return;
-							}
-						});
-							addFrmAttach.submit(function (e) {
-								var bar = $('.bar');
-								var status = $('.status');
-								
-								var formURL = "http://" + window.location.host + "/uploadEmployeesFiles";
-								e.preventDefault();
-								addFrmAttach.ajaxSubmit({
-									url: formURL,
-									type: "POST",
-									processData: false,
-									contentType: false,
-												   data: [fileArr],
-
-									beforeSend: function (xhr) {
-										xhr.setRequestHeader("id", currentModelID);
-										status.show();
-										var statusVal = '0%';
-										bar.width(statusVal);
-										status.html(statusVal);
-									},
-									
-									uploadProgress: function(event, position, total, statusComplete) {
-										var statusVal = statusComplete + '%';
-										bar.width(statusVal);
-										status.html(statusVal);
-									},
-									
-									success: function () {
-										console.log('Attach file');
-										addFrmAttach[0].reset();
-										status.hide();
-										self.hideDialog();
-										Backbone.history.navigate("easyErp/" + self.contentType, { trigger: true });
-									},
-
-									error: function () {
-										console.log("Attach file error");
-									}
-								});
-							});
-						if(fileArr.length>0){
-							addFrmAttach.submit();
-						}
-						else{
-							self.hideDialog();
-							Backbone.history.navigate("easyErp/" + self.contentType, { trigger: true });
-
-						}
-						addFrmAttach.off('submit');
-
+      					self.attachView.sendToServer(null,model.changed);      
                     },
                     error: function (model, xhr) {
     					self.errorNotification(xhr);
@@ -496,9 +421,17 @@ define([
                         }
                     }
                 });
-                common.populateUsersForGroups('#sourceUsers','#targetUsers',null,this.page);
+				var notDiv = this.$el.find('.attach-container');
+				this.attachView = new attachView({
+                        model: new EmployeeModel(),
+						url:"/uploadEmployeesFiles",
+						isCreate:true
+                    });
+
+                notDiv.append(this.attachView.render().el);
+                common.populateUsersForGroups('#sourceUsers','#targetUsers',null,1);
                 common.populateUsers("#allUsers", "/UsersForDd",null,null,true);
-                common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",null,this.pageG);
+                common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",null,1);
 
 				populate.get("#jobTypeDd", "/jobType", {}, "name", this, true);
                 populate.get2name("#projectManagerDD", "/getPersonsForDd", {}, this, true);
@@ -507,8 +440,7 @@ define([
 				populate.get("#departmentsDd", "/DepartmentsForDd", {}, "departmentName", this, true);
                 common.canvasDraw({ model: this.model.toJSON() }, this);
                 $('#dateBirth').datepicker({
-                	dateFormat: "d/m/yy",
-                    changeMonth: true,
+                	changeMonth: true,
                     changeYear: true,
                     yearRange: '-100y:c+nn',
                     maxDate: '-18y'

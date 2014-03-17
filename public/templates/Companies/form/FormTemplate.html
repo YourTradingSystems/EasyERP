@@ -33,6 +33,9 @@
                             <dd id="phones_mobile" class="editable" title="<%=phones.mobile%>"><a id="phones_mobile" href="skype:<%=phones.mobile%>?call"><%=phones.mobile%></a></dd>
                             <dt>Email</dt>
                             <dd id="email" class="editable" title="<%=email%>"><a class="no-long" href="javascript:;" data-maxlength="48"><%=email%></a></dd>
+                            <dt>Assigned to</dt>
+                            <dd title="<%=(salesPurchases.salesPerson) ? salesPurchases.salesPerson.name.first + ' ' + salesPurchases.salesPerson.name.last: ''%>"><%=(salesPurchases.salesPerson) ? salesPurchases.salesPerson.name.first + ' ' + salesPurchases.salesPerson.name.last: ''%></dd>
+
                         </dl>
 
                     </div>
@@ -62,20 +65,11 @@
                     <p style="text-align:center;"><%if(editedBy.date){%><span style="font-style: italic;">Last Edited <%=editedBy.date%> by <%=editedBy.user ?  editedBy.user.login:""%></span>| <%}%><span style="font-style: italic;">Created On <%=createdBy.date %> by <%=createdBy.user ? createdBy.user.login:""%></span></p>
                 </div>
                 <div class="clearfix"></div>
-                <div class="details right person">...</div>
+<!--                <div class="details right person">...</div>-->
 
 
             </div>
-            <!--
-            <div class="formTitle">
-              <h3 class="left">Internal Notes</h3>
-              <div class="clearfix"></div>
-            </div>
-            <div class="inner">
-              <span><%=internalNotes%></span>
-            </div>
-            -->
-            <div id="details">
+<!--            <div id="details">
                 <div class="formTitle">
                     <h3 class="left">Sales &amp; Purchases</h3>
                     <div class="clearfix"></div>
@@ -83,8 +77,6 @@
                 <div class="inner sales-purchases">
                     <div class="half-block left">
                         <dl class="customer-info company long">
-                            <dt>Sales Person</dt>
-                            <dd title="<%=(salesPurchases.salesPerson) ? salesPurchases.salesPerson.name.first + ' ' + salesPurchases.salesPerson.name.last: ''%>"><%=(salesPurchases.salesPerson) ? salesPurchases.salesPerson.name.first + ' ' + salesPurchases.salesPerson.name.last: ''%></dd>
                             <dt>Sales Team</dt><dd title="<%=(salesPurchases.salesTeam) ? salesPurchases.salesTeam.departmentName : ''%>"><%=(salesPurchases.salesTeam) ? salesPurchases.salesTeam.departmentName : ''%></dd>
 
                         </dl>
@@ -96,24 +88,12 @@
                             <dd title="<%=salesPurchases.reference%>"><%=salesPurchases.reference%></dd>
                             <dt>Language</dt>
 								<dd title="<%=salesPurchases.language%>"><%=salesPurchases.language%></dd>
-<!--                            <dt>Customer</dt>
-                            <dd id="salesPurchases_isCustomer" class="with-checkbox">
-                                <input class="left" type="checkbox" <%=((salesPurchases.isCustomer)? 'checked' : '') %>/>
-                            </dd>
-                            <dt>Supplier</dt>
-                            <dd id="salesPurchases_isSupplier" class="with-checkbox">
-                                <input class="left" type="checkbox" <%=((salesPurchases.isSupplier)? 'checked' : '') %>/>
-                            </dd>
-                            <dt>Active </dt>
-                            <dd id="salesPurchases_active" class="with-checkbox">
-                                <input class="left" type="checkbox" <%=((salesPurchases.active)? 'checked' : '') %> />
-                            </dd>-->
                         </dl>
                     </div>
                     <div class="clearfix"></div>
 
                 </div>
-            </div>
+            </div>-->
         </form>
     </div>
     <div class="formRightColumn">

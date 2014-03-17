@@ -13,6 +13,19 @@
     mongoose.model('birthdays', birthdaysSchema);
 
     var getEmployeesInDateRange = function (req, callback, response) {
+        function getAge(birthday) {
+            birthday = new Date(birthday);
+            var today = new Date();
+            var years = today.getFullYear() - birthday.getFullYear();
+
+            birthday.setFullYear(today.getFullYear());
+
+            if (today < birthday) {
+                years--;
+            }
+            console.log(years);
+            return (years < 0) ? 0 : years;
+        };
         var separateWeklyAndMonthly = function (arrayOfEmployees) {
             //Current week
         	var dateOnly = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -174,6 +187,10 @@
                                 console.log(error);
                                 callback(req, separateWeklyAndMonthly([]), response);
                             } else {
+                                ress.map(function(employee) {
+                                    employee.age = getAge(employee.dateBirth);
+                                    return employee;
+                                });
                                 callback(req, separateWeklyAndMonthly(ress), response);
                             }
                         });

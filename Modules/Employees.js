@@ -49,7 +49,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
         age: { type: Number, default: 0 },
         daysForBirth: Number,
         nextAction: Date,
-        source: {type: String, default: '' },
+        source: { type: String, default: '' },
         referredBy: { type: String, default: '' },
         active: { type: Boolean, default: true },
         workflow: { type: ObjectId, ref: 'workflows', default: null },
@@ -96,17 +96,17 @@ var Employee = function (logWriter, mongoose, event, department, models) {
         var contentType = req.params.contentType;
         var optionsObject = {};
         if (data.filter.letter)
-                 optionsObject['name.last'] = new RegExp('^[' + data.filter.letter.toLowerCase() + data.filter.letter.toUpperCase() + '].*');
+            optionsObject['name.last'] = new RegExp('^[' + data.filter.letter.toLowerCase() + data.filter.letter.toUpperCase() + '].*');
 
 
-       if (data.filter && data.filter.workflow) {
-		   data.filter.workflow = data.filter.workflow.map(function(item){
-			   return item==="null"?null:item;
-		   });
+        if (data.filter && data.filter.workflow) {
+            data.filter.workflow = data.filter.workflow.map(function (item) {
+                return item === "null" ? null : item;
+            });
             optionsObject['workflow'] = { $in: data.filter.workflow.objectID() };
-       } else if (data && !data.newCollection) {
+        } else if (data && !data.newCollection) {
             optionsObject['workflow'] = { $in: [] };
-       }
+        }
 
         switch (contentType) {
             case ('Employees'): {
@@ -564,8 +564,8 @@ var Employee = function (logWriter, mongoose, event, department, models) {
         switch (contentType) {
             case ('Employees'): {
                 optionsObject['isEmployee'] = true;
-                        if (data.filter.letter)
-                            optionsObject['name.last'] = new RegExp('^[' + data.filter.letter.toLowerCase() + data.filter.letter.toUpperCase() + '].*');
+                if (data.filter.letter)
+                    optionsObject['name.last'] = new RegExp('^[' + data.filter.letter.toLowerCase() + data.filter.letter.toUpperCase() + '].*');
             }
                 break;
             case ('Applications'): {
@@ -635,11 +635,11 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                                     case ('Employees'):
                                         switch (viewType) {
                                             case ('list'): {
-												if (data.sort) {
-													query.sort(data.sort);
-												}else{
-													query.sort({"editedBy.date":-1});
-												}
+                                                if (data.sort) {
+                                                    query.sort(data.sort);
+                                                } else {
+                                                    query.sort({ "editedBy.date": -1 });
+                                                }
 
                                                 query.select('_id name createdBy editedBy department jobPosition manager dateBirth skype workEmail workPhones jobType').
                                                     populate('manager', 'name').
@@ -662,20 +662,20 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                                         switch (viewType) {
                                             case ('list'): {
                                                 if (data && data.filter && data.filter.workflow) {
-													data.filter.workflow = data.filter.workflow.map(function(item){
-														return item==="null"?null:item;
-													});
-                                                      console.log(data.filter.workflow);
-                                                      query.where('workflow').in(data.filter.workflow);
+                                                    data.filter.workflow = data.filter.workflow.map(function (item) {
+                                                        return item === "null" ? null : item;
+                                                    });
+                                                    console.log(data.filter.workflow);
+                                                    query.where('workflow').in(data.filter.workflow);
                                                 } else if (data && (!data.newCollection || data.newCollection === 'false')) {
-                                                      query.where('workflow').in([]);
+                                                    query.where('workflow').in([]);
                                                 }
 
-                                                 if (data.sort) {
-                                                     query.sort(data.sort);
-                                                 }else{
-													 query.sort({"editedBy.date":-1});
-												 }
+                                                if (data.sort) {
+                                                    query.sort(data.sort);
+                                                } else {
+                                                    query.sort({ "editedBy.date": -1 });
+                                                }
                                                 query.select('_id name createdBy editedBy jobPosition manager workEmail workPhones creationDate workflow personalEmail department jobType sequence').
                                                     populate('manager', 'name').
                                                     populate('jobPosition', 'name').
@@ -858,8 +858,8 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                                         if (!err) {
                                             res['data'] = result;
                                             res['time'] = (new Date() - startTime);
-											res['workflowId'] = data.workflowId;
-											res['fold'] = (req.session.kanbanSettings.applications.foldWorkflows&&req.session.kanbanSettings.applications.foldWorkflows.indexOf(data.workflowId.toString())!==-1);
+                                            res['workflowId'] = data.workflowId;
+                                            res['fold'] = (req.session.kanbanSettings.applications.foldWorkflows && req.session.kanbanSettings.applications.foldWorkflows.indexOf(data.workflowId.toString()) !== -1);
 
                                             response.send(res);
                                         } else {
@@ -909,42 +909,60 @@ var Employee = function (logWriter, mongoose, event, department, models) {
     function updateOnlySelectedFields(req, _id, data, res) {
         var fileName = data.fileName;
         delete data.fileName;
-		if (data.workflow&&data.sequenceStart&&data.workflowStart){
-			if (data.sequence == -1) {
-				event.emit('updateSequence', models.get(req.session.lastDb - 1, 'Employees', employeeSchema), "sequence", data.sequenceStart, data.sequence, data.workflowStart, data.workflowStart, false, true, function (sequence) {
-					event.emit('updateSequence', models.get(req.session.lastDb - 1, 'Employees', employeeSchema), "sequence", data.sequenceStart, data.sequence, data.workflow, data.workflow, true, false, function (sequence) {
-						data.sequence = sequence;
-						if (data.workflow == data.workflowStart)
-							data.sequence -= 1;
-						models.get(req.session.lastDb - 1, 'Employees', employeeSchema).findByIdAndUpdate(_id, { $set: data }, function (err, result) {
-							if (!err) {
-								res.send(200, { success: 'Employees updated', sequence:result.sequence });
-							} else {
-								res.send(500, { error: "Can't update Employees" });
-							}
 
-						});
+        var updateObject = {};
 
-					});
-				});
-			} else {
-				event.emit('updateSequence', models.get(req.session.lastDb - 1, 'Employees', employeeSchema), "sequence", data.sequenceStart, data.sequence, data.workflowStart, data.workflow, false, false, function (sequence) {
-					delete data.sequenceStart;
-					delete data.workflowStart;
-					data.sequence = sequence;
-					models.get(req.session.lastDb - 1, 'Employees', employeeSchema).findByIdAndUpdate(_id, { $set: data }, function (err, result) {
-						if (!err) {
-							res.send(200, { success: 'Employees updated' });
-						} else {
-							res.send(500, { error: "Can't update Employees" });
-						}
+        for (var i in data) {
+            if (i === 'contractEndReason') {
+                updateObject['isEmployee'] = false;
+                updateObject['contractEnd'] = {
+                    reason: data[i],
+                    date: new Date()
+                };
+            } else {
+                updateObject[i] = data[i];
+            }
+        }
 
-					});
-				});
-			}
-		} else {
-            models.get(req.session.lastDb - 1, 'Employees', employeeSchema).findByIdAndUpdate(_id, { $set: data }, function (err, result) {
+        if (data.workflow && data.sequenceStart && data.workflowStart) {
+            if (data.sequence == -1) {
+                event.emit('updateSequence', models.get(req.session.lastDb - 1, 'Employees', employeeSchema), "sequence", data.sequenceStart, data.sequence, data.workflowStart, data.workflowStart, false, true, function (sequence) {
+                    event.emit('updateSequence', models.get(req.session.lastDb - 1, 'Employees', employeeSchema), "sequence", data.sequenceStart, data.sequence, data.workflow, data.workflow, true, false, function (sequence) {
+                        data.sequence = sequence;
+                        if (data.workflow == data.workflowStart)
+                            data.sequence -= 1;
+                        models.get(req.session.lastDb - 1, 'Employees', employeeSchema).findByIdAndUpdate(_id, { $set: data }, function (err, result) {
+                            if (!err) {
+                                res.send(200, { success: 'Employees updated', sequence: result.sequence });
+                            } else {
+                                res.send(500, { error: "Can't update Employees" });
+                            }
+
+                        });
+
+                    });
+                });
+            } else {
+                event.emit('updateSequence', models.get(req.session.lastDb - 1, 'Employees', employeeSchema), "sequence", data.sequenceStart, data.sequence, data.workflowStart, data.workflow, false, false, function (sequence) {
+                    delete data.sequenceStart;
+                    delete data.workflowStart;
+                    data.sequence = sequence;
+                    models.get(req.session.lastDb - 1, 'Employees', employeeSchema).findByIdAndUpdate(_id, { $set: data }, function (err, result) {
+                        if (!err) {
+                            res.send(200, { success: 'Employees updated' });
+                        } else {
+                            res.send(500, { error: "Can't update Employees" });
+                        }
+
+                    });
+                });
+            }
+        } else {
+            models.get(req.session.lastDb - 1, 'Employees', employeeSchema).findByIdAndUpdate(_id, { $set: updateObject }, function (err, result) {
                 if (!err) {
+                    if (updateObject.dateBirth || updateObject.contractEnd) {
+                        event.emit('recalculate', req);
+                    }
                     if (fileName) {
                         var os = require("os");
                         var osType = (os.type().split('_')[0]);
@@ -982,95 +1000,33 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                         });
 
                     }
-                    res.send(200, { success: 'Employees updated', result:result });
+                    res.send(200, { success: 'Employees updated', result: result });
                 } else {
                     res.send(500, { error: "Can't update Employees" });
                 }
 
             });
-		}
+        }
     }
-    function update(req, _id, data, res) {
-        try {
-            delete data._id;
-            delete data.createdBy;
-            if (data.relatedUser && data.relatedUser._id) {
-                data.relatedUser = data.relatedUser._id;
-            }
-            if (data.department && data.department._id) {
-                data.department = data.department._id;
-            }
-            if (data.manager && data.manager._id) {
-                data.manager = data.manager._id;
-            }
-            if (data.coach && data.coach._id) {
-                data.coach = data.coach._id;
-            }
-            if (data.jobPosition && data.jobPosition._id) {
-                data.jobPosition = data.jobPosition._id;
-            }
-            if (data.workflow && data.workflow._id) {
-                data.workflow = data.workflow._id;
-            }
-            if (data.recalculate && data.dateBirth) {
-                data.dateBirth = getDate(data.dateBirth);
-                data.age = getAge(data.dateBirth);
-            }
-            if (data.groups && data.groups.group) {
-                data.groups.group.forEach(function (group, index) {
-                    if (group._id) data.groups.group[index] = newObjectId(group._id.toString());
-                });
-            }
-            if (data.groups && data.groups.users) {
-                data.groups.users.forEach(function (user, index) {
-                    if (user._id) data.groups.users[index] = newObjectId(user._id.toString());
-                });
-            }
 
-            if (data.workflowForList || data.workflowForKanban) {
-                data = {
-                    $set: {
-                        workflow: data.workflow
-                    }
-                };
-            }
-
-            if (data.workflowContractEnd) {
-                data = {
-                    $set: {
-                        workflow: data.workflow,
-                        'contractEnd.reason': data.contractEndReason,
-                        'contractEnd.date': new Date(),
-                        isEmployee: false
-                    }
-                };
-            }
-
-
-
-            models.get(req.session.lastDb - 1, "Employees", employeeSchema).findByIdAndUpdate({ _id: _id }, data, { upsert: true }, function (err, result) {
-                try {
-                    if (err) {
-                        console.log(err);
-                        logWriter.log("Employees.js update employee.update " + err);
-                        res.send(500, { error: "Can't update Employees" });
-                    } else {
-                        res.send(200, { success: 'Employees updated success', data: result });
-                        if (data.recalculate) {
-                            event.emit('recalculate', req);
-                        }
+    function addAtach(req, _id, files, res) {//to be deleted
+        models.get(req.session.lastDb - 1, "Employees", employeeSchema).findByIdAndUpdate(_id, { $push: { attachments: { $each: files } } }, { upsert: true }, function (err, result) {
+            try {
+                if (err) {
+                    console.log(err);
+                    logWriter.log("Employees.js update employee.update " + err);
+                    res.send(500, { error: "Can't update Employees" });
+                } else {
+                    res.send(200, { success: 'Employees updated success', data: result });
+                    if (data.recalculate) {
+                        event.emit('recalculate', req);
                     }
                 }
-                catch (exception) {
-                    logWriter.log("Employees.js getEmployees employee.find " + exception);
-                }
-            });
-        }
-        catch (exception) {
-            console.log(exception);
-            logWriter.log("Employees.js update " + exception);
-            res.send(500, { error: 'Employees updated error' });
-        }
+            }
+            catch (exception) {
+                logWriter.log("Employees.js getEmployees employee.find " + exception);
+            }
+        });
     }// end update
 
     function remove(req, _id, res) {
@@ -1122,7 +1078,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
 
         getForDdByRelatedUser: getForDdByRelatedUser,
 
-        update: update,
+        addAtach: addAtach,
 
         updateOnlySelectedFields: updateOnlySelectedFields,
 

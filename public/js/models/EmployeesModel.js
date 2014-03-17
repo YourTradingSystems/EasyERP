@@ -20,7 +20,7 @@
 	            if (response.editedBy)
 	                response.editedBy.date = common.utcDateToLocaleDateTime(response.editedBy.date);
 	            if (response.dateBirth)
-	            	response.dateBirth = common.utcDateToLocaleDateTime(response.dateBirth, true);
+	                response.dateBirth = common.utcDateToLocaleDate(response.dateBirth);
                 if (response.attachments) {
                     _.map(response.attachments, function (attachment) {
                         attachment.uploadDate = common.utcDateToLocaleDate(attachment.uploadDate);

@@ -84,8 +84,9 @@ define([
             endContract: function (e) {
                 var wfId = $('.endContractReasonList').attr('data-id');
                 var contractEndReason = $(e.target).text();
-                this.currentModel.set({ workflow: wfId, contractEndReason: contractEndReason, workflowContractEnd: true });
-                this.currentModel.save({}, {
+                this.currentModel.set({ workflow: wfId, contractEndReason: contractEndReason});
+                this.currentModel.save(this.currentModel.changed, {
+                    patch: true,
                     success: function () {
                         Backbone.history.navigate("easyErp/Applications/kanban", { trigger: true });
                     },
@@ -441,18 +442,7 @@ define([
                     homeAddress[el.attr("name")] = $.trim(el.val());
                 });
                 // date parse 
-                var dateBirthSt = $.trim($("#dateBirth").val());
-                var dateBirth = "";
-                if (dateBirthSt) {
-                	dateBirthArr = dateBirthSt.split("/");
-                    var newDateBirt = new Date();  
-                    newDateBirt.setFullYear(dateBirthArr[2]);
-                    newDateBirt.setMonth(dateBirthArr[1]-1);    
-                    newDateBirt.setDate(dateBirthArr[0]); 
-                    var fullDateBirt = newDateBirt.toUTCString();
-                    dateBirth = new Date(Date.parse(fullDateBirt)).toISOString();
-                }
-                var recalculate = (this.currentModel.attributes.dateBirth == dateBirthSt) ? false : true;
+                var dateBirthSt = $.trim(this.$el.find("#dateBirth").val());
 
                 var active = (this.$el.find("#active").is(":checked")) ? true : false;
                 var sourceId = $("#sourceDd").data("id");
@@ -503,11 +493,10 @@ define([
                     passportNo: $.trim(this.$el.find("#passportNo").val()),
                     otherId: $.trim(this.$el.find("#otherId").val()),
                     homeAddress: homeAddress,
-                    dateBirth: dateBirth,
+                    dateBirth: dateBirthSt,
                     active: active,
                     source: sourceId,
                     imageSrc: this.imageSrc,
-                    recalculate: recalculate,
                     groups: {
                         owner: $("#allUsers").val(),
                         users: usersId,
@@ -515,11 +504,12 @@ define([
                     },
                     whoCanRW: whoCanRW
                 };
-                this.currentModel.save(data,{
+                this.currentModel.set(data);
+                this.currentModel.save(this.currentModel.changed, {
                         headers: {
                             mid: 39
                         },
-                        wait: true,
+                        patch: true,
                         success: function (model) {
                             Backbone.history.navigate("easyErp/" + self.contentType, { trigger: true });
                             self.hideDialog();
@@ -603,11 +593,16 @@ define([
 
                 
                 $('#dateBirth').datepicker({
-                	dateFormat: "d/m/yy",
+                    dateFormat: "d M, yy",
                     changeMonth : true,
                     changeYear : true,
                     yearRange: '-100y:c+nn',
                     maxDate: '-1d'
+                    //onChangeMonthYear: function (year, month) {
+                    //    var target = $(this);
+                    //    var day = target.val().split('/')[0];
+                    //    target.val(day + '/' + month + '/' + year);
+                    //}
                 });
                 var model = this.currentModel.toJSON();
                 if (model.groups)

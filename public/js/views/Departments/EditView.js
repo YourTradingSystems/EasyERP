@@ -23,7 +23,6 @@ define([
 					this.currentModel = (options.model) ? options.model : options.collection.getElement();
 				}
 				this.responseObj = {};
-				this.page=1;
                 this.render();
             },
 			events:{
@@ -50,27 +49,79 @@ define([
 				this.showNewSelect(e,true,false)
 			},
 
-			nextUserList:function(e){
-				this.page+=1;
-				common.populateUsersForGroups('#sourceUsers','#targetUsers',null,this.page);
-			},
-			prevUserList:function(e){
-				this.page-=1;
-				common.populateUsersForGroups('#sourceUsers','#targetUsers',null,this.page);
-			},
+			nextUserList: function (e, page) {
+                $(e.target).closest(".left").find("ul").attr("data-page", parseInt($(e.target).closest(".left").find("ul").attr("data-page")) + 1);
+                this.updateAssigneesPagination($(e.target).closest(".left"));
+
+            },
+
+            prevUserList: function (e, page) {
+                $(e.target).closest(".left").find("ul").attr("data-page", parseInt($(e.target).closest(".left").find("ul").attr("data-page")) - 1);
+                this.updateAssigneesPagination($(e.target).closest(".left"));
+            },
 
 			chooseUser:function(e){
 				$(e.target).toggleClass("choosen");
 			},
-            addUsers: function (e) {
+
+            updateAssigneesPagination: function (el) {
+                var pag = el.find(".userPagination .text");
+                el.find(".userPagination .nextUserList").remove();
+                el.find(".userPagination .prevUserList").remove();
+                el.find(".userPagination .nextGroupList").remove();
+                el.find(".userPagination .prevGroupList").remove();
+
+                var list = el.find("ul");
+                var count = list.find("li").length;
+                var s = "";
+                var page = parseInt(list.attr("data-page"));
+                if (page > 1) {
+                    el.find(".userPagination").prepend("<a class='prevUserList' href='javascript:;'>« prev</a>");
+                }
+                if (count === 0) {
+                    s += "0-0 of 0";
+                } else {
+                    if ((page) * 20 - 1 < count) {
+                        s += ((page - 1) * 20 + 1) + "-" + ((page) * 20) + " of " + count;
+                    } else {
+                        s += ((page - 1) * 20 + 1) + "-" + (count) + " of " + count;
+                    }
+                }
+
+                if (page < count / 20) {
+                    el.find(".userPagination").append("<a class='nextUserList' href='javascript:;'>next »</a>");
+                }
+                el.find("ul li").hide();
+                for (var i = (page - 1) * 20; i < 20 * page; i++) {
+                    el.find("ul li").eq(i).show();
+                }
+
+                pag.text(s);
+            },
+
+
+			addUsers: function (e) {
                 e.preventDefault();
+
+                var div = $(e.target).parents(".left");
                 $('#targetUsers').append($(e.target));
+
+                this.updateAssigneesPagination(div);
+
+                div = $(e.target).parents(".left");
+                this.updateAssigneesPagination(div);
             },
             removeUsers: function (e) {
                 e.preventDefault();
-                $('#sourceUsers').append($(e.target));
-            },
 
+                var div = $(e.target).parents(".left");
+                $('#sourceUsers').append($(e.target));
+
+                this.updateAssigneesPagination(div);
+
+                div = $(e.target).parents(".left");
+                this.updateAssigneesPagination(div);
+            },
 			changeTab:function(e){
 				$(e.target).closest(".dialog-tabs").find("a.active").removeClass("active");
 				$(e.target).addClass("active");
@@ -144,7 +195,6 @@ define([
                     },
                     wait: true,
                     success: function (model) {
-						self.hideDialog();
                         Backbone.history.navigate("#easyErp/Departments", { trigger: true });
                     },
                     error: function (model, xhr) {
@@ -212,7 +262,11 @@ define([
                     return $('<li/>').text(item.login).attr("id",item._id);
                 });
 				$('#targetUsers').append(b);
-				common.populateUsersForGroups('#sourceUsers','#targetUsers',this.currentModel.toJSON(),this.page);
+				common.populateUsersForGroups('#sourceUsers','#targetUsers',this.currentModel.toJSON(),1,function(){
+					self.updateAssigneesPagination($("#targetUsers").parent());
+					self.updateAssigneesPagination($("#sourceUsers").parent());
+					
+				});
                 return this;
             }
 

@@ -2,9 +2,10 @@ define([
     "text!templates/Applications/CreateTemplate.html",
     "models/ApplicationsModel",
     "common",
-	"populate"
+	"populate",
+    'views/Notes/AttachView'
 ],
-    function (CreateTemplate, ApplicationModel, common, populate) {
+    function (CreateTemplate, ApplicationModel, common, populate, attachView) {
 
         var CreateView = Backbone.View.extend({
             el: "#content-holder",
@@ -14,8 +15,6 @@ define([
             initialize: function () {
                 _.bindAll(this, "saveItem", "render");
                 this.model = new ApplicationModel();
-                this.page=1;
-                this.pageG=1;
 				this.responseObj = {};
                 this.render();
             },
@@ -27,8 +26,6 @@ define([
                 "mouseleave .avatar": "hideEdit",
                 "click .current-selected": "showNewSelect",
                 "click": "hideNewSelect",
-                "change .inputAttach": "addAttach",
-				"click .deleteAttach":"deleteAttach",
                 'keydown': 'keydownHandler',
                 'click .dialog-tabs a': 'changeTab',
                 'click .addUser': 'addUser',
@@ -241,18 +238,6 @@ define([
 				pag.text(s);
 			},
 
-			deleteAttach:function(e){
-				$(e.target).closest(".attachFile").remove();
-			},
-            addAttach: function (event) {
-				var s= $(".inputAttach:last").val().split("\\")[$(".inputAttach:last").val().split('\\').length-1];
-				$(".attachContainer").append('<li class="attachFile">'+
-											 '<a href="javascript:;">'+s+'</a>'+
-											 '<a href="javascript:;" class="deleteAttach">Delete</a></li>'
-											 );
-				$(".attachContainer .attachFile:last").append($(".input-file .inputAttach").attr("hidden","hidden"));
-				$(".input-file").append('<input type="file" value="Choose File" class="inputAttach" name="attachfile">');
-			},
             hideDialog: function () {
                 $(".edit-dialog").remove();
                 $(".add-group-dialog").remove();
@@ -301,11 +286,7 @@ define([
                 }, 250);
 
             },
-            fileSizeIsAcceptable: function(file){
-                if(!file){return false;}
-                return file.size < App.File.MAXSIZE;
-            },
-
+ 
             saveItem: function () {
                 var self = this;
                 var mid = 39;
@@ -391,67 +372,8 @@ define([
                     },
                     wait: true,
                     success: function (model, response) {
-                        Backbone.history.fragment = '';
-                        var currentModelID = response.id || (new Date()).valueOf();
-						var addFrmAttach = $("#createApplicationForm");
-						var fileArr= [];
-						var addInptAttach = '';
-						$("li .inputAttach").each(function(){
-							addInptAttach = $(this)[0].files[0];
-							fileArr.push(addInptAttach);
-							if(!self.fileSizeIsAcceptable(addInptAttach)){
-								alert('File you are trying to attach is too big. MaxFileSize: ' + App.File.MaxFileSizeDisplay);
-								return;
-							}
-						});
-							addFrmAttach.submit(function (e) {
-								var bar = $('.bar');
-								var status = $('.status');
-								
-								var formURL = "http://" + window.location.host + "/uploadApplicationFiles";
-								e.preventDefault();
-								addFrmAttach.ajaxSubmit({
-									url: formURL,
-									type: "POST",
-									processData: false,
-									contentType: false,
-												   data: [fileArr],
-
-									beforeSend: function (xhr) {
-										xhr.setRequestHeader("id", currentModelID);
-										status.show();
-										var statusVal = '0%';
-										bar.width(statusVal);
-										status.html(statusVal);
-									},
-									
-									uploadProgress: function(event, position, total, statusComplete) {
-										var statusVal = statusComplete + '%';
-										bar.width(statusVal);
-										status.html(statusVal);
-									},
-									
-									success: function () {
-										addFrmAttach[0].reset();
-										status.hide();
-										self.hideDialog();
-										Backbone.history.navigate("easyErp/" + self.contentType, { trigger: true });
-									},
-
-									error: function () {
-										console.log("Attach file error");
-									}
-								});
-							});
-						if(fileArr.length>0){
-							addFrmAttach.submit();
-						}
-						else{
-							self.hideDialog();
-							Backbone.history.navigate("easyErp/" + self.contentType, { trigger: true });
-
-						}
-						addFrmAttach.off('submit');
+                        var currentModel = model.changed;
+						self.attachView.sendToServer(null,currentModel);
 
                     },
                     error: function (model, xhr) {
@@ -493,9 +415,17 @@ define([
                         }
                     }
                 });
-                common.populateUsersForGroups('#sourceUsers','#targetUsers',null,this.page);
+				var notDiv = this.$el.find('.attach-container');
+				this.attachView = new attachView({
+                    model: new ApplicationModel(),
+					url:"/uploadApplicationFiles",
+					isCreate:true
+                });
+
+                notDiv.append(this.attachView.render().el);
+                common.populateUsersForGroups('#sourceUsers','#targetUsers',null,1);
                 common.populateUsers("#allUsers", "/UsersForDd",null,null,true);
-                common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",null,this.pageG);
+                common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",null,1);
 				populate.getWorkflow("#workflowsDd","#workflowNamesDd","/WorkflowsForDd",{id:"Applications"},"name",this,true);
 				populate.get("#departmentDd","/DepartmentsForDd",{},"departmentName",this,true);
 				populate.get("#jobPositionDd","/JobPositionForDd",{},"name",this,true);
