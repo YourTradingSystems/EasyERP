@@ -192,11 +192,11 @@ define([
                    // for input type number
                    this.$el.find("#logged").spinner({
                        min: 0,
-                       max: 1000
+                       max: 9999
                    });
                    this.$el.find("#estimated").spinner({
                        min: 0,
-                       max: 1000
+                       max: 9999
                    });
                    //$('#deadline').datepicker({
                    //    dateFormat: "d M, yy",

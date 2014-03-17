@@ -281,7 +281,6 @@ define([
                 var workflow = this.$el.find("#workflowsDd").data("id");
                 var description = $.trim(this.$el.find("#description").val());
                 var $userNodes = this.$el.find("#usereditDd option:selected"), users = [];
-                console.log(workflow);
                 $userNodes.each(function (key, val) {
                     users.push({
                         id: val.value,
