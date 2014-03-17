@@ -63,7 +63,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
         },
         editedBy: {
             user: { type: ObjectId, ref: 'Users', default: null },
-            date: { type: Date, default: Date.now  }
+            date: { type: Date, default: Date.now }
         },
         campaign: { type: String, default: '' },
         source: { type: String, default: '' },
@@ -85,16 +85,16 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
 
         var contentType = req.params.contentType;
         var optionsObject = {};
-         //modified for filter Vasya
-         if (data.filter && data.filter.workflow) {
-			 data.filter.workflow = data.filter.workflow.map(function(item){
-				 return item==="null"?null:item;
-			 });
+        //modified for filter Vasya
+        if (data.filter && data.filter.workflow) {
+            data.filter.workflow = data.filter.workflow.map(function (item) {
+                return item === "null" ? null : item;
+            });
 
-             optionsObject['workflow'] = { $in: data.filter.workflow.objectID() };
-         } else if (data && !data.newCollection) {
-               optionsObject['workflow'] = { $in: [] };
-         }
+            optionsObject['workflow'] = { $in: data.filter.workflow.objectID() };
+        } else if (data && !data.newCollection) {
+            optionsObject['workflow'] = { $in: [] };
+        }
         switch (contentType) {
             case ('Opportunities'): {
                 optionsObject['isOpportunitie'] = true;
@@ -345,7 +345,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                     if (data.uId) {
                         _opportunitie.createdBy.user = data.uId;
                         //uId for edited by field on creation
-                        _opportunitie.editedBy.user =data.uId;
+                        _opportunitie.editedBy.user = data.uId;
                     }
                     if (data.campaign) {
                         _opportunitie.campaign = data.campaign;
@@ -402,12 +402,11 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                 break;
 
         }
+        var c = new Date() - data.dataRange * 24 * 60 * 60 * 1000;
+        var a = new Date(c);
         if (data.source) {
 
-            var c = new Date() - data.dataRange * 24 * 60 * 60 * 1000;
-			console.log(data.dataRange);
-            var a = new Date(c);
-            models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).aggregate({ $match: { $and: [{ createdBy: { $ne: null },source: {$ne:""}, $or: [{ isConverted: true }, { isOpportunitie: false }] }, { 'createdBy.date': { $gte: a } }] } }, { $group: { _id: { source: "$source", isOpportunitie: "$isOpportunitie" }, count: { $sum: 1 } } }, { $project: { "source": "$_id.source", count: 1, "isOpp": "$_id.isOpportunitie", _id: 0 } }).exec(function (err, result) {
+            models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).aggregate({ $match: { $and: [{ createdBy: { $ne: null }, source: { $ne: "" }, $or: [{ isConverted: true }, { isOpportunitie: false }] }, { 'createdBy.date': { $gte: a } }] } }, { $group: { _id: { source: "$source", isOpportunitie: "$isOpportunitie" }, count: { $sum: 1 } } }, { $project: { "source": "$_id.source", count: 1, "isOpp": "$_id.isOpportunitie", _id: 0 } }).exec(function (err, result) {
                 if (err) {
                     console.log(err);
                     logWriter.log('Opportunities.js chart' + err);
@@ -428,8 +427,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                 myItem["$project"]["year"] = {};
                 myItem["$project"]["year"]["$year"] = "$convertedDate";
             }
-            var c = new Date() - data.dataRange * 24 * 60 * 60 * 1000;
-            var a = new Date(c);
+
             models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).aggregate(
 				{
 				    $match: {
@@ -624,37 +622,37 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                             if (!err) {
                                 var query = models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).find().where('_id').in(result);
                                 if (data.sort) {
-                                      query.sort(data.sort);
-                                }else{
-									query.sort({"editedBy.date":-1});
-								}
+                                    query.sort(data.sort);
+                                } else {
+                                    query.sort({ "editedBy.date": -1 });
+                                }
                                 if (data && data.filter && data.filter.workflow) {
-									data.filter.workflow = data.filter.workflow.map(function(item){
-										return item==="null"?null:item;
-									});
-								}
+                                    data.filter.workflow = data.filter.workflow.map(function (item) {
+                                        return item === "null" ? null : item;
+                                    });
+                                }
                                 switch (data.contentType) {
-  
+
                                     case ('Opportunities'): {
-                                    if (data && data.filter && data.filter.workflow) {
-                                          console.log(data.filter.workflow);
-                                          query.where('workflow').in(data.filter.workflow);
-                                    } else if (data && (!data.newCollection || data.newCollection === 'false')) {
-                                          query.where('workflow').in([]);
-                                    }
+                                        if (data && data.filter && data.filter.workflow) {
+                                            console.log(data.filter.workflow);
+                                            query.where('workflow').in(data.filter.workflow);
+                                        } else if (data && (!data.newCollection || data.newCollection === 'false')) {
+                                            query.where('workflow').in([]);
+                                        }
                                         query.populate('customer', 'name').
                                             populate('workflow', '_id name status').
                                             populate('salesPerson', 'name').
                                             populate('createdBy.user', 'login').
                                             populate('editedBy.user', 'login');
                                     }
-                                    break;
+                                        break;
                                     case ('Leads'): {
-                                    if (data && data.filter && data.filter.workflow) {
-                                          query.where('workflow').in(data.filter.workflow);
-                                    } else if (data && (!data.newCollection || data.newCollection === 'false')) {
-                                          query.where('workflow').in([]);
-                                    }
+                                        if (data && data.filter && data.filter.workflow) {
+                                            query.where('workflow').in(data.filter.workflow);
+                                        } else if (data && (!data.newCollection || data.newCollection === 'false')) {
+                                            query.where('workflow').in([]);
+                                        }
 
                                         query.select("_id createdBy editedBy name workflow contactName phones campaign source email contactName").
                                             populate('company', 'name').
@@ -664,16 +662,16 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                                     }
                                         break;
                                 }
-                                    query.skip((data.page - 1) * data.count).
-                                    limit(data.count).
-                                    exec(function (error, _res) {
-                                        if (!error) {
-                                            res['data'] = _res;
-                                            response.send(res);
-                                        } else {
-                                            console.log(error);
-                                        }
-                                    });
+                                query.skip((data.page - 1) * data.count).
+                                limit(data.count).
+                                exec(function (error, _res) {
+                                    if (!error) {
+                                        res['data'] = _res;
+                                        response.send(res);
+                                    } else {
+                                        console.log(error);
+                                    }
+                                });
                             } else {
                                 console.log(err);
                             }
@@ -777,9 +775,6 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                         res.send(500, { error: "Can't update Opportunities" });
                     } else {
                         if (data.createCustomer) {                       //�������� ���������
-                            console.log('************Cre Cust***********');
-                            console.log(data);
-                            console.log('*******************************');
                             if (data.tempCompanyField) {                          //�������� �������
                                 //add " address:data.address" convert address (Vasya)
                                 var _company = {
@@ -841,9 +836,9 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
             delete data._id;
             delete data.createdBy;
             if (data.workflow && data.workflow.wId == 'Leads') {
-                models.get(req.session.lastDb - 1, 'workflows', workflow.workflowSchema).findOne({ $and: [{ wId: 'Opportunities' }, { sequence: 0 }] }, function (err, _workflow) {
-                    if (_workflow) {
-                        data.workflow._id = _workflow._id;
+                models.get(req.session.lastDb - 1, 'workflows', workflow.workflowSchema).find({ wId: 'Opportunities' }).sort({ sequence: 1 }).exec(function (err, _workflow) {
+                    if (_workflow.length !== 0) {
+                        data.workflow._id = _workflow[_workflow.length - 1]._id;
                     }
                     updateOpp();
                 });
@@ -864,34 +859,35 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
         delete data.fileName;
         if (data.workflow && data.sequenceStart && data.workflowStart) {
             if (data.sequence == -1) {
-				var query = (data.jobkey) ? { $and: [{ name: data.name }, { jobkey: data.jobkey }] } : { name: data.name };
-				models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).find(query, function (error, doc) {
-					if (error) {
+                var query = (data.jobkey) ? { $and: [{ name: data.name }, { jobkey: data.jobkey }] } : { name: data.name };
+                models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).find(query, function (error, doc) {
+                    if (error) {
                         console.log(error);
                         logWriter.log('Opprtunities.js. create opportunitie.find' + error);
                         res.send(500, { error: 'Opprtunities.create find error' });
                     }
-                    if (doc.length > 0&&doc[0]._id!=_id) {
-						logWriter.log('Opprtunities.js. createLead Dublicate Leads' + data.name);
+                    if (doc.length > 0 && doc[0]._id != _id) {
+                        logWriter.log('Opprtunities.js. createLead Dublicate Leads' + data.name);
                         res.send(400, { error: 'An Opportunities with the same Name already exists' });
-					}else{
-                event.emit('updateSequence', models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema), "sequence", data.sequenceStart, data.sequence, data.workflowStart, data.workflowStart, false, true, function (sequence) {
-                    event.emit('updateSequence',models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema), "sequence", data.sequenceStart, data.sequence, data.workflow, data.workflow, true, false, function (sequence) {
-                        data.sequence = sequence;
-                        if (data.workflow == data.workflowStart)
-                            data.sequence -= 1;
-                        models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).findByIdAndUpdate(_id, { $set: data }, function (err, result) {
-                            if (!err) {
-                                res.send(200, { success: 'Opportunities updated', sequence:result.sequence  });
-                            } else {
-                                res.send(500, { error: "Can't update Opportunitie" });
-                            }
+                    } else {
+                        event.emit('updateSequence', models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema), "sequence", data.sequenceStart, data.sequence, data.workflowStart, data.workflowStart, false, true, function (sequence) {
+                            event.emit('updateSequence', models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema), "sequence", data.sequenceStart, data.sequence, data.workflow, data.workflow, true, false, function (sequence) {
+                                data.sequence = sequence;
+                                if (data.workflow == data.workflowStart)
+                                    data.sequence -= 1;
+                                models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).findByIdAndUpdate(_id, { $set: data }, function (err, result) {
+                                    if (!err) {
+                                        res.send(200, { success: 'Opportunities updated', sequence: result.sequence });
+                                    } else {
+                                        res.send(500, { error: "Can't update Opportunitie" });
+                                    }
 
+                                });
+
+                            });
                         });
-
-                    });
+                    }
                 });
-					}});
             } else {
                 event.emit('updateSequence', models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema), "sequence", data.sequenceStart, data.sequence, data.workflowStart, data.workflow, false, false, function (sequence) {
                     delete data.sequenceStart;
@@ -907,75 +903,76 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
 
                     });
                 });
-					}
-        } else {
-				var query = (data.jobkey) ? { $and: [{ name: data.name }, { jobkey: data.jobkey }] } : { name: data.name };
-				models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).find(query, function (error, doc) {
-					if (error) {
-                        console.log(error);
-                        logWriter.log('Opprtunities.js. create opportunitie.find' + error);
-                        res.send(500, { error: 'Opprtunities.create find error' });
-                    }
-                    if (doc.length > 0&&doc[0]._id!=_id) {
-						logWriter.log('Opprtunities.js. createLead Dublicate Leads' + data.name);
-                        res.send(400, { error: 'An Opportunities with the same Name already exists' });
-					}else{
-            if (data.notes && data.notes.length != 0) {
-                var obj = data.notes[data.notes.length - 1];
-                            if (!obj._id)
-                obj._id = mongoose.Types.ObjectId();
-                obj.date = new Date();
-                            if (!obj.author)
-                obj.author = req.session.uName;
-                data.notes[data.notes.length - 1] = obj;
             }
-
-            models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).findByIdAndUpdate(_id,  { $set: data }, function (err, result) {
-                if (!err) {
-                                if (fileName) {
-                                    var os = require("os");
-                                    var osType = (os.type().split('_')[0]);
-                                    var path;
-                                    var dir;
-                                    switch (osType) {
-                                        case "Windows":
-                                            {
-                                                var newDirname = __dirname.replace("\\Modules", "");
-                                                while (newDirname.indexOf("\\") !== -1) {
-                                                    newDirname = newDirname.replace("\\", "\/");
-                                                }
-                                                path = newDirname + "\/uploads\/" + _id + "\/" + fileName;
-                                                dir = newDirname + "\/uploads\/" + _id;
-                                            }
-                                            break;
-                                        case "Linux":
-                                            {
-                                                var newDirname = __dirname.replace("/Modules", "");
-                                                while (newDirname.indexOf("\\") !== -1) {
-                                                    newDirname = newDirname.replace("\\", "\/");
-                                                }
-                                                path = newDirname + "\/uploads\/" + _id + "\/" + fileName;
-                                                dir = newDirname + "\/uploads\/" + _id;
-                                            }
-                                    }
-
-                                    logWriter.fs.unlink(path, function (err) {
-                                        console.log(err);
-                                        logWriter.fs.readdir(dir, function (err, files) {
-                                            if (files.length === 0) {
-                                                logWriter.fs.rmdir(dir, function () { });
-                                            }
-                                        });
-                                    });
-
-                                }
-                    res.send(200, { success: 'Opportunities updated',  notes: result.notes, sequence: result.sequence });
-                } else {
-                    res.send(500, { error: "Can't update Opportunitie" });
+        } else {
+            var query = (data.jobkey) ? { $and: [{ name: data.name }, { jobkey: data.jobkey }] } : { name: data.name };
+            models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).find(query, function (error, doc) {
+                if (error) {
+                    console.log(error);
+                    logWriter.log('Opprtunities.js. create opportunitie.find' + error);
+                    res.send(500, { error: 'Opprtunities.create find error' });
                 }
+                if (doc.length > 0 && doc[0]._id != _id) {
+                    logWriter.log('Opprtunities.js. createLead Dublicate Leads' + data.name);
+                    res.send(400, { error: 'An Opportunities with the same Name already exists' });
+                } else {
+                    if (data.notes && data.notes.length != 0) {
+                        var obj = data.notes[data.notes.length - 1];
+                        if (!obj._id)
+                            obj._id = mongoose.Types.ObjectId();
+                        obj.date = new Date();
+                        if (!obj.author)
+                            obj.author = req.session.uName;
+                        data.notes[data.notes.length - 1] = obj;
+                    }
 
+                    models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).findByIdAndUpdate(_id, { $set: data }, function (err, result) {
+                        if (!err) {
+                            if (fileName) {
+                                var os = require("os");
+                                var osType = (os.type().split('_')[0]);
+                                var path;
+                                var dir;
+                                switch (osType) {
+                                    case "Windows":
+                                        {
+                                            var newDirname = __dirname.replace("\\Modules", "");
+                                            while (newDirname.indexOf("\\") !== -1) {
+                                                newDirname = newDirname.replace("\\", "\/");
+                                            }
+                                            path = newDirname + "\/uploads\/" + _id + "\/" + fileName;
+                                            dir = newDirname + "\/uploads\/" + _id;
+                                        }
+                                        break;
+                                    case "Linux":
+                                        {
+                                            var newDirname = __dirname.replace("/Modules", "");
+                                            while (newDirname.indexOf("\\") !== -1) {
+                                                newDirname = newDirname.replace("\\", "\/");
+                                            }
+                                            path = newDirname + "\/uploads\/" + _id + "\/" + fileName;
+                                            dir = newDirname + "\/uploads\/" + _id;
+                                        }
+                                }
+
+                                logWriter.fs.unlink(path, function (err) {
+                                    console.log(err);
+                                    logWriter.fs.readdir(dir, function (err, files) {
+                                        if (files.length === 0) {
+                                            logWriter.fs.rmdir(dir, function () { });
+                                        }
+                                    });
+                                });
+
+                            }
+                            res.send(200, { success: 'Opportunities updated', notes: result.notes, sequence: result.sequence });
+                        } else {
+                            res.send(500, { error: "Can't update Opportunitie" });
+                        }
+
+                    });
+                }
             });
-					}});
 
         }
 
@@ -1176,7 +1173,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                                     if (!err) {
                                         res['data'] = result;
                                         res['workflowId'] = data.workflowId;
-										res['fold'] = (req.session.kanbanSettings.opportunities.foldWorkflows&&req.session.kanbanSettings.opportunities.foldWorkflows.indexOf(data.workflowId.toString())!==-1);
+                                        res['fold'] = (req.session.kanbanSettings.opportunities.foldWorkflows && req.session.kanbanSettings.opportunities.foldWorkflows.indexOf(data.workflowId.toString()) !== -1);
                                         response.send(res);
                                     } else {
                                         logWriter.log("Opportunitie.js getFilterOpportunitiesForKanban opportunitie.find" + err);
@@ -1321,7 +1318,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
 
         remove: remove,
 
-		opportunitiesSchema:opportunitiesSchema
+        opportunitiesSchema: opportunitiesSchema
     }
 };
 module.exports = Opportunities;

@@ -1277,18 +1277,18 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
     function updateEmployees(req, res, id, data) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
-            access.getEditWritAccess(req, req.session.uId, 42, function (access) {
+            access.getEditWritAccess(req, req.session.uId, 42, function(access) {
                 if (access) {
                     data.employee.editedBy = {
                         user: req.session.uId,
                         date: new Date().toISOString()
-                    }
+                    };
 
                     employee.update(req, id, data.employee, res);
                 } else {
                     res.send(403);
                 }
-            })
+            });
 
         } else {
             res.send(401);

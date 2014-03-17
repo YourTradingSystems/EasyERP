@@ -22,21 +22,21 @@
                 if (response.data) {
                     if (response.data.weekly) {
                         _.map(response.data.weekly, function (employee) {
-                            employee.dateBirth = common.utcDateToLocaleDateTime(employee.dateBirth, true);
+                            employee.dateBirth = common.utcDateToLocaleDate(employee.dateBirth);
                             return employee;
                         });
                     }
                     
                     if (response.data.nextweek) {
                         _.map(response.data.nextweek, function (employee) {
-                            employee.dateBirth = common.utcDateToLocaleDateTime(employee.dateBirth, true);
+                            employee.dateBirth = common.utcDateToLocaleDate(employee.dateBirth);
                             return employee;
                         });
                     }
                     
                     if (response.data.monthly) {
                         _.map(response.data.monthly, function (employee) {
-                            employee.dateBirth = common.utcDateToLocaleDateTime(employee.dateBirth, true);
+                            employee.dateBirth = common.utcDateToLocaleDate(employee.dateBirth);
                             return employee;
                         });
                     }
