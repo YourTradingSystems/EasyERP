@@ -19,40 +19,40 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         jobType = require("./Modules/JobType.js")(logWriter, mongoose, models),
         birthdays = require("./Modules/Birthdays.js")(logWriter, mongoose, employee, models, event);
 
-	//binding for remove Workflow
-	event.on('removeWorkflow',function (req, wId, id) {
-		var query;
-		switch(wId){
-			case "Opportunities":
-			case "Leads":
-			query = models.get(req.session.lastDb - 1, "Opportunities", opportunities.opportunitiesSchema);
-			break;
-			case "Projects":
-			query = models.get(req.session.lastDb - 1, "Project", project.ProjectSchema);
-			break;
-			case "Tasks":
-			query = models.get(req.session.lastDb - 1, "Tasks", project.TasksSchema);
-			break;
-			case "Applications":
-			query = models.get(req.session.lastDb - 1, "Employees", employee.employeeSchema);
-			break;
-			case "Jobpositions":
-			query = models.get(req.session.lastDb - 1, 'JobPosition', jobPosition.jobPositionSchema);
-			break;
+    //binding for remove Workflow
+    event.on('removeWorkflow', function (req, wId, id) {
+        var query;
+        switch (wId) {
+            case "Opportunities":
+            case "Leads":
+                query = models.get(req.session.lastDb - 1, "Opportunities", opportunities.opportunitiesSchema);
+                break;
+            case "Projects":
+                query = models.get(req.session.lastDb - 1, "Project", project.ProjectSchema);
+                break;
+            case "Tasks":
+                query = models.get(req.session.lastDb - 1, "Tasks", project.TasksSchema);
+                break;
+            case "Applications":
+                query = models.get(req.session.lastDb - 1, "Employees", employee.employeeSchema);
+                break;
+            case "Jobpositions":
+                query = models.get(req.session.lastDb - 1, 'JobPosition', jobPosition.jobPositionSchema);
+                break;
 
-		}
-		if (query){
-			query.update({workflow:id},{workflow:null},{multi:true}).exec(function(err,result){
-				if (err) {
-					console.log(err);
-					logWriter.log("Removed workflow update " + err);
-				}
-				console.log(result);
-			});
-		}
-	});
-	//binding for Sequence
-	event.on('updateSequence',function (model, sequenceField, start, end, workflowStart, workflowEnd, isCreate, isDelete, callback) {
+        }
+        if (query) {
+            query.update({ workflow: id }, { workflow: null }, { multi: true }).exec(function (err, result) {
+                if (err) {
+                    console.log(err);
+                    logWriter.log("Removed workflow update " + err);
+                }
+                console.log(result);
+            });
+        }
+    });
+    //binding for Sequence
+    event.on('updateSequence', function (model, sequenceField, start, end, workflowStart, workflowEnd, isCreate, isDelete, callback) {
         var query;
         var objFind = {};
         var objChange = {};
@@ -495,16 +495,16 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
     function personUpdateOnlySelectedFields(req, res, id, data) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
             access.getEditWritAccess(req, req.session.uId, 49, function (access) {
-				if (access) {
-					data.editedBy = {
-						user: req.session.uId,
-						date: new Date().toISOString()
-					};
-					customer.updateOnlySelectedFields(req, id, data, res);
-				} else {
-					res.send(403);
-				}
-			});
+                if (access) {
+                    data.editedBy = {
+                        user: req.session.uId,
+                        date: new Date().toISOString()
+                    };
+                    customer.updateOnlySelectedFields(req, id, data, res);
+                } else {
+                    res.send(403);
+                }
+            });
         } else {
             res.send(401);
         }
@@ -659,7 +659,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
     };
 
     function getProjectsById(req, res, data) {
-        
+
         if (req.session && req.session.loggedIn && req.session.lastDb) {
             access.getReadAccess(req, req.session.uId, 39, function (access) {
                 if (access) {
@@ -833,16 +833,16 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
     function taskUpdateOnlySelectedFields(req, res, id, data) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
             access.getEditWritAccess(req, req.session.uId, 40, function (access) {
-            if (access) {
-                data.editedBy = {
-                    user: req.session.uId,
-                    date: new Date().toISOString()
-                };
-                project.taskUpdateOnlySelectedFields(req, id, data, res);
-            } else {
-                res.send(403);
-            }
-				});
+                if (access) {
+                    data.editedBy = {
+                        user: req.session.uId,
+                        date: new Date().toISOString()
+                    };
+                    project.taskUpdateOnlySelectedFields(req, id, data, res);
+                } else {
+                    res.send(403);
+                }
+            });
         } else {
             res.send(401);
         }
@@ -1042,16 +1042,16 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
     function companyUpdateOnlySelectedFields(req, res, id, data) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
             access.getEditWritAccess(req, req.session.uId, 50, function (access) {
-				if (access) {
-					data.editedBy = {
-						user: req.session.uId,
-						date: new Date().toISOString()
-					};
-					customer.updateOnlySelectedFields(req, id, data, res);
-				} else {
-					res.send(403);
-				}
-			});
+                if (access) {
+                    data.editedBy = {
+                        user: req.session.uId,
+                        date: new Date().toISOString()
+                    };
+                    customer.updateOnlySelectedFields(req, id, data, res);
+                } else {
+                    res.send(403);
+                }
+            });
         } else {
             res.send(401);
         }
@@ -1059,7 +1059,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
     // Get  Persons or Companies or ownCompanies for list and thumbnail
     function getFilterCustomers(req, res) {
-        if (req.session && req.session.loggedIn && req.session.lastDb ) {
+        if (req.session && req.session.loggedIn && req.session.lastDb) {
             access.getReadAccess(req, req.session.uId, 50, function (access) {
                 if (access) {
                     customer.getFilterCustomers(req, res);
@@ -1228,11 +1228,11 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         }
     };
 
-    function uploadEmployeesFile(req, res, id, file) {
+    function uploadEmployeesFile(req, res, id, files) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
             access.getEditWritAccess(req, req.session.uId, 42, function (access) {
                 if (access) {
-                    employee.update(req, id, { $push: { attachments: { $each: file } } }, res);
+                    employee.addAtach(req, id, files, res);
                 } else {
                     res.send(403);
                 }
@@ -1277,7 +1277,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
     function updateEmployees(req, res, id, data) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
-            access.getEditWritAccess(req, req.session.uId, 42, function(access) {
+            access.getEditWritAccess(req, req.session.uId, 42, function (access) {
                 if (access) {
                     data.employee.editedBy = {
                         user: req.session.uId,
@@ -1297,16 +1297,16 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
     function employeesUpdateOnlySelectedFields(req, res, id, data) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
             access.getEditWritAccess(req, req.session.uId, 42, function (access) {
-				if (access) {
-					data.editedBy = {
-						user: req.session.uId,
-						date: new Date().toISOString()
-					};
-					employee.updateOnlySelectedFields(req, id, data, res);
-				} else {
-					res.send(403);
-				}
-			});
+                if (access) {
+                    data.editedBy = {
+                        user: req.session.uId,
+                        date: new Date().toISOString()
+                    };
+                    employee.updateOnlySelectedFields(req, id, data, res);
+                } else {
+                    res.send(403);
+                }
+            });
         } else {
             res.send(401);
         }
@@ -1427,11 +1427,11 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         }
     };
 
-    function uploadApplicationFile(req, res, id, file) {
+    function uploadApplicationFile(req, res, id, files) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
             access.getEditWritAccess(req, req.session.uId, 43, function (access) {
                 if (access) {
-                    employee.update(req, id, { $push: { attachments: { $each: file } } }, res);
+                    employee.addAtach(req, id, files, res);
                 } else {
                     res.send(403);
                 }
@@ -1443,16 +1443,16 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
     function aplicationUpdateOnlySelectedFields(req, res, id, data) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
             access.getEditWritAccess(req, req.session.uId, 43, function (access) {
-				if (access) {
-					data.editedBy = {
-						user: req.session.uId,
-						date: new Date().toISOString()
-					};
-					employee.updateOnlySelectedFields(req, id, data, res);
-				} else {
-					res.send(403);
-				}
-			});
+                if (access) {
+                    data.editedBy = {
+                        user: req.session.uId,
+                        date: new Date().toISOString()
+                    };
+                    employee.updateOnlySelectedFields(req, id, data, res);
+                } else {
+                    res.send(403);
+                }
+            });
         } else {
             res.send(401);
         }
@@ -1706,7 +1706,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
     // Get  Leads or Opportunities for List
     function getFilterOpportunities(req, res) {
-        if (req.session && req.session.loggedIn && req.session.lastDb ) {
+        if (req.session && req.session.loggedIn && req.session.lastDb) {
             access.getReadAccess(req, req.session.uId, 24, function (access) {
                 if (access) {
                     opportunities.getFilter(req, res);
@@ -1808,19 +1808,19 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
     }
 
     function opportunitieUpdateOnlySelectedFields(req, res, id, data) {
-		data = data.opportunitie;
+        data = data.opportunitie;
         if (req.session && req.session.loggedIn && req.session.lastDb) {
             access.getEditWritAccess(req, req.session.uId, 25, function (access) {
-				if (access) {
-					data.editedBy = {
-						user: req.session.uId,
-						date: new Date().toISOString()
-					};
-					opportunities.updateOnlySelectedFields(req, id, data, res);
-				} else {
-					res.send(403);
-				}
-			});
+                if (access) {
+                    data.editedBy = {
+                        user: req.session.uId,
+                        date: new Date().toISOString()
+                    };
+                    opportunities.updateOnlySelectedFields(req, id, data, res);
+                } else {
+                    res.send(403);
+                }
+            });
         } else {
             res.send(401);
         }
@@ -1840,7 +1840,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             res.send(401);
         }
     }
-    
+
     function uploadOpportunitiesFiles(req, res, id, file) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
             access.getEditWritAccess(req, req.session.uId, 39, function (access) {
@@ -1882,7 +1882,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
         mongoose: mongoose,
         getModules: getModules,
-		redirectFromModuleId:redirectFromModuleId,
+        redirectFromModuleId: redirectFromModuleId,
 
         login: login,
         createUser: createUser,
@@ -1891,7 +1891,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         getUsersForDd: getUsersForDd,
         getUserById: getUserById,
         getFilterUsers: getFilterUsers,
-		getAllUserWithProfile: getAllUserWithProfile,
+        getAllUserWithProfile: getAllUserWithProfile,
         updateUser: updateUser,
         removeUser: removeUser,
         currentUser: currentUser,
@@ -1910,7 +1910,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         uploadFile: uploadFile,
         getCustomer: getCustomer,
         getFilterPersonsForMiniView: getFilterPersonsForMiniView,
-		personUpdateOnlySelectedFields:personUpdateOnlySelectedFields,
+        personUpdateOnlySelectedFields: personUpdateOnlySelectedFields,
 
         projectsTotalCollectionLength: projectsTotalCollectionLength,//for Showmore and Lists
         getProjects: getProjects,//for Thumbnails
@@ -1925,7 +1925,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         getProjectStatusCountForDashboard: getProjectStatusCountForDashboard,
         getProjectByEndDateForDashboard: getProjectByEndDateForDashboard,
         updateOnlySelectedFields: updateOnlySelectedFields,
-		taskUpdateOnlySelectedFields: taskUpdateOnlySelectedFields,
+        taskUpdateOnlySelectedFields: taskUpdateOnlySelectedFields,
         getProjectType: getProjectType,
 
         createTask: createTask,
@@ -1943,7 +1943,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         removeCompany: removeCompany,
         createCompany: createCompany,
         updateCompany: updateCompany,
-		companyUpdateOnlySelectedFields:companyUpdateOnlySelectedFields,
+        companyUpdateOnlySelectedFields: companyUpdateOnlySelectedFields,
         getFilterCustomers: getFilterCustomers,
         getCustomersImages: getCustomersImages,
         getCustomersAlphabet: getCustomersAlphabet,
@@ -1954,7 +1954,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         updateWorkflow: updateWorkflow,
         getWorkflowsForDd: getWorkflowsForDd,
         removeWorkflow: removeWorkflow,
-		updateWorkflowOnlySelectedField:updateWorkflowOnlySelectedField,
+        updateWorkflowOnlySelectedField: updateWorkflowOnlySelectedField,
 
         jobPositionsTotalCollectionLength: jobPositionsTotalCollectionLength,
         createJobPosition: createJobPosition,
@@ -1982,8 +1982,8 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         removeApplication: removeApplication,
         updateApplication: updateApplication,
         uploadApplicationFile: uploadApplicationFile,
-		aplicationUpdateOnlySelectedFields:aplicationUpdateOnlySelectedFields,
-		employeesUpdateOnlySelectedFields:employeesUpdateOnlySelectedFields,
+        aplicationUpdateOnlySelectedFields: aplicationUpdateOnlySelectedFields,
+        employeesUpdateOnlySelectedFields: employeesUpdateOnlySelectedFields,
 
         getDepartment: getDepartment,
         createDepartment: createDepartment,
@@ -1997,7 +1997,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         updateDegree: updateDegree,
         removeDegree: removeDegree,
 
-		getCampaigns:getCampaigns,
+        getCampaigns: getCampaigns,
         employeesTotalCollectionLength: employeesTotalCollectionLength,
         getEmployeesFilter: getEmployeesFilter,
         uploadEmployeesFile: uploadEmployeesFile,
@@ -2019,11 +2019,11 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         getOpportunityById: getOpportunityById,
         updateOpportunitie: updateOpportunitie,
         removeOpportunitie: removeOpportunitie,
-		opportunitieUpdateOnlySelectedFields: opportunitieUpdateOnlySelectedFields,
-		uploadOpportunitiesFiles:uploadOpportunitiesFiles,
+        opportunitieUpdateOnlySelectedFields: opportunitieUpdateOnlySelectedFields,
+        uploadOpportunitiesFiles: uploadOpportunitiesFiles,
 
         getSources: getSources,
-		getLanguages:getLanguages,
+        getLanguages: getLanguages,
         getJobType: getJobType,
         customerTotalCollectionLength: customerTotalCollectionLength
 

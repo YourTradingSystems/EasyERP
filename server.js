@@ -1117,12 +1117,14 @@ app.put('/Employees/:_id', function (req, res) {
     var data = {};
     var id = req.body._id;
     data.employee = req.body;
-    requestHandler.updateEmployees(req, res, id, data);
+    //requestHandler.updateEmployees(req, res, id, data);
+    console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!----UPDATE-EMPLOYEE---!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
 });
 
 app.patch('/Employees/:_id', function (req, res) {
     var id = req.param('_id');
     requestHandler.employeesUpdateOnlySelectedFields(req, res, id, req.body);
+    console.log(req.body);
 });
 
 app.delete('/Employees/:_id', function (req, res) {
@@ -1184,11 +1186,13 @@ app.put('/Applications/:_id', function (req, res) {
     var id = req.body._id;
     data.employee = req.body;
     requestHandler.updateApplication(req, res, id, data);
+    console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!----UPDATE-APP---!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
 });
 
 app.patch('/Applications/:_id', function (req, res) {
     var id = req.param('_id');
     requestHandler.aplicationUpdateOnlySelectedFields(req, res, id, req.body);
+    console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!----PATCH-APP---!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
 });
 
 app.delete('/Applications/:_id', function (req, res) {
