@@ -114,7 +114,7 @@ var Workflow = function (logWriter, mongoose, models, event) {
                 if (data) {
                  models.get(req.session.lastDb - 1, "workflows", workflowSchema).find({ _id: _id }, function (err, workflows) {//add vasya no not create workflow with the same name
                      models.get(req.session.lastDb - 1, "workflows", workflowSchema).find({ $and: [{ wId: workflows[0].wId  },{name: data.name}]}, function (err, workflow) {//add vasya no not create workflow with the same name
-                            delete data._id;
+                            //delete data._id;
                             if (workflow.length > 0) {//add vasya no not create workflow with the same name
                                      if (workflow[0].name === data.name) {//add vasya no not create workflow with the same name
                                             result.send(400, { error: 'An Workflows with the same Name already exists' });//add vasya no not create workflow with the same name
