@@ -3,19 +3,19 @@ define([
     'views/Persons/EditView',
     'views/Opportunities/compactContent',
     'views/Notes/NoteView',
-    'text!templates/Notes/AddNote.html',
-    'text!templates/Notes/AddAttachments.html',
+    'views/Notes/AttachView',
     'views/Opportunities/CreateView',
     'common'
 ],
 
-    function (personFormTemplate, editView, opportunitiesCompactContentView, noteView, addNoteTemplate, addAttachTemplate, createViewOpportunities, common) {
+    function (personFormTemplate, editView, opportunitiesCompactContentView, noteView, attachView, createViewOpportunities, common) {
         var personTasksView = Backbone.View.extend({
             el: '#content-holder',
 
             initialize: function (options) {
                 this.formModel = options.model;
                 this.formModel.on("change", this.render, this);
+				this.formModel.urlRoot = "/Persons";
                 this.pageMini = 1;
                 this.pageCount = 4;
                 this.allMiniOpp = 0;
@@ -41,11 +41,6 @@ define([
                 "click .person-checkbox:not(.disabled)": "personsSalesChecked",
                 "click .details": "toggle",
                 "click .company": "gotoCompanyForm",
-                "change .inputAttach": "addAttach",
-                "click #addNote": "addNote",
-                "click .editDelNote": "editDelNote",
-                "click #cancelNote": "cancelNote",
-                "click .deleteAttach": "deleteAttach",
                 "mouseenter .editable:not(.quickEdit), .editable .no-long:not(.quickEdit)": "quickEdit",
                 "mouseleave .editable": "removeEdit",
                 "click #editSpan": "editClick",
@@ -190,6 +185,7 @@ define([
             },
             saveClick: function (e) {
                 e.preventDefault();
+				var self = this;
                 var parent = $(e.target).parent().parent();
                 var objIndex = parent[0].id.split('_'); //replace change to split;
                 var currentModel = this.model;
@@ -201,7 +197,8 @@ define([
                     newModel[objIndex[0]] = param;
                 } else {
                     newModel[objIndex[0]] = $('#editInput').val();
-                }
+                
+}				var oldvalue = this.formModel[objIndex[0]];
                 this.formModel.save(newModel, {
                     headers: {
                         mid: 39
@@ -212,6 +209,7 @@ define([
                         Backbone.history.navigate("#easyErp/Persons/form/" + model.id, { trigger: true });
                     },
                     error: function (model, response) {
+						self.formModel[objIndex[0]]=oldvalue;
                         if (response)
                             alert(response.error);
                     }
@@ -219,211 +217,6 @@ define([
             },
 
 
-            cancelNote: function () {
-                $('#noteArea').val('');
-                $('#noteTitleArea').val('');
-                $('#getNoteKey').attr("value", '');
-            },
-
-            editDelNote: function (e) {
-                var id = e.target.id;
-                var k = id.indexOf('_');
-                var type = id.substr(0, k);
-                var id_int = id.substr(k + 1);
-                var currentModel = this.formModel;
-                var notes = currentModel.get('notes');
-
-                switch (type) {
-                    case "edit":
-                        {
-                            $('#noteArea').val($('#' + id_int).find('.noteText').text());
-                            $('#noteTitleArea').val($('#' + id_int).find('.noteTitle').text());
-                            $('#getNoteKey').attr("value", id_int);
-                            break;
-                        }
-                    case "del":
-                        {
-
-                            var newNotes = _.filter(notes, function (note) {
-                                if (note._id != id_int) {
-                                    return note;
-                                }
-                            });
-                            if (confirm("You realy want to remove note? ")) {
-                                currentModel.save({ 'notes': newNotes },
-                                    {
-                                        headers: {
-                                            mid: 39
-                                        },
-                                        patch: true,
-                                        success: function () {
-                                            $('#' + id_int).remove();
-                                        }
-                                    });
-                            }
-                            break;
-                        }
-                }
-            },
-
-            addNote: function (e) {
-                e.preventDefault();
-                var val = $('#noteArea').val().replace(/</g, "&#60;").replace(/>/g, "&#62;");
-                var title = $('#noteTitleArea').val().replace(/</g, "&#60;").replace(/>/g, "&#62;");
-                if (!val) { //textarrea notes not be empty
-                    alert("Note Content can not be empty");
-                } else {
-                    if (val.replace(/ /g, '') || title.replace(/ /g, '')) {
-                        var formModel = this.formModel;
-                        var notes = formModel.get('notes');
-                        var arrKeyStr = $('#getNoteKey').attr("value");
-                        var noteObj = {
-                            note: '',
-                            title: ''
-                        };
-                        if (arrKeyStr) {
-                            var editNotes = _.map(notes, function(note) {
-                                if (note._id == arrKeyStr) {
-                                    note.note = val;
-                                    note.title = title;
-                                }
-                                return note;
-                            });
-                            formModel.save({ 'notes': editNotes },
-                                {
-                                    headers: {
-                                        mid: 39
-                                    },
-                                    patch: true,
-                                    success: function() {
-                                        $('#noteBody').val($('#' + arrKeyStr).find('.noteText').html(val));
-                                        $('#noteBody').val($('#' + arrKeyStr).find('.noteTitle').html(title));
-                                        $('#getNoteKey').attr("value", '');
-                                    }
-                                });
-                        } else {
-                            noteObj.note = val;
-                            noteObj.title = title;
-                            notes.push(noteObj);
-                            formModel.save({ 'notes': notes },
-                                {
-                                    headers: {
-                                        mid: 39
-                                    },
-                                    patch: true,
-                                    wait: true,
-                                    success: function(models, data) {
-                                        $('#noteBody').empty();
-                                        data.notes.forEach(function(item) {
-                                            var date = common.utcDateToLocaleDate(item.date);
-                                            $('#noteBody').prepend(_.template(addNoteTemplate, { id: item._id, title: item.title, val: item.note, author: item.author, date: date }));
-                                        });
-                                    }
-                                });
-                        }
-                        $('#noteArea').val('');
-                        $('#noteTitleArea').val('');
-                    } else {
-                        return false;
-                    }
-                }
-            },
-
-            addAttach: function (event) {
-                event.preventDefault();
-                var currentModel = this.formModel;
-                var currentModelId = currentModel["id"];
-                var addFrmAttach = $("#addAttachments");
-                var addInptAttach = $("#inputAttach")[0].files[0];
-                if (!this.fileSizeIsAcceptable(addInptAttach)) {
-                    $('#inputAttach').val('');
-                    alert('File you are trying to attach is too big. MaxFileSize: ' + App.File.MaxFileSizeDisplay);
-                    return;
-                }
-                addFrmAttach.submit(function (e) {
-                    var bar = $('.bar');
-                    var status = $('.status');
-
-                    var formURL = "http://" + window.location.host + "/uploadFiles";
-                    e.preventDefault();
-                    addFrmAttach.ajaxSubmit({
-                        url: formURL,
-                        type: "POST",
-                        processData: false,
-                        contentType: false,
-                        data: [addInptAttach],
-
-                        beforeSend: function (xhr) {
-                            xhr.setRequestHeader("id", currentModelId);
-                            status.show();
-                            var statusVal = '0%';
-                            bar.width(statusVal);
-                            status.html(statusVal);
-                        },
-
-                        uploadProgress: function (event, position, total, statusComplete) {
-                            var statusVal = statusComplete + '%';
-                            bar.width(statusVal);
-                            status.html(statusVal);
-                        },
-
-                        success: function (data) {
-                            var attachments = currentModel.get('attachments');
-                            attachments.length = 0;
-                            $('.attachContainer').empty();
-                            data.data.attachments.forEach(function (item) {
-                                var date = common.utcDateToLocaleDate(item.uploadDate);
-                                attachments.push(item);
-                                $('.attachContainer').prepend(_.template(addAttachTemplate, { data: item, date: date }));
-                            });
-                            addFrmAttach[0].reset();
-                            status.hide();
-                        },
-
-                        error: function () {
-                            console.log("Attach file error");
-                        }
-                    });
-                });
-                addFrmAttach.submit();
-                addFrmAttach.off('submit');
-            },
-
-            fileSizeIsAcceptable: function (file) {
-                if (!file) {
-                    return false;
-                }
-                return file.size < App.File.MAXSIZE;
-            },
-
-            deleteAttach: function (e) {
-                if (confirm("You realy want to remove file? ")) {
-                    var target = $(e.target);
-                    if (target.closest("li").hasClass("attachFile")) {
-                        target.closest(".attachFile").remove();
-                    } else {
-                        var id = e.target.id;
-                        var currentModel = this.formModel;
-                        var attachments = currentModel.get('attachments');
-                        var newAttachments = _.filter(attachments, function(attach) {
-                            if (attach._id != id) {
-                                return attach;
-                            }
-                        });
-                        var fileName = $('.attachFile_' + id + ' a')[0].innerHTML;
-                        currentModel.save({ 'attachments': newAttachments, fileName: fileName },
-                            {
-                                headers: {
-                                    mid: 39
-                                },
-                                patch: true,//Send only changed attr(add Roma)
-                                success: function() {
-                                    $('.attachFile_' + id).remove();
-                                }
-                            });
-                    }
-                }
-            },
 
             editItem: function () {
                 //create editView in dialog here
@@ -459,6 +252,11 @@ define([
                 this.renderMiniOpp();
                 el.find('.formLeftColumn').append(
                     new noteView({
+                        model: this.formModel
+                    }).render().el
+                );
+                el.find('.formLeftColumn').append(
+                    new attachView({
                         model: this.formModel
                     }).render().el
                 );

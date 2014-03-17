@@ -1,12 +1,12 @@
 ﻿define([
     "text!templates/Applications/EditTemplate.html",
-    'text!templates/Notes/AddAttachments.html',
+    'views/Notes/AttachView',
     'collections/Workflows/WorkflowsCollection',
     "common",
 	"populate",
 	"custom"
 ],
-    function (EditTemplate, addAttachTemplate, WorkflowsCollection, common, populate, custom) {
+    function (EditTemplate, attachView, WorkflowsCollection, common, populate, custom) {
 
         var EditView = Backbone.View.extend({
             el: "#content-holder",
@@ -20,8 +20,6 @@
                 this.employeesCollection = options.collection;
                 this.currentModel = (options.model) ? options.model : options.collection.getElement();
 				this.currentModel.urlRoot = "/Applications";
-                this.page = 1;
-                this.pageG = 1;
 				this.responseObj = {};
                 this.render();
             },
@@ -35,8 +33,6 @@
                 "mouseleave .avatar": "hideEdit",
                 "click .current-selected": "showNewSelect",
                 "click": "hideNewSelect",
-                "click .deleteAttach": "deleteAttach",
-                "change .inputAttach": "addAttach",
                 'click .dialog-tabs a': 'changeTab',
                 'click .addUser': 'addUser',
                 'click .addGroup': 'addGroup',
@@ -58,6 +54,7 @@
                     throw new Error('Workflow "Refused" not found');
                 }
                 var id = workflow.get('_id');
+				var workflowStart = this.currentModel.get("workflow")&&this.currentModel.get("workflow")._id?this.currentModel.get("workflow")._id:this.currentModel.get("workflow");
                 this.currentModel.save({
                     workflow: id
                 }, {
@@ -73,6 +70,14 @@
 						case 'kanban':
 							{
                                     $(".column[data-id='" + id + "']").find(".columnNameDiv").after($("#" + model._id));
+                                      if (id) {
+                                           var counter = $(".column[data-id='" + id + "']").closest(".column").find(".totalCount");
+                                           counter.html(parseInt(counter.html()) + 1);
+                                           counter = $(".column[data-id='" + workflowStart + "']").closest(".column").find(".totalCount");
+                                           counter.html(parseInt(counter.html()) - 1);
+
+                                      }
+
 							}
 						}
 						self.hideDialog();
@@ -293,96 +298,6 @@
                     groupsAndUser_holder.hide();
                 }
             },
-            fileSizeIsAcceptable: function (file) {
-                if (!file) { return false; }
-                return file.size < App.File.MAXSIZE;
-            },
-            addAttach: function (event) {
-                event.preventDefault();
-                var currentModel = this.currentModel;
-                var currentModelID = currentModel["id"];
-                var addFrmAttach = $("#createApplicationForm");
-                var addInptAttach = $(".input-file .inputAttach")[0].files[0];
-                if (!this.fileSizeIsAcceptable(addInptAttach)) {
-                    $('#inputAttach').val('');
-                    alert('File you are trying to attach is too big. MaxFileSize: ' + App.File.MaxFileSizeDisplay);
-                    return;
-                }
-                addFrmAttach.submit(function (e) {
-                    var bar = $('.bar');
-                    var status = $('.status');
-                    var formURL = "http://" + window.location.host + "/uploadApplicationFiles";
-                    e.preventDefault();
-                    addFrmAttach.ajaxSubmit({
-                        url: formURL,
-                        type: "POST",
-                        processData: false,
-                        contentType: false,
-                        data: [addInptAttach],
-
-                        beforeSend: function (xhr) {
-                            xhr.setRequestHeader("id", currentModelID);
-                            status.show();
-                            var statusVal = '0%';
-                            bar.width(statusVal);
-                            status.html(statusVal);
-                        },
-
-                        uploadProgress: function (event, position, total, statusComplete) {
-                            var statusVal = statusComplete + '%';
-                            bar.width(statusVal);
-                            status.html(statusVal);
-                        },
-
-                        success: function (data) {
-                            var attachments = currentModel.get('attachments');
-                            attachments.length = 0;
-                            $('.attachContainer').empty();
-                            data.data.attachments.forEach(function (item) {
-                                var date = common.utcDateToLocaleDate(item.uploadDate);
-                                attachments.push(item);
-                                $('.attachContainer').prepend(_.template(addAttachTemplate, { data: item, date: date }));
-                            });
-                            console.log('Attach file');
-                            addFrmAttach[0].reset();
-                            status.hide();
-                        },
-
-                        error: function () {
-                            console.log("Attach file error");
-                        }
-                    });
-                });
-                addFrmAttach.submit();
-                addFrmAttach.off('submit');
-            },
-            deleteAttach: function (e) {
-                if (confirm("You realy want to remove file? ")) {
-                if ($(e.target).closest("li").hasClass("attachFile")) {
-                    $(e.target).closest(".attachFile").remove();
-                    } else {
-                    var id = e.target.id;
-                    var currentModel = this.currentModel;
-                    var attachments = currentModel.get('attachments');
-                        var new_attachments = _.filter(attachments, function(attach) {
-                        if (attach._id != id) {
-                            return attach;
-                        }
-                    });
-                    var fileName = $('.attachFile_' + id + ' a')[0].innerHTML;
-                        currentModel.save({ 'attachments': new_attachments, fileName: fileName },
-                                      {
-                                          headers: {
-                                              mid: 39
-                                          },
-                                patch: true,
-                                success: function(model, response, options) {
-                                              $('.attachFile_' + id).remove();
-                                          }
-                                      });
-                }
-                }
-            },
 
             keydownHandler: function (e) {
                 switch (e.which) {
@@ -549,8 +464,16 @@
 									});
                                     kanban_holder.find(".inner").attr("data-sequence", result.sequence);
 								}
-
+                                if (data.workflow) {
                                     $(".column[data-id='" + data.workflow + "']").find(".columnNameDiv").after(kanban_holder);
+                                    var counter = $(".column[data-id='" + data.workflow + "']").closest(".column").find(".totalCount");
+                                    counter.html(parseInt(counter.html()) + 1);
+                                    counter = $(".column[data-id='" + data.workflowStart + "']").closest(".column").find(".totalCount");
+                                    counter.html(parseInt(counter.html()) - 1);
+
+                                }
+
+                                $(".column[data-id='" + data.workflow + "']").find(".columnNameDiv").after(kanban_holder);
 
                             }
                         }
@@ -641,6 +564,13 @@
                         }
                     }
                 });
+				var notDiv = this.$el.find('.attach-container');
+                notDiv.append(
+                    new attachView({
+                        model: this.currentModel,
+						url:"/uploadApplicationFiles"
+                    }).render().el
+                );
                 common.populateUsersForGroups('#sourceUsers', '#targetUsers', this.currentModel.toJSON(), 1);
                 common.populateUsers("#allUsers", "/UsersForDd", this.currentModel.toJSON(), null, true);
                 common.populateDepartmentsList("#sourceGroups", "#targetGroups", "/DepartmentsForDd", this.currentModel.toJSON(), 1);

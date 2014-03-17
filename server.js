@@ -28,7 +28,6 @@ mainDb.once('open', function callback() {
     var main = mainDb.model('easyErpDBS', mainDBSchema);
     main.find().exec(function (err, result) {
         if (!err) {
-
             result.forEach(function (_db, index) {
                 var dbInfo = {
                     DBname: '',
@@ -194,6 +193,7 @@ app.get('/download/:path', function (req, res) {
 
 function uploadFileArray(req, res, callback) {
     var files = [];
+	console.log(req.files);
     if (req.files && !req.files.attachfile.length) {
         req.files.attachfile = [req.files.attachfile];
     }
@@ -264,7 +264,7 @@ function uploadFileArray(req, res, callback) {
                     var file = {};
                     file._id = mongoose.Types.ObjectId();
                     file.name = item.name;
-                    file.shortPas = encodeURIComponent(shortPas);
+					file.shortPas = encodeURIComponent(shortPas);
                     file.size = Math.round(item.size / 1024 / 2024 * 100) / 100;
                     file.uploadDate = new Date();
                     file.uploaderName = req.session.uName;
@@ -718,7 +718,7 @@ app.put('/Persons/:_id', function (req, res) {
     requestHandler.updatePerson(req, res, id, data, remove);
 });
 
-app.patch('/Persons/:viewType/:_id', function (req, res) {
+app.patch('/Persons/:_id', function (req, res) {
     var id = req.param('_id');
     requestHandler.personUpdateOnlySelectedFields(req, res, id, req.body);
 });
@@ -969,7 +969,7 @@ app.put('/Companies/:_id', function (req, res) {
     requestHandler.updateCompany(req, res, id, data, remove);
 });
 
-app.patch('/Companies/:viewType/:_id', function (req, res) {
+app.patch('/Companies/:_id', function (req, res) {
     var id = req.param('_id');
     requestHandler.companyUpdateOnlySelectedFields(req, res, id, req.body);
 });

@@ -19,9 +19,6 @@ define([
                 _.bindAll(this, "render", "deleteItem");
                 this.currentModel = (options.model) ? options.model : options.collection.getElement();
 				this.currentModel.urlRoot="/Companies";
-				
-                this.page=1;
-                this.pageG=1;
 				this.responseObj = {};
                 this.render();
             },
@@ -37,7 +34,6 @@ define([
                 "click .newSelectList li": "chooseOption",
                 "click": "hideNewSelect",
                 "click .details": "toggleDetails",
-
                 'click .dialog-tabs a': 'changeTab',
                 'click .addUser': 'addUser',
                 'click .addGroup': 'addGroup',
@@ -105,15 +101,15 @@ define([
                     }
 
                 });
-                $("#targetUsers").unbind().on("click","li",this.removeUsers);
-                $("#sourceUsers").unbind().on("click","li",this.addUsers);
+				this.updateAssigneesPagination($("#sourceUsers").closest(".left"));
+				this.updateAssigneesPagination($("#targetUsers").closest(".left"));
+                $("#targetUsers").unbind().on("click","li",{self:this}, this.removeUsers);
+                $("#sourceUsers").unbind().on("click","li",{self:this}, this.addUsers);
                 $(document).on("click",".nextUserList",function(e){
-                    self.page += 1;
-                    self.nextUserList(e,self.page);
+                    self.nextUserList(e);
                 });
                 $(document).on("click",".prevUserList",function(e){
-                    self.page -= 1;
-                    self.prevUserList(e,self.page);
+                    self.prevUserList(e);
                 });
 
             },
@@ -142,19 +138,19 @@ define([
                     }
 
                 });
-                $("#targetGroups").unbind().on("click","li",this.removeUsers);
-                $("#sourceGroups").unbind().on("click","li",this.addUsers);
+				this.updateAssigneesPagination($("#sourceGroups").closest(".left"));
+				this.updateAssigneesPagination($("#targetGroups").closest(".left"));
+                $("#targetGroups").unbind().on("click","li",{self:this},this.removeUsers);
+                $("#sourceGroups").unbind().on("click","li",{self:this},this.addUsers);
                 $(document).unbind().on("click",".nextGroupList",function(e){
-                    self.pageG += 1;
-                    self.nextUserList(e,self.pageG);
+                    self.nextUserList(e);
                 });
                 $(document).unbind().on("click",".prevGroupList",function(e){
-                    self.pageG -= 1;
-                    self.prevUserList(e,self.pageG);
+                    self.prevUserList(e);
                 });
             },
 
-            addUsers: function (e) {
+/*            addUsers: function (e) {
                 e.preventDefault();
                 $(e.target).closest(".ui-dialog").find(".target").append($(e.target));
 
@@ -163,6 +159,25 @@ define([
             removeUsers: function (e) {
                 e.preventDefault();
                 $(e.target).closest(".ui-dialog").find(".source").append($(e.target));
+            },*/
+
+            addUsers: function (e) {
+                e.preventDefault();
+				$(e.target).parents("ul").find("li:not(:visible)").eq(0).show();
+				var div =$(e.target).parents(".left");
+                $(e.target).closest(".ui-dialog").find(".target").append($(e.target));
+				e.data.self.updateAssigneesPagination(div);
+				div =$(e.target).parents(".left");
+				e.data.self.updateAssigneesPagination(div);
+
+            },
+            removeUsers: function (e) {
+                e.preventDefault();
+				var div =$(e.target).parents(".left");
+                $(e.target).closest(".ui-dialog").find(".source").append($(e.target));
+				e.data.self.updateAssigneesPagination(div);
+				div =$(e.target).parents(".left");
+				e.data.self.updateAssigneesPagination(div);
             },
 
             unassign:function(e){
@@ -183,7 +198,43 @@ define([
                 $(e.target).toggleClass("choosen");
             },
 
-            addUserToTable:function(id){
+			updateAssigneesPagination:function(el){
+				var pag = el.find(".userPagination .text");
+				el.find(".userPagination .nextUserList").remove();
+				el.find(".userPagination .prevUserList").remove();
+				el.find(".userPagination .nextGroupList").remove();
+				el.find(".userPagination .prevGroupList").remove();
+
+				var list = el.find("ul");
+				var count = list.find("li").length;
+				var s ="";
+				var page  = parseInt(list.attr("data-page"));
+				if (page>1){
+					el.find(".userPagination").prepend("<a class='prevUserList' href='javascript:;'>« prev</a>");
+				}
+				if (count===0){
+					s+="0-0 of 0";
+				}else{
+					if ((page)*20-1<count){
+						s+=((page-1)*20+1)+"-"+((page)*20)+" of "+count;
+					}else{
+						s+=((page-1)*20+1)+"-"+(count)+" of "+count;
+					}
+				}
+				
+				if (page<count/20){
+					el.find(".userPagination").append("<a class='nextUserList' href='javascript:;'>next »</a>");
+				}
+				el.find("ul li").hide();
+				for (var i=(page-1)*20;i<20*page;i++){
+					el.find("ul li").eq(i).show();
+				}
+ 
+				pag.text(s);
+			},
+
+
+            addUserToTable:function(id) {
                 var groupsAndUser_holder = $(".groupsAndUser");
                 var groupsAndUserHr_holder = $(".groupsAndUser tr");
                 groupsAndUser_holder.show();
@@ -195,10 +246,11 @@ define([
                 $(id).find("li").each(function(){
                     groupsAndUser_holder.append("<tr data-type='"+id.replace("#","")+"' data-id='"+ $(this).attr("id")+"'><td>"+$(this).text()+"</td><td class='text-right'></td></tr>");
                 });
-                if (groupsAndUserHr_holder.length<2){
+                if ($(".groupsAndUser tr").length <2) {
                     groupsAndUser_holder.hide();
                 }
             },
+
 			toggleDetails:function(){
 				$("#details-dialog").toggle();
 			},
@@ -373,9 +425,9 @@ define([
                     modal: true
                 });
 				$('#text').datepicker({ dateFormat: "d M, yy" });
-                common.populateUsersForGroups('#sourceUsers','#targetUsers',this.currentModel.toJSON(),this.page);
+                common.populateUsersForGroups('#sourceUsers','#targetUsers',this.currentModel.toJSON(),1);
                 common.populateUsers("#allUsers", "/UsersForDd",this.currentModel.toJSON(),null,true);
-                common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",this.currentModel.toJSON(),this.pageG);
+                common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",this.currentModel.toJSON(),1);
 
 				populate.get("#departmentDd", "/DepartmentsForDd",{},"departmentName",this);
 				populate.get("#language", "/Languages",{},"name",this);

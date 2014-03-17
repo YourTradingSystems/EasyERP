@@ -46,7 +46,14 @@ function (thumbnailsItemTemplate, stagesTamplate, editView, createView, dataServ
             "click .health-wrapper ul li div": "chooseHealthDd",
             "click .stageSelect": "showNewSelect",
             "click .newSelectList li": "chooseOption",
-            "click": "hideHealth"
+            "click": "hideHealth",
+            "click .filter-check-list li": "checkCheckbox"
+        },
+        checkCheckbox: function (e) {
+            var target$ = $(e.target);
+            if (!target$.is("input")) {
+                target$.closest("li").find("input").prop("checked", !target$.closest("li").find("input").prop("checked"));
+            }
         },
 		showNewSelect: function (e) {
             if ($(".newSelectList").is(":visible")) {
@@ -59,6 +66,7 @@ function (thumbnailsItemTemplate, stagesTamplate, editView, createView, dataServ
         },
 
         chooseOption: function (e) {
+			var self = this;
             var targetElement = $(e.target).parents(".thumbnail");
             var id = targetElement.attr("id");
             var model = this.collection.get(id);
@@ -70,7 +78,7 @@ function (thumbnailsItemTemplate, stagesTamplate, editView, createView, dataServ
                 patch: true,
                 validate: false,
                 success: function () {
-                    targetElement.find(".stageSelect").text($(e.target).text()).attr("class","stageSelect "+$(e.target).text().replace(" ",'').toLowerCase());
+					self.showFilteredPage();
                 }
             });
 

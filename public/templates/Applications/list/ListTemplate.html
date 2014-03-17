@@ -12,7 +12,8 @@
 			  <a href="javascript:;" class="stageSelect" data-id="<%=(application.workflow) ? application.workflow._id : ''%>"><%=(application.workflow) ? application.workflow.name : 'Undefinded'%></a>
 			</td>
             <td><%=application.jobType%></td>
-            <td><%=(application.createdBy && application.createdBy.user) ? application.createdBy.user.login + " (" + application.createdBy.date + ")" : ''%></td>
-            <td><%=(application.editedBy.user) ? application.editedBy.user.login + " (" + application.editedBy.date + ")" : ''%></td>
+			<td><%=(application.createdBy&&application.createdBy.date)?( application.createdBy.date + ((application.createdBy.user) ?(' (' + application.createdBy.user.login + ')') : '')):''%></td>
+			<td><%=(application.editedBy&&application.editedBy.date)?( application.editedBy.date + ((application.editedBy.user) ?(' (' + application.editedBy.user.login + ')') : '')):''%></td>
+
         </tr>
     <% }) %>

@@ -18,7 +18,6 @@ define([
                 _.bindAll(this, "saveItem", "render");
                 this.departmentsCollection = new DepartmentsCollection();
                 this.model = new DepartmentsModel();
-				this.page = 1;
 				this.responseObj = {};
                 this.render();
             },
@@ -45,14 +44,53 @@ define([
 			prevSelect:function(e){
 				this.showNewSelect(e,true,false);
 			},
-			nextUserList:function(e){
-				this.page+=1;
-				common.populateUsersForGroups('#sourceUsers','#targetUsers',null,this.page);
-			},
-			prevUserList:function(e){
-				this.page-=1;
-				common.populateUsersForGroups('#sourceUsers','#targetUsers',null,this.page);
-			},
+
+            updateAssigneesPagination: function (el) {
+                var pag = el.find(".userPagination .text");
+                el.find(".userPagination .nextUserList").remove();
+                el.find(".userPagination .prevUserList").remove();
+                el.find(".userPagination .nextGroupList").remove();
+                el.find(".userPagination .prevGroupList").remove();
+
+                var list = el.find("ul");
+                var count = list.find("li").length;
+                var s = "";
+                var page = parseInt(list.attr("data-page"));
+                if (page > 1) {
+                    el.find(".userPagination").prepend("<a class='prevUserList' href='javascript:;'>« prev</a>");
+                }
+                if (count === 0) {
+                    s += "0-0 of 0";
+                } else {
+                    if ((page) * 20 - 1 < count) {
+                        s += ((page - 1) * 20 + 1) + "-" + ((page) * 20) + " of " + count;
+                    } else {
+                        s += ((page - 1) * 20 + 1) + "-" + (count) + " of " + count;
+                    }
+                }
+
+                if (page < count / 20) {
+                    el.find(".userPagination").append("<a class='nextUserList' href='javascript:;'>next »</a>");
+                }
+                el.find("ul li").hide();
+                for (var i = (page - 1) * 20; i < 20 * page; i++) {
+                    el.find("ul li").eq(i).show();
+                }
+
+                pag.text(s);
+            },
+
+
+            nextUserList: function (e, page) {
+                $(e.target).closest(".left").find("ul").attr("data-page", parseInt($(e.target).closest(".left").find("ul").attr("data-page")) + 1);
+                this.updateAssigneesPagination($(e.target).closest(".left"));
+
+            },
+
+            prevUserList: function (e, page) {
+                $(e.target).closest(".left").find("ul").attr("data-page", parseInt($(e.target).closest(".left").find("ul").attr("data-page")) - 1);
+                this.updateAssigneesPagination($(e.target).closest(".left"));
+            },
 
 			chooseUser:function(e){
 				$(e.target).toggleClass("choosen");
@@ -68,13 +106,28 @@ define([
             close: function () {
                 this._modelBinder.unbind();
             },
+
             addUsers: function (e) {
                 e.preventDefault();
+
+                var div = $(e.target).parents(".left");
                 $('#targetUsers').append($(e.target));
+
+                this.updateAssigneesPagination(div);
+
+                div = $(e.target).parents(".left");
+                this.updateAssigneesPagination(div);
             },
             removeUsers: function (e) {
                 e.preventDefault();
+
+                var div = $(e.target).parents(".left");
                 $('#sourceUsers').append($(e.target));
+
+                this.updateAssigneesPagination(div);
+
+                div = $(e.target).parents(".left");
+                this.updateAssigneesPagination(div);
             },
 
             saveItem: function () {
@@ -85,7 +138,6 @@ define([
                 var departmentName = $.trim($("#departmentName").val());
                 
                 var parentDepartment = this.$("#parentDepartment").data("id")?this.$("#parentDepartment").data("id"):null;
-                //var _parentDepartment = common.toObject(departmentId, this.departmentsCollection);
                 var nestingLevel = this.$("#parentDepartment").data('level');
                 var departmentManager = this.$("#departmentManager").data("id");
                 var users = this.$el.find("#targetUsers li");
@@ -109,13 +161,11 @@ define([
                     },
                     wait: true,
                     success: function (model) {
-						self.hideDialog();
                         Backbone.history.navigate("easyErp/Departments", { trigger: true });
                     },
                     error: function (model, xhr) {
     					self.errorNotification(xhr);
                     }
-
                 });
             },
             hideDialog: function () {
@@ -127,9 +177,7 @@ define([
 			showNewSelect:function(e,prev,next){
                 populate.showSelect(e,prev,next,this);
                 return false;
-                
             },
-
 
 			chooseOption:function(e){
                 $(e.target).parents("dd").find(".current-selected").text($(e.target).text()).attr("data-id",$(e.target).attr("id")).attr("data-level",$(e.target).data("level"));
@@ -158,12 +206,10 @@ define([
 						}]
 
                 });
-/*                common.populateDepartments(App.ID.parentDepartment, "/getSalesTeam",null,function(){self.styleSelect(App.ID.parentDepartment);});
-				common.populateEmployeesDd(App.ID.departmentManager, "/getPersonsForDd",null,function(){self.styleSelect(App.ID.departmentManager);});*/
 				populate.get2name("#departmentManager", "/getPersonsForDd",{},this,true,true);
 				populate.getParrentDepartment("#parentDepartment", "/getSalesTeam",{},this,true,true);
 
-				common.populateUsersForGroups('#sourceUsers','#targetUsers',null,this.page);
+				common.populateUsersForGroups('#sourceUsers','#targetUsers',null,1);
                 return this;
             }
 

@@ -30,7 +30,7 @@
                             <dt><label for="customerDd">Customer</label></dt><dd>
 							<a id="customerDd" data-id="<%=model.customer?model.customer._id:''%>" class="current-selected" href="javascript:;"><%=model.customer?(model.customer.name.first+' '+model.customer.name.last):'Select'%></a>
 							</dd>
-                            <dt><label for="salesPerson">Salesperson</label></dt><dd>
+                            <dt><label for="salesPerson">Assigned to</label></dt><dd>
 							    <a id="salesPerson" data-id="<%=model.salesPerson?model.salesPerson._id:''%>" class="current-selected" href="javascript:;"><%=model.salesPerson?(model.salesPerson.name.first+' '+model.salesPerson.name.last):'Select'%></a>
 							</dd>
                             <dt><label for="street">Street</label></dt><dd><input type="text" id="street" class="address" placeholder="Street..." name="street" value="<%=model.address.street%>" maxlength="32"/></dd>

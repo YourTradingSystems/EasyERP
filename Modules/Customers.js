@@ -828,14 +828,13 @@
 													}
                                                     query.select("_id editedBy createdBy salesPurchases name email phones.phone address.country").
                                                         populate('salesPurchases.salesPerson', '_id name').
-                                                        populate('salesPurchases.salesTeam', '_id departmentName').
+                                                         populate('salesPurchases.salesTeam', '_id departmentName').
                                                         populate('createdBy.user', 'login').
                                                         populate('editedBy.user', 'login');
                                                 }
                                                     break;
                                                 case ('thumbnails'): {
-                                                    query.select("_id name").
-                                                        populate('company', '_id name address').
+                                                    query.select("_id name address").
                                                         populate('createdBy.user').
                                                         populate('editedBy.user');
                                                 }
