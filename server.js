@@ -1119,6 +1119,7 @@ app.put('/Employees/:_id', function (req, res) {
     data.employee = req.body;
     requestHandler.updateEmployees(req, res, id, data);
 });
+
 app.patch('/Employees/:_id', function (req, res) {
     var id = req.param('_id');
     requestHandler.employeesUpdateOnlySelectedFields(req, res, id, req.body);

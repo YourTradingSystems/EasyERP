@@ -441,17 +441,8 @@ define([
                     homeAddress[el.attr("name")] = $.trim(el.val());
                 });
                 // date parse 
-                var dateBirthSt = $.trim($("#dateBirth").val());
-                var dateBirth = "";
-                if (dateBirthSt) {
-                	dateBirthArr = dateBirthSt.split("/");
-                    var newDateBirt = new Date();  
-                    newDateBirt.setFullYear(dateBirthArr[2]);
-                    newDateBirt.setMonth(dateBirthArr[1]-1);    
-                    newDateBirt.setDate(dateBirthArr[0]); 
-                    var fullDateBirt = newDateBirt.toUTCString();
-                    dateBirth = new Date(Date.parse(fullDateBirt)).toISOString();
-                }
+                var dateBirthSt = $.trim(this.$el.find("#dateBirth").val());
+
                 var recalculate = (this.currentModel.attributes.dateBirth == dateBirthSt) ? false : true;
 
                 var active = (this.$el.find("#active").is(":checked")) ? true : false;
@@ -503,7 +494,7 @@ define([
                     passportNo: $.trim(this.$el.find("#passportNo").val()),
                     otherId: $.trim(this.$el.find("#otherId").val()),
                     homeAddress: homeAddress,
-                    dateBirth: dateBirth,
+                    dateBirth: dateBirthSt,
                     active: active,
                     source: sourceId,
                     imageSrc: this.imageSrc,
@@ -603,11 +594,16 @@ define([
 
                 
                 $('#dateBirth').datepicker({
-                	dateFormat: "d/m/yy",
+                    dateFormat: "d M, yy",
                     changeMonth : true,
                     changeYear : true,
                     yearRange: '-100y:c+nn',
                     maxDate: '-1d'
+                    //onChangeMonthYear: function (year, month) {
+                    //    var target = $(this);
+                    //    var day = target.val().split('/')[0];
+                    //    target.val(day + '/' + month + '/' + year);
+                    //}
                 });
                 var model = this.currentModel.toJSON();
                 if (model.groups)

@@ -338,18 +338,8 @@ define([
                     homeAddress[el.attr("name")] = el.val();
                 });
                 // date parse 
-                var dateBirthSt = $.trim($("#dateBirth").val());
+                var dateBirthSt = $.trim(this.$el.find("#dateBirth").val());
                
-                var dateBirth = "";
-                if (dateBirthSt) {
-                	dateBirthArr = dateBirthSt.split("/");
-                    var newDateBirt = new Date();  
-                    newDateBirt.setFullYear(dateBirthArr[2]);
-                    newDateBirt.setMonth(dateBirthArr[1]-1);    
-                    newDateBirt.setDate(dateBirthArr[0]); 
-                    var fullDateBirt = newDateBirt.toUTCString();
-                    dateBirth = new Date(Date.parse(fullDateBirt)).toISOString();
-                }
                 var active = ($("#active").is(":checked")) ? true : false;
                 var sourceId = $("#sourceDd").data("id");
                 var usersId=[];
@@ -385,7 +375,7 @@ define([
                     passportNo: passportNo,
                     otherId: otherId,
                     homeAddress: homeAddress,
-                    dateBirth: dateBirth,
+                    dateBirth: dateBirthSt,
                     active: active,
                     source:sourceId,
                     groups: {
@@ -450,8 +440,7 @@ define([
 				populate.get("#departmentsDd", "/DepartmentsForDd", {}, "departmentName", this, true);
                 common.canvasDraw({ model: this.model.toJSON() }, this);
                 $('#dateBirth').datepicker({
-                	dateFormat: "d/m/yy",
-                    changeMonth: true,
+                	changeMonth: true,
                     changeYear: true,
                     yearRange: '-100y:c+nn',
                     maxDate: '-18y'
