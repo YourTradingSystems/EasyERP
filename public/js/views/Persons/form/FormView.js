@@ -15,6 +15,7 @@ define([
             initialize: function (options) {
                 this.formModel = options.model;
                 this.formModel.on("change", this.render, this);
+				this.formModel.urlRoot = "/Persons";
                 this.pageMini = 1;
                 this.pageCount = 4;
                 this.allMiniOpp = 0;
@@ -184,6 +185,7 @@ define([
             },
             saveClick: function (e) {
                 e.preventDefault();
+				var self = this;
                 var parent = $(e.target).parent().parent();
                 var objIndex = parent[0].id.split('_'); //replace change to split;
                 var currentModel = this.model;
@@ -195,7 +197,8 @@ define([
                     newModel[objIndex[0]] = param;
                 } else {
                     newModel[objIndex[0]] = $('#editInput').val();
-                }
+                
+}				var oldvalue = this.formModel[objIndex[0]];
                 this.formModel.save(newModel, {
                     headers: {
                         mid: 39
@@ -206,6 +209,7 @@ define([
                         Backbone.history.navigate("#easyErp/Persons/form/" + model.id, { trigger: true });
                     },
                     error: function (model, response) {
+						self.formModel[objIndex[0]]=oldvalue;
                         if (response)
                             alert(response.error);
                     }

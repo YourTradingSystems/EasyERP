@@ -718,7 +718,7 @@ app.put('/Persons/:_id', function (req, res) {
     requestHandler.updatePerson(req, res, id, data, remove);
 });
 
-app.patch('/Persons/:viewType/:_id', function (req, res) {
+app.patch('/Persons/:_id', function (req, res) {
     var id = req.param('_id');
     requestHandler.personUpdateOnlySelectedFields(req, res, id, req.body);
 });
@@ -969,7 +969,7 @@ app.put('/Companies/:_id', function (req, res) {
     requestHandler.updateCompany(req, res, id, data, remove);
 });
 
-app.patch('/Companies/:viewType/:_id', function (req, res) {
+app.patch('/Companies/:_id', function (req, res) {
     var id = req.param('_id');
     requestHandler.companyUpdateOnlySelectedFields(req, res, id, req.body);
 });

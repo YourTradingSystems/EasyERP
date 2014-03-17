@@ -18,6 +18,7 @@ define([
             initialize: function (options) {
                 _.bindAll(this, 'render');
                 this.formModel = options.model;
+                this.formModel.urlRoot = "/Companies";
                 this.pageMini = 1;
                 this.pageCount = 4;
                 this.allMiniOpp = 0;
@@ -292,7 +293,6 @@ define([
 
             deleteItems: function () {
                 var mid = 39;
-                this.formModel.urlRoot = "/Companies";
                 this.formModel.destroy({
                     headers: {
                         mid: mid
