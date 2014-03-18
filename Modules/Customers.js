@@ -704,7 +704,7 @@
             for (var i in req.query) {
                 data[i] = req.query[i];
             }
-
+            console.log('getFilterCustomers');
             var viewType = data.viewType;
             var contentType = data.contentType;
             var res = {};
@@ -713,7 +713,6 @@
             switch (contentType) {
                 case ('Persons'): {
                     optionsObject['type'] = 'Person';
-                    console.log(data)
                     if (data && data.filter && data.filter.letter)
                              optionsObject['name.last'] = new RegExp('^[' + data.filter.letter.toLowerCase() + data.filter.letter.toUpperCase() + '].*');
                 }
@@ -808,7 +807,7 @@
                                                 }
                                                     break;
                                                 case ('thumbnails'): {
-                                                    query.select("_id name email").
+                                                    query.select("_id name email company").
                                                         populate('company', '_id name').
                                                         populate('department', '_id departmentName').
                                                         populate('createdBy.user').
