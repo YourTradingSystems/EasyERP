@@ -178,7 +178,13 @@ function (thumbnailsItemTemplate, stagesTamplate, editView, createView, dataServ
             var createdInTag = "<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>";
 
             currentEl.html('');
-
+                $('#check_all').click(function () {
+                    $(':checkbox').prop('checked', this.checked);
+                    if ($("input.checkbox:checked").length > 0)
+                        $("#top-bar-deleteBtn").show();
+                    else
+                        $("#top-bar-deleteBtn").hide();
+                });
             if (this.collection.length > 0) {
                 currentEl.append(this.template({ collection: this.collection.toJSON() }));
             } else {
@@ -194,6 +200,13 @@ function (thumbnailsItemTemplate, stagesTamplate, editView, createView, dataServ
                                         });
                                     }
             });
+                $('#check_all').click(function () {
+                    $(':checkbox').prop('checked', this.checked);
+                    if ($("input.checkbox:checked").length > 0)
+                        $("#top-bar-deleteBtn").show();
+                    else
+                        $("#top-bar-deleteBtn").hide();
+                });
             currentEl.append(createdInTag);
             $(document).on("click", function (e) {
                 self.hide(e);
