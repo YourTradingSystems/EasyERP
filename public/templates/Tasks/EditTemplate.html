@@ -8,7 +8,7 @@
             <dl class="person-info-h3 right">
                 <dt><label>Assigned to :</label></dt>
                 <dd>
-                <a id="assignedToDd" data-id="<%=(model.assignedTo) ? model.assignedTo._id : ''%>" class="current-selected" href="javascript:;"><%=model.assignedTo.name.first+' '+model.assignedTo.name.last%></a>
+                <a id="assignedToDd" data-id="<%=(model.assignedTo) ? model.assignedTo._id : ''%>" class="current-selected" href="javascript:;"><%=(model.assignedTo)?(model.assignedTo.name.first+' '+model.assignedTo.name.last):'Select'%></a>
             </dl>
         </div>
         <div class="clearfix">
