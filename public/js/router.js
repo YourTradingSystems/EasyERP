@@ -26,7 +26,7 @@ define([
             "easyErp/Dashboard": "goToDashboard",
             "easyErp/projectDashboard": "goToProjectDashboard",
             "easyErp/:contentType": "getList",
-            "*eny": "any"
+            "*any": "any"
         },
 
         initialize: function () {
@@ -54,15 +54,15 @@ define([
                 if (charCode > 31 && (charCode < 48 || charCode > 57))
                     return false;
                 return true;
-			});
+            });
             $(window).on("resize", function (e) {
-				$("#ui-datepicker-div").hide();
-//				$(".hasDatepicker").datepicker("destroy");
-			});
+                $("#ui-datepicker-div").hide();
+                //				$(".hasDatepicker").datepicker("destroy");
+            });
             $(document).on("paste", ".onlyNumber", function (e) {
                 return false;
-			});
- 
+            });
+
         },
 
         goToProfiles: function () {
@@ -225,6 +225,14 @@ define([
         },
 
         goToList: function (contentType, parrentContentId, page, countPerPage, filter) {
+            var currentContentType = this.testContent(contentType);
+            if (contentType !== currentContentType) {
+                contentType = currentContentType;
+                var url = '#easyErp/' + contentType + '/list';
+                if (parrentContentId)
+                    url += '/' + parrentContentId;
+                Backbone.history.navigate(url, { replace: true });
+            }
             var newCollection = true;
             var self = this;
             var startTime = new Date();
@@ -273,6 +281,14 @@ define([
         },
 
         goToForm: function (contentType, modelId) {
+            var currentContentType = this.testContent(contentType);
+            if (contentType !== currentContentType) {
+                contentType = currentContentType;
+                var url = '#easyErp/' + contentType + '/form';
+                if (modelId)
+                    url += '/' + modelId;
+                Backbone.history.navigate(url, { replace: true });
+            }
             var self = this;
             var startTime = new Date();
             var contentFormModelUrl;
@@ -337,6 +353,10 @@ define([
 
         goToKanban: function (contentType, parrentContentId) {
             var self = this;
+            var currentContentType = this.testContent(contentType);
+            if (contentType !== currentContentType) {
+                contentType = currentContentType;
+            }
             var contentViewUrl = "views/" + contentType + "/kanban/KanbanView";
             var topBarViewUrl = "views/" + contentType + "/TopBarView";
             var collectionUrl = "collections/Workflows/WorkflowsCollection";
@@ -378,7 +398,12 @@ define([
         },
 
         goToThumbnails: function (contentType, countPerPage, filter) {
-
+            var currentContentType = this.testContent(contentType);
+            if (contentType !== currentContentType) {
+                contentType = currentContentType;
+                var url = '#easyErp/' + contentType + '/thumbnails';
+                Backbone.history.navigate(url, { replace: true });
+            }
             var newCollection = true;
             var startTime = new Date();
             var self = this;
@@ -433,12 +458,16 @@ define([
                 }
             });
         },
-
+        testContent: function (contentType) {
+            var arrayOfContentTypes = ['Persons', 'Companies', 'Leads', 'Opportunities', 'Projects', 'Tasks', 'Employees', 'Applications', 'JobPositions', 'Birthdays', 'Departments', 'Users', 'Profiles'];
+            if (arrayOfContentTypes.indexOf(contentType) < 0)
+                contentType = arrayOfContentTypes[0];
+            return contentType;
+        },
         getList: function (contentType) {
-            if (contentType) {
-                var viewType = custom.getCurrentVT({ contentType: contentType });
-                Backbone.history.navigate('#easyErp/' + contentType + '/' + viewType, { trigger: true, replace: true });
-            }
+            contentType = this.testContent(contentType);
+            var viewType = custom.getCurrentVT({ contentType: contentType });
+            Backbone.history.navigate('#easyErp/' + contentType + '/' + viewType, { trigger: true, replace: true });
         },
 
         changeWrapperView: function (wrapperView) {

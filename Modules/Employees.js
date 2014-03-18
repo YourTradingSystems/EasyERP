@@ -417,7 +417,8 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                             res.send(500, { error: 'Employees.save BD error' });
                         } else {
                             res.send(201, { success: 'A new Employees create success', result: result, id: result._id });
-                            event.emit('recalculate', req);
+                            if (result.isEmployee)
+                                event.emit('recalculate', req);
                         }
                     });
                 });
@@ -909,6 +910,21 @@ var Employee = function (logWriter, mongoose, event, department, models) {
     function updateOnlySelectedFields(req, _id, data, res) {
         var fileName = data.fileName;
         delete data.fileName;
+
+        var updateObject = {};
+
+        for (var i in data) {
+            if (i === 'contractEndReason') {
+                updateObject['isEmployee'] = false;
+                updateObject['contractEnd'] = {
+                    reason: data[i],
+                    date: new Date()
+                };
+            } else {
+                updateObject[i] = data[i];
+            }
+        }
+
         if (data.workflow && data.sequenceStart && data.workflowStart) {
             if (data.sequence == -1) {
                 event.emit('updateSequence', models.get(req.session.lastDb - 1, 'Employees', employeeSchema), "sequence", data.sequenceStart, data.sequence, data.workflowStart, data.workflowStart, false, true, function (sequence) {
@@ -943,8 +959,11 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                 });
             }
         } else {
-            models.get(req.session.lastDb - 1, 'Employees', employeeSchema).findByIdAndUpdate(_id, { $set: data }, function (err, result) {
+            models.get(req.session.lastDb - 1, 'Employees', employeeSchema).findByIdAndUpdate(_id, { $set: updateObject }, function (err, result) {
                 if (!err) {
+                    if (updateObject.dateBirth || updateObject.contractEnd) {
+                        event.emit('recalculate', req);
+                    }
                     if (fileName) {
                         var os = require("os");
                         var osType = (os.type().split('_')[0]);
@@ -991,87 +1010,24 @@ var Employee = function (logWriter, mongoose, event, department, models) {
         }
     }
 
-    function update(req, _id, data, res) {
-        try {
-            delete data._id;
-            delete data.createdBy;
-            if (data.relatedUser && data.relatedUser._id) {
-                data.relatedUser = data.relatedUser._id;
-            }
-            if (data.department && data.department._id) {
-                data.department = data.department._id;
-            }
-            if (data.manager && data.manager._id) {
-                data.manager = data.manager._id;
-            }
-            if (data.coach && data.coach._id) {
-                data.coach = data.coach._id;
-            }
-            if (data.jobPosition && data.jobPosition._id) {
-                data.jobPosition = data.jobPosition._id;
-            }
-            if (data.workflow && data.workflow._id) {
-                data.workflow = data.workflow._id;
-            }
-            if (data.recalculate && data.dateBirth) {
-                data.dateBirth = getDate(data.dateBirth);
-                data.age = getAge(data.dateBirth);
-            }
-            if (data.groups && data.groups.group) {
-                data.groups.group.forEach(function (group, index) {
-                    if (group._id) data.groups.group[index] = newObjectId(group._id.toString());
-                });
-            }
-            if (data.groups && data.groups.users) {
-                data.groups.users.forEach(function (user, index) {
-                    if (user._id) data.groups.users[index] = newObjectId(user._id.toString());
-                });
-            }
-
-            if (data.workflowForList || data.workflowForKanban) {
-                data = {
-                    $set: {
-                        workflow: data.workflow
-                    }
-                };
-            }
-
-            if (data.workflowContractEnd) {
-                data = {
-                    $set: {
-                        workflow: data.workflow,
-                        'contractEnd.reason': data.contractEndReason,
-                        'contractEnd.date': new Date(),
-                        isEmployee: false
-                    }
-                };
-            }
-
-
-
-            models.get(req.session.lastDb - 1, "Employees", employeeSchema).findByIdAndUpdate({ _id: _id }, data, { upsert: true }, function (err, result) {
-                try {
-                    if (err) {
-                        console.log(err);
-                        logWriter.log("Employees.js update employee.update " + err);
-                        res.send(500, { error: "Can't update Employees" });
-                    } else {
-                        res.send(200, { success: 'Employees updated success', data: result });
-                        if (data.recalculate) {
-                            event.emit('recalculate', req);
-                        }
+    function addAtach(req, _id, files, res) {//to be deleted
+        models.get(req.session.lastDb - 1, "Employees", employeeSchema).findByIdAndUpdate(_id, { $push: { attachments: { $each: files } } }, { upsert: true }, function (err, result) {
+            try {
+                if (err) {
+                    console.log(err);
+                    logWriter.log("Employees.js update employee.update " + err);
+                    res.send(500, { error: "Can't update Employees" });
+                } else {
+                    res.send(200, { success: 'Employees updated success', data: result });
+                    if (data.recalculate) {
+                        event.emit('recalculate', req);
                     }
                 }
-                catch (exception) {
-                    logWriter.log("Employees.js getEmployees employee.find " + exception);
-                }
-            });
-        }
-        catch (exception) {
-            console.log(exception);
-            logWriter.log("Employees.js update " + exception);
-            res.send(500, { error: 'Employees updated error' });
-        }
+            }
+            catch (exception) {
+                logWriter.log("Employees.js getEmployees employee.find " + exception);
+            }
+        });
     }// end update
 
     function remove(req, _id, res) {
@@ -1123,7 +1079,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
 
         getForDdByRelatedUser: getForDdByRelatedUser,
 
-        update: update,
+        addAtach: addAtach,
 
         updateOnlySelectedFields: updateOnlySelectedFields,
 

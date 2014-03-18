@@ -260,6 +260,11 @@ require(['app'], function (app) {
                 $("#pageList").append('<li class="showPage">' + i + '</li>');
             }
         }
+        else if (pageNumber >= itemsOnPage && page <= itemsOnPage) {
+             for (var i = 1; i <= itemsOnPage; i++) {
+                 $("#pageList").append('<li class="showPage">' + i + '</li>');
+             }
+         }
 
         else if (page >= pageNumber - 3) {
             for (var i = pageNumber - 6; i <= pageNumber; i++) {
@@ -384,31 +389,36 @@ require(['app'], function (app) {
             }
             var adr = /^\d+$/;
             var lastPage = parseInt($('#lastPage').text());
-
+            var itemsNumber = $("#itemsNumber").text();
             if (!adr.test(page) || (parseInt(page) <= 0) || (parseInt(page) > parseInt(lastPage))) {
                 page = 1;
             }
             //number page show (Vasya)
             var itemsOnPage = 7;
             $("#pageList").empty();
-            if (lastPage <= itemsOnPage) {
-                for (var i = 1; i <= lastPage; i++) {
+            if (parseInt(lastPage) <= itemsOnPage) {
+                for (var i = 1; i <= parseInt(lastPage); i++) {
                     $("#pageList").append('<li class="showPage">' + i + '</li>');
                 }
             }
             else if (page >= 5 && page <= itemsOnPage) {
-                for (var i = page - 3; i <= page + 3; i++) {
+                for (var i = parseInt (page) - 3; i <= parseInt(page) + 3; i++) {
                     $("#pageList").append('<li class="showPage">' + i + '</li>');
                 }
             }
-            else if (lastPage >= itemsOnPage && page <= lastPage - 3) {
-                for (var i = page - 3; i <= page + 3; i++) {
+                else if (lastPage >= itemsOnPage && page <= itemsOnPage) {
+                        for (var i = 1; i <= itemsOnPage; i++) {
+                            $("#pageList").append('<li class="showPage">' + i + '</li>');
+                        }
+                    }
+            else if (lastPage >= itemsOnPage && page > 3 && page <= parseInt(lastPage) - 3) {
+                for (var i = parseInt(page) - 3; i <= parseInt(page)+3; i++) {
                     $("#pageList").append('<li class="showPage">' + i + '</li>');
                 }
             }
 
-            else if (page >= lastPage - 3) {
-                for (var i = lastPage - 6; i <= lastPage; i++) {
+            else if (page >= parseInt(lastPage) - 3) {
+                for (var i = lastPage - 6; i <= parseInt(lastPage); i++) {
                     $("#pageList").append('<li class="showPage">' + i + '</li>');
                 }
             }

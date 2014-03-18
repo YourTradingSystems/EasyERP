@@ -84,8 +84,9 @@ define([
             endContract: function (e) {
                 var wfId = $('.endContractReasonList').attr('data-id');
                 var contractEndReason = $(e.target).text();
-                this.currentModel.set({ workflow: wfId, contractEndReason: contractEndReason, workflowContractEnd: true });
-                this.currentModel.save({}, {
+                this.currentModel.set({ workflow: wfId, contractEndReason: contractEndReason});
+                this.currentModel.save(this.currentModel.changed, {
+                    patch: true,
                     success: function () {
                         Backbone.history.navigate("easyErp/Applications/kanban", { trigger: true });
                     },
@@ -443,8 +444,6 @@ define([
                 // date parse 
                 var dateBirthSt = $.trim(this.$el.find("#dateBirth").val());
 
-                var recalculate = (this.currentModel.attributes.dateBirth == dateBirthSt) ? false : true;
-
                 var active = (this.$el.find("#active").is(":checked")) ? true : false;
                 var sourceId = $("#sourceDd").data("id");
 
@@ -498,7 +497,6 @@ define([
                     active: active,
                     source: sourceId,
                     imageSrc: this.imageSrc,
-                    recalculate: recalculate,
                     groups: {
                         owner: $("#allUsers").val(),
                         users: usersId,
@@ -506,11 +504,12 @@ define([
                     },
                     whoCanRW: whoCanRW
                 };
-                this.currentModel.save(data,{
+                this.currentModel.set(data);
+                this.currentModel.save(this.currentModel.changed, {
                         headers: {
                             mid: 39
                         },
-                        wait: true,
+                        patch: true,
                         success: function (model) {
                             Backbone.history.navigate("easyErp/" + self.contentType, { trigger: true });
                             self.hideDialog();

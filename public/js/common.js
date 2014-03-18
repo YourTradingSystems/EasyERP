@@ -77,7 +77,7 @@
             	e.preventDefault();
 
                 var file = inputFile[0].files[0];//fix type file
-                var filesExt = ['jpg', 'gif', 'png', 'jpeg'];//fix type file
+                var filesExt = ['jpg', 'gif', 'png','jpe','jfif','jpeg','bmp','JPEG','JPG','GIF','PNG','BMP'];//fix type file
                 var parts = $(inputFile).val().split('.');//fix type file
                 if(filesExt.join().search(parts[parts.length - 1]) != -1){//fix type file
                 var fr = new FileReader();

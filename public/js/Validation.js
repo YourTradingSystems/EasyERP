@@ -16,7 +16,8 @@ define(
             emailRegExp = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
             loggedRegExp = /^([0-9]{1,9})\.?([0-9]{1,2})?$/;
         var MIN_LENGTH = 2,
-            LOGIN_MIN_LENGTH = 6;
+            LOGIN_MIN_LENGTH = 6,
+            WORKFLOW_MIN_LENGTH = 3;
 
         var validateEmail = function(validatedString){
             return emailRegExp.test(validatedString);
@@ -267,7 +268,7 @@ define(
                     return;
                 }
                 if(fieldValue.length < 3) {
-                    errorArray.push([fieldName, errorMessages.minLengthMsg(LOGIN_MIN_LENGTH)].join(' '));
+                    errorArray.push([fieldName, errorMessages.minLengthMsg(WORKFLOW_MIN_LENGTH)].join(' '));
                     return;
                 }
                 if(!validateGroupsName(fieldValue)) errorArray.push([fieldName, errorMessages.invalidLoginMsg].join(' '));
@@ -277,8 +278,8 @@ define(
                         errorArray.push([fieldName, errorMessages.invalidCharsMsg].join(' '));
                         return;
                     }
-                    if(fieldValue.length < MIN_LENGTH) {
-                        errorArray.push([fieldName, errorMessages.minLengthMsg(6)].join(' '));
+                    if(fieldValue.length < WORKFLOW_MIN_LENGTH) {
+                        errorArray.push([fieldName, errorMessages.minLengthMsg(3)].join(' '));
                         return;
                     }
                     if(!validateName(fieldValue)) errorArray.push([fieldName, errorMessages.invalidLoginMsg].join(' '));
