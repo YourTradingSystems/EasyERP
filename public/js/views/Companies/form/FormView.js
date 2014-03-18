@@ -234,15 +234,18 @@ define([
                 var objIndex = parent[0].id.split('_'); //replace change to split;
                 var currentModel = this.formModel;
                 var newModel = {};
+				var oldvalue = '';
 
                 if (objIndex.length > 1) {
+					oldvalue = this.formModel.toJSON()[objIndex[0]][objIndex[1]];
                     var param = currentModel.get(objIndex[0]) || {};
                     param[objIndex[1]] = $('#editInput').val().replace('http://', '');
                     newModel[objIndex[0]] = param;
                 } else {
+					oldvalue = this.formModel.toJSON()[objIndex[0]];
                     newModel[objIndex[0]] = $('#editInput').val().replace('http://', '');
                 }
-                this.formModel.save(newModel, {
+                var valid = this.formModel.save(newModel, {
                     headers: {
                         mid: 39
                     },
@@ -257,6 +260,18 @@ define([
                     }
 
                 });
+				if (!valid){
+					if (objIndex.length > 1) {
+						var param = currentModel.get(objIndex[0]) || {};
+						param[objIndex[1]] = $('#editInput').val();
+						newModel[objIndex[0]] = {};
+						newModel[objIndex[0]][objIndex[1]] = oldvalue;
+
+					} else {
+						newModel[objIndex[0]] = oldvalue;
+					}
+					this.formModel.set(newModel);
+				}
             },
 
 
