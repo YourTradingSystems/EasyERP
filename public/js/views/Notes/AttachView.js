@@ -21,7 +21,7 @@ define([
 			if (this.isCreate){
 				var s = this.$el.find(".inputAttach:last").val().split("\\")[ this.$el.find(".inputAttach:last").val().split('\\').length - 1];
                 this.$el.find(".attachContainer").append('<li class="attachFile">' +
-                                             '<a href="javascript:;">' + s + '</a>' +
+                                             '<span class="blue">' + s + '</span>' +
                                              '<a href="javascript:;" class="deleteAttach">Delete</a></li>'
                                             );
                 this.$el.find(".attachContainer .attachFile:last").append(this.$el.find(".input-file .inputAttach").attr("hidden", "hidden"));
@@ -142,7 +142,7 @@ define([
 
         deleteAttach: function (e) {
 			var self = this;
-            if (confirm("You realy want to remove file? ")) {
+            if (confirm("You really want to remove this file?")) {
                 var target = $(e.target);
                 if (target.closest("li").hasClass("attachFile")) {
                     target.closest(".attachFile").remove();

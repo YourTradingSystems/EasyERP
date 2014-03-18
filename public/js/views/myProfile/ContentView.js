@@ -60,7 +60,7 @@ define([
                     context.UsersModel.save({
                         oldpass: $.trim($('#old_password').val()),
                         pass: $.trim($('#new_password').val()),
-                        confirmPass: $.trim($('#confirm_new_password').val())
+                        confirmPass: $.trim($('#confirm_new_password').val()),
                     },
 	                {
 	                    headers: {

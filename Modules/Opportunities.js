@@ -904,10 +904,11 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                         logWriter.log('Opprtunities.js. create opportunitie.find' + error);
                         res.send(500, { error: 'Opprtunities.create find error' });
                     }
-                    if (doc.length > 0&&doc[0]._id!=_id) {
+                    // An Opportunity with the same Name is already exists
+                    /*if (doc.length > 0&&doc[0]._id!=_id) {
 						logWriter.log('Opprtunities.js. createLead Dublicate Leads' + data.name);
                         res.send(400, { error: 'An Opportunities with the same Name already exists' });
-					}else{
+					}else{*/
             if (data.notes && data.notes.length != 0) {
                 var obj = data.notes[data.notes.length - 1];
                             if (!obj._id)
@@ -963,7 +964,8 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                 }
 
             });
-					}});
+					//}
+					});
 
         }
 
