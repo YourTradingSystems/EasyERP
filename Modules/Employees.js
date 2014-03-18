@@ -417,7 +417,8 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                             res.send(500, { error: 'Employees.save BD error' });
                         } else {
                             res.send(201, { success: 'A new Employees create success', result: result, id: result._id });
-                            event.emit('recalculate', req);
+                            if (result.isEmployee)
+                                event.emit('recalculate', req);
                         }
                     });
                 });
