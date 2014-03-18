@@ -61,7 +61,39 @@ function (common, Validation) {
             if (errors.length > 0)
                 return errors;
         },
-
+ defaults: {
+            id: null,
+            imageSrc: '',
+            type: 'Person',
+            name: {
+                first: "",
+                last: ""
+            },
+            email: "",
+            address: {
+                street1: "",
+                street2: "",
+                city: "",
+                zip: "",
+                country: "",
+                state: ""
+            },
+            website: "",
+            jobPosition: "",
+            skype: "",
+            phones: {
+                phone: "",
+                mobile: "",
+                fax: ""
+            },
+            salesPurchases: {
+                isCustomer: true
+            },
+            department: null,
+            dateBirth: null,
+            attachments: [],
+            notes: []
+        },
         urlRoot: function () {
             return "/Persons";
         }

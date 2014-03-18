@@ -190,9 +190,13 @@ define([
                 var objIndex = parent[0].id.split('_'); //replace change to split;
                 var currentModel = this.model;
                 var newModel = {};
-				var oldvalue = '';
+				var oldvalue = {};
                 if (objIndex.length > 1) {
-					oldvalue = this.formModel.toJSON()[objIndex[0]][objIndex[1]];
+					for (var i in this.formModel.toJSON()[objIndex[0]]){
+						console.log(i);
+						oldvalue[i] = this.formModel.toJSON()[objIndex[0]][i];
+
+					}
 
                     var param = currentModel.get(objIndex[0]) || {};
                     param[objIndex[1]] = $('#editInput').val();
@@ -216,16 +220,9 @@ define([
                     }
                 });
 				if (!valid){
-					if (objIndex.length > 1) {
-						var param = currentModel.get(objIndex[0]) || {};
-						param[objIndex[1]] = $('#editInput').val();
-						newModel[objIndex[0]] = {};
-						newModel[objIndex[0]][objIndex[1]] = oldvalue;
-
-					} else {
-						newModel[objIndex[0]] = oldvalue;
-					}
+					newModel[objIndex[0]] = oldvalue;
 					this.formModel.set(newModel);
+					console.log(this.formModel);
 				}
             },
 
