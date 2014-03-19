@@ -46,16 +46,16 @@ define([
 				return false;
             },
 
-			nextSelect:function(e){
-				this.showNewSelect(e,false,true);
+            nextSelect: function (e) {
+                this.showNewSelect(e, false, true);
 			},
-			prevSelect:function(e){
-				this.showNewSelect(e,true,false);
+            prevSelect: function (e) {
+                this.showNewSelect(e, true, false);
 			},
-            changeTab:function(e){
+            changeTab: function (e) {
                 $(e.target).closest(".dialog-tabs").find("a.active").removeClass("active");
                 $(e.target).addClass("active");
-                var n= $(e.target).parents(".dialog-tabs").find("li").index($(e.target).parent());
+                var n = $(e.target).parents(".dialog-tabs").find("li").index($(e.target).parent());
                 var dialog_holder = $(".dialog-tabs-items");
                 dialog_holder.find(".dialog-tabs-item.active").removeClass("active");
                 dialog_holder.find(".dialog-tabs-item").eq(n).addClass("active");
@@ -99,31 +99,28 @@ define([
                 var mid = 39;
 				var self = this;
                 var name = $.trim(this.$el.find("#name").val());
-
                 var company = $.trim(this.$el.find("#company").val());
-
                 var idCustomer = $("#customerDd").data("id");
-                idCustomer = idCustomer ? idCustomer : null;
+                //idCustomer = idCustomer ? idCustomer : null;
+                var currentCustomer = this.currentModel.get('customer');
                 var address = {};
                 $("dd").find(".address").each(function () {
                     var el = $(this);
                     address[el.attr("name")] = $.trim(el.val());
                 });
-
                 var salesPersonId = this.$("#salesPerson").data("id");
-                salesPersonId = salesPersonId ? salesPersonId : null;
+                var currentSalesPerson = this.currentModel.get('salesPerson');
+                //salesPersonId = salesPersonId ? salesPersonId : null;
                 var salesTeamId = this.$("#salesTeam option:selected").val();
-                salesTeamId = salesTeamId ? salesTeamId : null;
+                var currentSalesTeam = this.currentModel.get('salesTeam');
+                //salesTeamId = salesTeamId ? salesTeamId : null;
                 var first = $.trim(this.$el.find("#first").val());
                 var last = $.trim(this.$el.find("#last").val());
                 var contactName = {
                     first: first,
                     last: last
                 };
-
                 var email = $.trim(this.$el.find("#email_person").val());
-                var func = $.trim(this.$el.find("#func").val());
-
                 var phone = $.trim(this.$el.find("#phone").val());
                 var mobile = $.trim(this.$el.find("#mobile").val());
                 var fax = $.trim(this.$el.find("#fax").val());
@@ -132,15 +129,21 @@ define([
                     mobile: mobile,
                     fax: fax
                 };
+                var currentWorkflow = this.currentModel.get('workflow');
                 var workflow = this.$("#workflowsDd").data('id');
-                workflow = workflow ? workflow : null;
+                //workflow = workflow ? workflow : null;
+
                 var priority = $("#priorityDd").data("id");
 
                 var internalNotes = $.trim($("#internalNotes").val());
 
                 var active;
-                if ($("#active").is(":checked")) { console.log("true"); active = true; }
-                else { active = false; }
+                if ($("#active").is(":checked")) {
+                    console.log("true");
+                    active = true;
+                } else {
+                    active = false;
+                }
 
                 var optout;
                 if ($("#optout").is(":checked")) {
@@ -151,37 +154,36 @@ define([
 
                 var reffered = $.trim($("#reffered").val());
 
-                var usersId=[];
-                var groupsId=[];
-                $(".groupsAndUser tr").each(function(){
-                    if ($(this).data("type")=="targetUsers"){
+                var usersId = [];
+                var groupsId = [];
+                $(".groupsAndUser tr").each(function () {
+                    if ($(this).data("type") == "targetUsers") {
                         usersId.push($(this).data("id"));
                     }
-                    if ($(this).data("type")=="targetGroups"){
+                    if ($(this).data("type") == "targetGroups") {
                         groupsId.push($(this).data("id"));
                     }
 
                 });
                 var whoCanRW = this.$el.find("[name='whoCanRW']:checked").val();
-                this.currentModel.save({
+                var data = {
                     name: name,
                     company: company,
                     campaign: this.$el.find('#campaignDd').data("id"),
                     source: this.$el.find('#sourceDd').data("id"),
-                    customer: idCustomer,
+                    //customer: idCustomer,
                     address: address,
-                    salesPerson: salesPersonId,
-                    salesTeam: salesTeamId,
+                    //salesPerson: salesPersonId,
+                    //salesTeam: salesTeamId,
                     contactName: contactName,
                     email: email,
-                    func: func,
+                    //func: func,
                     phones: phones,
-                    workflow: workflow,
                     fax: fax,
                     priority: priority,
                     internalNotes: internalNotes,
-                    active: active,
-                    optout: optout,
+                    //active: active,
+                    //optout: optout,
                     reffered: reffered,
                     groups: {
                         owner: $("#allUsers").val(),
@@ -189,10 +191,31 @@ define([
                         group: groupsId
                     },
                     whoCanRW: whoCanRW
-                }, {
+                };
+                if (currentWorkflow && currentWorkflow._id && workflow && (currentWorkflow._id !== workflow)) {
+                    data['workflow'] = workflow;
+                };
+                if (currentCustomer && currentCustomer._id && idCustomer && (currentCustomer._id !== idCustomer)) {
+                    data['customer'] = idCustomer;
+                } else if (!currentCustomer && idCustomer) {
+                    data['customer'] = idCustomer;
+                };
+                if (currentSalesPerson && currentSalesPerson._id && salesPersonId && (currentSalesPerson._id !== salesPersonId)) {
+                    data['salesPerson'] = salesPersonId;
+                } else if (!currentSalesPerson && salesPersonId) {
+                    data['salesPerson'] = salesPersonId;
+                };
+                if (currentSalesTeam && currentSalesTeam._id && salesTeamId && (currentSalesTeam._id !== salesTeamId)) {
+                    data['salesTeam'] = salesTeamId;
+                } else if (!currentSalesTeam && salesTeamId) {
+                    data['salesTeam'] = salesTeamId;
+                };
+                this.currentModel.set(data);
+                this.currentModel.save(this.currentModel.changed, {
                     headers: {
                         mid: mid
                     },
+                    patch: true,
                     success: function () {
                         self.hideDialog();
                         Backbone.history.navigate("easyErp/Leads", { trigger: true });
@@ -204,7 +227,7 @@ define([
                 });
             },
 
-            deleteItem: function(event) {
+            deleteItem: function (event) {
                 var mid = 39;
                 event.preventDefault();
                 var self = this;
@@ -218,23 +241,23 @@ define([
                             success: function () {
                                 Backbone.history.navigate("easyErp/" + self.contentType, { trigger: true });
                             },
-                            error: function (model,xhr) {
+                        error: function (model, xhr) {
     							self.errorNotification(xhr);
                             }
                         });
                 }
             },
-            showNewSelect:function(e,prev,next){
-                populate.showSelect(e,prev,next,this);
+            showNewSelect: function (e, prev, next) {
+                populate.showSelect(e, prev, next, this);
                 return false;
                 
             },
 
-			hideNewSelect:function(){
+            hideNewSelect: function () {
 				$(".newSelectList").hide();
 			},
 
-			chooseOption:function(e){
+            chooseOption: function (e) {
                 var holder = $(e.target).parents("dd").find(".current-selected");
                 holder.text($(e.target).text()).attr("data-id", $(e.target).attr("id"));
                 if (holder.attr("id") == 'customerDd')
@@ -290,7 +313,7 @@ define([
                             class: "btn",
                             click: self.hideDialog
                         },
-                        delete:{
+                        delete: {
                             text: "Delete",
                             class: "btn",
                             click: self.deleteItem
@@ -323,22 +346,23 @@ define([
                     buttons: {
                         "Create opportunity": function () {
                             var self = this;
-                            var id = $("form").data("id");
                             var createCustomer = ($("select#createCustomerOrNot option:selected").val()) ? true : false;
-                            that.currentModel.save({
+                            that.currentModel.set({
                                 isOpportunitie: true,
                                 isConverted: true,
-								convertedDate:new Date(),
+                                convertedDate: new Date(),
                                 createCustomer: createCustomer,
                                 expectedRevenue: {
                                     currency: null,
-                                    progress: null,
-                                    value: null
+                                    progress: 0,
+                                    value: 0
                                 }
-                            }, {
+                            });
+                            that.currentModel.save(null, {
                                 headers: {
                                     mid: 39
                                 },
+                                patch: true,
                                 success: function (model) {
                                     $(self).dialog("close");
                                     //that.opportunitiesCollection.add(model);
@@ -359,15 +383,15 @@ define([
                 }, this);
 
                 if (model.groups)
-                    if (model.groups.users.length>0||model.groups.group.length){
+                    if (model.groups.users.length > 0 || model.groups.group.length) {
                         $(".groupsAndUser").show();
-                        model.groups.group.forEach(function(item){
-                            $(".groupsAndUser").append("<tr data-type='targetGroups' data-id='"+ item._id+"'><td>"+item.departmentName+"</td><td class='text-right'></td></tr>");
-                            $("#targetGroups").append("<li id='"+item._id+"'>"+item.departmentName+"</li>");
+                        model.groups.group.forEach(function (item) {
+                            $(".groupsAndUser").append("<tr data-type='targetGroups' data-id='" + item._id + "'><td>" + item.departmentName + "</td><td class='text-right'></td></tr>");
+                            $("#targetGroups").append("<li id='" + item._id + "'>" + item.departmentName + "</li>");
                         });
-                        model.groups.users.forEach(function(item){
-                            $(".groupsAndUser").append("<tr data-type='targetUsers' data-id='"+ item._id+"'><td>"+item.login+"</td><td class='text-right'></td></tr>");
-                            $("#targetUsers").append("<li id='"+item._id+"'>"+item.login+"</li>");
+                        model.groups.users.forEach(function (item) {
+                            $(".groupsAndUser").append("<tr data-type='targetUsers' data-id='" + item._id + "'><td>" + item.login + "</td><td class='text-right'></td></tr>");
+                            $("#targetUsers").append("<li id='" + item._id + "'>" + item.login + "</li>");
                         });
 
                     }

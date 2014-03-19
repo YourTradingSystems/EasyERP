@@ -344,7 +344,7 @@ define([
                 this.page = 1;
                 $("#top-bar-deleteBtn").hide();
                 $('#check_all').prop('checked', false);
-                this.changeLocationHash(1, itemsNumber);
+                this.changeLocationHash(1, itemsNumber, this.filter);
             },
 
             showPage: function (event) {
@@ -359,8 +359,10 @@ define([
                 currentEl.html('');
 
                 currentEl.append(_.template(listTemplate));
+                var itemView = new listItemView({ collection: this.collection, page: this.page, itemsNumber: this.collection.namberToShow });
+                itemView.bind('incomingStages', this.pushStages, this);
 
-                currentEl.append(new listItemView({ collection: this.collection, page: this.page, itemsNumber: this.collection.namberToShow }).render());//added two parameters page and items number
+                currentEl.append(itemView.render());//added two parameters page and items number
                 $('#check_all').click(function () {
                     $(':checkbox').prop('checked', this.checked);
                     if ($("input.checkbox:checked").length > 0)
@@ -368,17 +370,16 @@ define([
                     else
                         $("#top-bar-deleteBtn").hide();
                 });
-                this.bind('incomingStages', this.pushStages, this);
+                
                 common.populateWorkflowsList("Projects", ".filter-check-list", "", "/Workflows", null, function (stages) {
-                    self.stages = stages;
-                    var stage = (self.filter) ? self.filter.workflow : null;
-                    if (stage) {
+                    var stage = (self.filter) ? self.filter.workflow || [] : [];
+                    if (self.filter && stage) {
                         $('.filter-check-list input').each(function () {
                             var target = $(this);
                             target.attr('checked', $.inArray(target.val(), stage) > -1);
                         });
                     }
-                    self.trigger('incomingStages', stages);
+                    itemView.trigger('incomingStages', stages);
                 });
 
                 $(document).on("click", function (e) {

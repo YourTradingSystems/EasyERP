@@ -147,7 +147,8 @@ define([
                    $(e.target).parents("dd").find(".current-selected").text($(e.target).text()).attr("data-id", $(e.target).attr("id"));
                },
                render: function () {
-                   var projectID = (window.location.hash).split('/')[3];
+                   var afterPid = (window.location.hash).split('pId=')[1];
+                   var projectID = afterPid ? afterPid.split('/')[0] : null;
                    var formString = this.template();
                    var self = this;
                    this.$el = $(formString).dialog({

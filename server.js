@@ -1271,6 +1271,12 @@ app.put('/Leads/:_id', function (req, res) {
     data.lead = req.body;
     requestHandler.updateLead(req, res, id, data);
 });
+app.patch('/Leads/:_id', function (req, res) {
+    var data = {};
+    var id = req.param('_id');
+    data.lead = req.body;
+    requestHandler.updateLead(req, res, id, data);
+});
 
 app.delete('/Leads/:_id', function (req, res) {
     var id = req.param('_id');

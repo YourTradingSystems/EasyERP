@@ -11,21 +11,21 @@
 
 function (thumbnailsItemTemplate, stagesTamplate, editView, createView, dataService, currentModel, common, populate) {
     var ProjectThumbnalView = Backbone.View.extend({
-            el: '#content-holder',
-            countPerPage: 0,
-            template: _.template(thumbnailsItemTemplate),
-            newCollection: true,
-            //wfStatus: [],
-            filter: null,
-            defaultItemsNumber: null,
-            contentType: 'Projects',//needs in view.prototype.changeLocationHash
-            viewType: 'thumbnails',//needs in view.prototype.changeLocationHash
+        el: '#content-holder',
+        countPerPage: 0,
+        template: _.template(thumbnailsItemTemplate),
+        newCollection: true,
+        //wfStatus: [],
+        filter: null,
+        defaultItemsNumber: null,
+        contentType: 'Projects',//needs in view.prototype.changeLocationHash
+        viewType: 'thumbnails',//needs in view.prototype.changeLocationHash
 
         initialize: function (options) {
             $(document).off("click");
             this.startTime = options.startTime;
             this.collection = options.collection;
-			this.responseObj = {};
+            this.responseObj = {};
             this.asyncLoadImgs(this.collection);
             _.bind(this.collection.showMore, this.collection);
             this.countPerPage = options.collection.length;
@@ -42,7 +42,7 @@ function (thumbnailsItemTemplate, stagesTamplate, editView, createView, dataServ
             "click #showMore": "showMore",
             "click .thumbnail": "gotoEditForm",
             "click .filterButton": "showfilter",
-			"click .health-wrapper .health-container": "showHealthDd",
+            "click .health-wrapper .health-container": "showHealthDd",
             "click .health-wrapper ul li div": "chooseHealthDd",
             "click .stageSelect": "showNewSelect",
             "click .newSelectList li": "chooseOption",
@@ -55,7 +55,7 @@ function (thumbnailsItemTemplate, stagesTamplate, editView, createView, dataServ
                 target$.closest("li").find("input").prop("checked", !target$.closest("li").find("input").prop("checked"));
             }
         },
-		showNewSelect: function (e) {
+        showNewSelect: function (e) {
             if ($(".newSelectList").is(":visible")) {
                 this.hideHealth();
                 return false;
@@ -66,7 +66,7 @@ function (thumbnailsItemTemplate, stagesTamplate, editView, createView, dataServ
         },
 
         chooseOption: function (e) {
-			var self = this;
+            var self = this;
             var targetElement = $(e.target).parents(".thumbnail");
             var id = targetElement.attr("id");
             var model = this.collection.get(id);
@@ -78,13 +78,13 @@ function (thumbnailsItemTemplate, stagesTamplate, editView, createView, dataServ
                 patch: true,
                 validate: false,
                 success: function () {
-					self.showFilteredPage();
+                    self.showFilteredPage();
                 }
             });
 
             this.hideHealth();
             return false;
-		},
+        },
         chooseHealthDd: function (e) {
             var target$ = $(e.target);
             var target = target$.parents(".health-wrapper");
@@ -101,15 +101,15 @@ function (thumbnailsItemTemplate, stagesTamplate, editView, createView, dataServ
                 patch: true,
                 validate: false,
                 success: function () {
-					$(".health-wrapper ul").hide();
+                    $(".health-wrapper ul").hide();
                 }
             });
         },
 
-		hideHealth:function(){
-			$(".health-wrapper ul").hide();
+        hideHealth: function () {
+            $(".health-wrapper ul").hide();
             $(".newSelectList").hide();
-		},
+        },
         showHealthDd: function (e) {
             $(e.target).parents(".health-wrapper").find("ul").toggle();
             return false;
@@ -120,7 +120,7 @@ function (thumbnailsItemTemplate, stagesTamplate, editView, createView, dataServ
         },
 
         hide: function (e) {
-           if (!$(e.target).closest(".filter-check-list").length) {
+            if (!$(e.target).closest(".filter-check-list").length) {
                 $(".allNumberPerPage").hide();
                 if ($(".filter-check-list").is(":visible")) {
                     $(".filter-check-list").hide();
@@ -136,18 +136,18 @@ function (thumbnailsItemTemplate, stagesTamplate, editView, createView, dataServ
             this.newCollection = false;
             var workflowIdArray = [];
             $('.filter-check-list input:checked').each(function () {
-                 workflowIdArray.push($(this).val());
+                workflowIdArray.push($(this).val());
             });
-            this.filter = this.filter || {};
+            this.filter = (this.filter && this.filter !== 'empty') ? this.filter : {};
             this.filter['workflow'] = workflowIdArray;
             this.defaultItemsNumber = 0;
             this.changeLocationHash(null, this.defaultItemsNumber, this.filter);
-            this.collection.showMore({ count:this.defaultItemsNumber, page: 1, filter: this.filter });
+            this.collection.showMore({ count: this.defaultItemsNumber, page: 1, filter: this.filter });
             this.getTotalLength(this.defaultItemsNumber, this.filter);
         },
         //modified for filter Vasya
-        getTotalLength: function(currentNumber,filter, newCollection) {
-            dataService.getData('/totalCollectionLength/Projects', { currentNumber: currentNumber, filter:this.filter, newCollection: this.newCollection }, function (response, context) {
+        getTotalLength: function (currentNumber, filter, newCollection) {
+            dataService.getData('/totalCollectionLength/Projects', { currentNumber: currentNumber, filter: this.filter, newCollection: this.newCollection }, function (response, context) {
                 var showMore = context.$el.find('#showMoreDiv');
                 if (response.showMore) {
                     if (showMore.length === 0) {
@@ -171,7 +171,9 @@ function (thumbnailsItemTemplate, stagesTamplate, editView, createView, dataServ
             });
             common.getImages(ids, "/getEmployeesImages");
         },
-
+        pushStages: function (stages) {
+            this.stages = stages;
+        },
         render: function () {
             var self = this;
             var currentEl = this.$el;
@@ -188,17 +190,18 @@ function (thumbnailsItemTemplate, stagesTamplate, editView, createView, dataServ
             if (this.collection.length > 0) {
                 currentEl.append(this.template({ collection: this.collection.toJSON() }));
             } else {
-                currentEl.html('<h2>No projects found</h2>');
+                currentEl.append('<div class="filterButton"><span class="text">Stage</span><div class="arrow">7</div></div><ul class="filter-check-list"><li><input type="checkbox"  value="null" checked="checked"><span>Undefinded</span></li></ul>');
             }
+            this.bind('incomingStages', this.pushStages, this);
             common.populateWorkflowsList("Projects", ".filter-check-list", "", "/Workflows", null, function (stages) {
-                self.stages = stages;
-                                    var stage = (self.filter) ? self.filter.workflow : null;
-                                    if (stage) {
-                                        $('.filter-check-list input').each(function() {
-                                            var target = $(this);
-                                            target.attr('checked', $.inArray(target.val(), stage) > -1);
-                                        });
-                                    }
+                var stage = (self.filter) ? self.filter.workflow || [] : [];
+                if (self.filter && stage) {
+                    $('.filter-check-list input').each(function () {
+                        var target = $(this);
+                        target.attr('checked', $.inArray(target.val(), stage) > -1);
+                    });
+                }
+                self.trigger('incomingStages', stages);
             });
                 $('#check_all').click(function () {
                     $(':checkbox').prop('checked', this.checked);
@@ -210,9 +213,9 @@ function (thumbnailsItemTemplate, stagesTamplate, editView, createView, dataServ
             currentEl.append(createdInTag);
             $(document).on("click", function (e) {
                 self.hide(e);
-				self.hideHealth(e);
+                self.hideHealth(e);
             });
-			populate.getPriority("#priority",this);
+            populate.getPriority("#priority", this);
             return this;
         },
 
@@ -222,7 +225,7 @@ function (thumbnailsItemTemplate, stagesTamplate, editView, createView, dataServ
             } else {
                 e.preventDefault();
                 var id = $(e.target).closest('.thumbnail').attr("id");
-                var model = new currentModel({validate: false});
+                var model = new currentModel({ validate: false });
                 model.urlRoot = '/Projects/form/' + id;
                 model.fetch({
                     success: function (model) {
@@ -235,7 +238,7 @@ function (thumbnailsItemTemplate, stagesTamplate, editView, createView, dataServ
 
         showMore: function (event) {
             event.preventDefault();
-            this.collection.showMore({filter: this.filter, newCollection: this.newCollection });
+            this.collection.showMore({ filter: this.filter, newCollection: this.newCollection });
         },
         //modified for filter Vasya
         showMoreContent: function (newModels) {
@@ -244,19 +247,19 @@ function (thumbnailsItemTemplate, stagesTamplate, editView, createView, dataServ
             var created = holder.find('#timeRecivingDataFromServer');
             var content = holder.find(".thumbnailwithavatar");
             this.defaultItemsNumber += newModels.length;
-            this.changeLocationHash(null, this.defaultItemsNumber, this.filter);
+            this.changeLocationHash(null, (this.defaultItemsNumber < 50) ? 50 : this.defaultItemsNumber, this.filter);
             this.getTotalLength(this.defaultItemsNumber, this.filter);
 
             if (showMore.length != 0) {
-                     showMore.before(this.template({  collection: this.collection.toJSON() }));
-				$(".filter-check-list").eq(1).remove();
+                showMore.before(this.template({ collection: this.collection.toJSON() }));
+                $(".filter-check-list").eq(1).remove();
 
-                     showMore.after(created);
-             } else {
-                 content.html(this.template({ collection: this.collection.toJSON() }));
+                showMore.after(created);
+            } else {
+                content.html(this.template({ collection: this.collection.toJSON() }));
 
-             }
-             this.asyncLoadImgs(newModels);
+            }
+            this.asyncLoadImgs(newModels);
         },
 
         createItem: function () {

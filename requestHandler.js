@@ -1663,7 +1663,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             };
             access.getEditWritAccess(req, req.session.uId, 24, function (access) {
                 if (access) {
-                    opportunities.update(req, id, data.lead, res);
+                    opportunities.updateLead(req, id, data.lead, res);
                 } else {
                     res.send(403);
                 }

@@ -48,9 +48,6 @@
                     this.namberToShow = options.count;
                 }
 
-                if (options && options.count) {
-                    this.namberToShow = options.count;
-                }
                 filterObject['page'] = this.page;
                 filterObject['count'] = this.namberToShow;
                 filterObject['filter'] = (options && options.filter) ? options.filter : {};
