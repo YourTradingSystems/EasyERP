@@ -255,10 +255,6 @@ define([
                 );
  
 				$('#text').datepicker({ dateFormat: "d M, yy" });
-                common.populateUsersForGroups('#sourceUsers','#targetUsers',this.currentModel.toJSON(),1);
-                common.populateUsers("#allUsers", "/UsersForDd",this.currentModel.toJSON(),null,true);
-                common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",this.currentModel.toJSON(),1);
-
 				populate.get("#departmentDd", "/DepartmentsForDd",{},"departmentName",this);
 				populate.get("#language", "/Languages",{},"name",this);
 				populate.get2name("#employeesDd", "/getSalesPerson",{},this);
