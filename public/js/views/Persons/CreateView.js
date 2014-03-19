@@ -211,7 +211,9 @@ define([
                 });
 				var notDiv = this.$el.find('.assignees-container');
                 notDiv.append(
-                    new AssigneesView().render().el
+                    new AssigneesView({
+                        model: this.currentModel
+					}).render().el
                 );
                 var personModel = new PersonModel();
 				populate.getCompanies("#companiesDd", "/CompaniesForDd",{},this,false,true, (this.models)?this.models._id:null);
