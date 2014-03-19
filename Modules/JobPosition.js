@@ -380,7 +380,7 @@ var JobPosition = function (logWriter, mongoose, employee, department, models) {
                                     populate('createdBy.user', 'login').
                                     populate('editedBy.user', 'login').
                                     populate('department', 'departmentName').
-									populate('workflow', 'name _id').
+									populate('workflow', 'name _id status').
                                     exec(function (error, _res) {
                                         if (!error) {
                                             res['data'] = _res;

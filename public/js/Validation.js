@@ -272,7 +272,7 @@ define(
                     errorArray.push([fieldName, errorMessages.minLengthMsg(WORKFLOW_MIN_LENGTH)].join(' '));
                     return;
                 }
-                if(!validateGroupsName(fieldValue)) errorArray.push([fieldName, errorMessages.invalidLoginMsg].join(' '));
+                if(!validateWorkflowName(fieldValue)) errorArray.push([fieldName, errorMessages.invalidLoginMsg].join(' '));
             } else{
                 if(fieldValue){
                     if(hasInvalidChars(fieldValue)) {

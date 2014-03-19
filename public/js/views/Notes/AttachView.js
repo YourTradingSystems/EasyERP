@@ -27,7 +27,7 @@ define([
                 this.$el.find(".attachContainer .attachFile:last").append(this.$el.find(".input-file .inputAttach").attr("hidden", "hidden"));
                 this.$el.find(".input-file").append('<input type="file" value="Choose File" class="inputAttach" name="attachfile">');
 			}else{
-				this.sendToServer(event);
+				this.sendToServer(event,null,this);
 			}
 		},
         hideDialog: function () {
@@ -36,8 +36,7 @@ define([
             $(".add-user-dialog").remove();
         },
 
-        sendToServer: function (event,model) {
-			var self = this;
+        sendToServer: function (event,model,self) {
             var currentModel = this.model;
             var currentModelId = currentModel["id"];
             var addFrmAttach = this.$el.find("#addAttachments");
@@ -124,8 +123,11 @@ define([
 						}
                     },
 
-                    error: function () {
-                        console.log("Attach file error");
+                    error: function (xhr) {
+                        $('.attachContainer').empty();
+                        $('.bar .status').empty();
+						if (self)
+							self.errorNotification(xhr);						
                     }
                 });
             });

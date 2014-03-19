@@ -487,7 +487,7 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
     };
 
     function getProjectStatusCountForDashboard(req, response) {
-        models.get(req.session.lastDb - 1, "Workflows", workflow.workflowSchema).find({ "wId": "Projects" }).select("_id status").exec(function (error, resWorkflow) {
+        models.get(req.session.lastDb - 1, "Workflows", workflow.workflowSchema).find({ "wId": "Projects" }).select("_id name").exec(function (error, resWorkflow) {
             if (!error) {
                 models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema).aggregate(
                     {

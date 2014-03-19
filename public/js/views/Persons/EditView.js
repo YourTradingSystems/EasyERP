@@ -202,7 +202,6 @@ define([
             },
             render: function () {
                 var self = this;
-				console.log(this.currentModel.toJSON());
                 var formString = this.template({
                     model: this.currentModel.toJSON()
                 });
@@ -212,7 +211,7 @@ define([
                     resizable: true,
                     dialogClass: "edit-person-dialog",
                     title: "Edit Person",
-                    width: "900px",
+                    width: "900",
                     buttons: [
                         {
                             text: "Save",
