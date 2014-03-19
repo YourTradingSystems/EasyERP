@@ -248,8 +248,8 @@ define([
                         patch: true,
                         validate: false,
                         success: function (model) {
-                            //that.showFilteredPage();//When add filter by Type, then uncoment this code
-                            targetParrentElement.find('#' + model.id).text(type);
+                            that.showFilteredPage();//When add filter by Type, then uncoment this code
+                            //targetParrentElement.find('#' + model.id).text(type);
                         }
                     });
                 }
@@ -463,7 +463,7 @@ define([
             showMoreContent: function (newModels) {
                 var holder = this.$el;
                 holder.find("#listTable").empty();
-                var itemView = new listItemView({ collection: newModels,page: holder.find("#currentShowPage").val(), itemsNumber: holder.find("span#itemsNumber").text() });
+                var itemView = new listItemView({ collection: newModels, page: holder.find("#currentShowPage").val(), itemsNumber: holder.find("span#itemsNumber").text() });
                 holder.append(itemView.render());
                 itemView.undelegateEvents();
                 var pagenation = holder.find('.pagination');

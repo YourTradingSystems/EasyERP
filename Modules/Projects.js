@@ -33,7 +33,7 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
         attachments: { type: Array, default: [] },
         editedBy: {
             user: { type: ObjectId, ref: 'Users', default: null },
-            date: { type: Date, default: Date.now }
+            date: { type: Date }
         },
         health: { type: Number, default: 1 }
     }, { collection: 'Project' });
@@ -65,7 +65,7 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
         attachments: { type: Array, default: [] },
         editedBy: {
             user: { type: ObjectId, ref: 'Users', default: null },
-            date: { type: Date, default: Date.now }
+            date: { type: Date }
         }
     }, { collection: 'Tasks' });
 
@@ -316,8 +316,11 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                         _project.projectShortDesc = data.projectShortDesc;
                     }
                     if (data.uId) {
+                        var now = new Date();
                         _project.createdBy.user = data.uId;
+                        _project.createdBy.date = now;
                         //uId for edited by field on creation
+                        _project.editedBy.date = now;
                         _project.editedBy.user = data.uId;
                     }
 
@@ -988,7 +991,6 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
         for (var i in req.query) {
             data[i] = req.query[i];
         }
-        console.log(data);
         res['showMore'] = false;
 
         if (data && data.parrentContentId) {
@@ -999,7 +1001,7 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                 return item === "null" ? null : item;
             });
             addObj['workflow'] = { $in: data.filter.workflow.objectID() };
-        } else if (data && data.newCollection === 'false') {
+        } else if (data && data.type !== 'Tasks' && data.newCollection === 'false') {
             addObj['workflow'] = { $in: [] };
         }
         models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema).aggregate(
@@ -1015,7 +1017,6 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
             function (err, deps) {
                 if (!err) {
                     var arrOfObjectId = deps.objectID();
-                    console.log(addObj);
                     models.get(req.session.lastDb - 1, 'Project', ProjectSchema).aggregate(
                         {
                             $match: {
@@ -1065,7 +1066,6 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                                         data.filter.workflow = data.filter.workflow.map(function (item) {
                                             return item === "null" ? null : item;
                                         });
-
                                         query.where('workflow').in(data.filter.workflow);
                                     } else if (data && (!data.newCollection || data.newCollection === 'false')) {
                                         query.where('workflow').in([]);
@@ -1088,7 +1088,6 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                                     }
                                     res['count'] = projectsId.length;
                                     response.send(res);
-                                    console.log(res);
                                 }
                             } else {
                                 logWriter.log("Projects.js getListLength task.find " + err);
@@ -1522,8 +1521,11 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                         _task.workflow = data.workflow;
                     }
                     if (data.uId) {
+                        var now = new Date();
                         _task.createdBy.user = data.uId;
+                        _task.createdBy.date = data.now;
                         //uId for edited by field on creation
+                        _task.editedBy.date = data.now;
                         _task.editedBy.user = data.uId;
                     }
                     if (data.logged) {
@@ -1768,8 +1770,6 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
 
     function getTasksForList(req, data, response) {
         var res = {};
-        var startTime = new Date();
-
         res['data'] = [];
         var addObj = {};
         if (data.parrentContentId) {
@@ -1836,8 +1836,6 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                                     data.filter.workflow = data.filter.workflow.map(function (item) {
                                         return item === "null" ? null : item;
                                     });
-
-                                    console.log(data.filter.workflow);
                                     query.where('workflow').in(data.filter.workflow);
                                 } else if (data && (!data.newCollection || data.newCollection === 'false')) {
                                     query.where('workflow').in([]);
@@ -1858,9 +1856,7 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                                     exec(function (err, result) {
                                         if (!err) {
                                             res['data'] = result;
-                                            res['time'] = (new Date() - startTime);
                                             response.send(res);
-                                            console.log(res);
                                         } else {
                                             logWriter.log("Projects.js Getist task.find" + err);
                                             response.send(500, { error: "Can't find Tasks" });

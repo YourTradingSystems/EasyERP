@@ -131,9 +131,7 @@ define([
                 };
                 var currentWorkflow = this.currentModel.get('workflow');
                 var workflow = this.$("#workflowsDd").data('id');
-                //workflow = workflow ? workflow : null;
-
-                var priority = $("#priorityDd").data("id");
+                var priority = this.$el.find("#priorityDd").attr("data-id");
 
                 var internalNotes = $.trim($("#internalNotes").val());
 

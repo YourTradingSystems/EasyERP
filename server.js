@@ -181,11 +181,6 @@ app.post('/uploadFiles', function (req, res, next) {
     });
 });
 
-//app.get('/download/:name', function (req, res) {
-//    var name = req.param('name');
-//    res.download(__dirname + "\\uploads\\" + name);
-//});
-
 app.get('/download/:path', function (req, res) {
     var path = req.param('path');
     res.download(__dirname + path);
@@ -582,7 +577,7 @@ app.get('/Users/:viewType', function (req, res) {
     }
 });
 
-app.put('/Users/:_id', function (req, res) {
+app.patch('/Users/:_id', function (req, res) {
     var data = {};
     var id = req.param('_id');
     data.user = req.body;
