@@ -83,7 +83,9 @@ define([
                     },
                     patch: true,
                     success: function (err, model) {
-                        targetElement.find('.stageSelect').text($(e.target).text());
+						Backbone.history.fragment = '';
+						Backbone.history.navigate(window.location.hash, { trigger: true });
+						//                       targetElement.find('.stageSelect').text($(e.target).text());
                     }
                 });
 

@@ -28,6 +28,7 @@ define([
                 "click #modulesAccessTable tr.child td input": "checkUncheckParent"
             },
 			checkUncheckParent:function(e){
+				var td = $(e.target).parent();
 				if ($(e.target).prop("checked")){
 					var n =$(e.target).parent().parent().find("td").index($(e.target).parent());
 					var cur = $(e.target).closest(".child");
@@ -36,6 +37,17 @@ define([
 					}
 					cur = cur.prev();
 					cur.find("td").eq(n).find("input").prop("checked",true);
+//					console.log(td.prev().get(0).tagName);
+					while(td&&td.prev()&&td.prev().get(0)&&td.prev().get(0).tagName == "TD"){
+						td.prev().find("input").prop("checked",true);
+						td = td.prev();
+					}
+					
+				}else{
+					while(td&&td.next()&&td.next().get(0)&&td.next().get(0).tagName == "TD"){
+						td.next().find("input").prop("checked",false);
+						td = td.next();
+					}
 				}
 			},
 			checkUncheckChild:function(e){
@@ -44,6 +56,31 @@ define([
 				while(cur.next().hasClass("child")){
 					cur.next().find("td").eq(n).find("input").prop("checked",$(e.target).prop("checked"))
 					cur=cur.next();
+				}
+				var td = $(e.target).parent();
+				if ($(e.target).prop("checked")){
+					while(td&&td.prev()&&td.prev().get(0)&&td.prev().get(0).tagName == "TD"){
+						td.prev().find("input").prop("checked",true);
+						var n =$(e.target).parent().parent().find("td").index(td.prev());
+						var cur = td.prev().closest(".parent");
+						while(cur.next().hasClass("child")){
+							cur.next().find("td").eq(n).find("input").prop("checked",td.prev().find("input").prop("checked"))
+							cur=cur.next();
+						}
+						td = td.prev();
+					}
+					
+				}else{
+					while(td&&td.next()&&td.next().get(0)&&td.next().get(0).tagName == "TD"){
+						td.next().find("input").prop("checked",false);
+						var n =$(e.target).parent().parent().find("td").index(td.next());
+						var cur = td.next().closest(".parent");
+						while(cur.next().hasClass("child")){
+							cur.next().find("td").eq(n).find("input").prop("checked",td.next().find("input").prop("checked"))
+							cur=cur.next();
+						}
+						td = td.next();
+					}
 				}
 			},
 
