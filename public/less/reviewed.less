@@ -2626,7 +2626,6 @@ body {
   font-family: @body-font;
   font-size: 12px;
   height: 100%;
-  min-width:810px;
 }
 
 dl {
@@ -2906,6 +2905,7 @@ dl {
   .fullsize;
   width:auto;
   min-width:810px;
+  position:relative;
 
   #content-holder {
     height: auto;
@@ -4663,5 +4663,13 @@ input::-webkit-inner-spin-button {
 		clear:both;
 		display:block;
 		float:left;
+	}
+}
+.edit-person-dialog{
+	.form-holder form{
+		margin-top:-340px;
+	}
+	.ui-dialog-buttonpane{
+		margin-top: -140px !important;
 	}
 }

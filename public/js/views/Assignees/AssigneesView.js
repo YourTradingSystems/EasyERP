@@ -42,7 +42,11 @@ define([
             e.preventDefault();
 			$(e.target).parents("ul").find("li:not(:visible)").eq(0).show();
 			var div =$(e.target).parents(".left");
-            $(e.target).closest(".ui-dialog").find(".target").append($(e.target));
+			if ($(e.target).hasClass("temp")){
+				$(e.target).closest(".ui-dialog").find(".target").append($(e.target).removeClass("temp"));
+			}else{
+				$(e.target).closest(".ui-dialog").find(".target").append($(e.target).addClass("temp"));
+			}
 			e.data.self.updateAssigneesPagination(div);
 			div =$(e.target).parents(".left");
 			e.data.self.updateAssigneesPagination(div);
@@ -52,11 +56,23 @@ define([
         removeUsers: function (e) {
             e.preventDefault();
 			var div =$(e.target).parents(".left");
-            $(e.target).closest(".ui-dialog").find(".source").append($(e.target));
+			if ($(e.target).hasClass("temp")){
+				$(e.target).closest(".ui-dialog").find(".source").append($(e.target).removeClass("temp"));
+			}else{
+				$(e.target).closest(".ui-dialog").find(".source").append($(e.target).addClass("temp"));
+			}
 			e.data.self.updateAssigneesPagination(div);
 			div =$(e.target).parents(".left");
 			e.data.self.updateAssigneesPagination(div);
         },
+		closeDialog:function(e){
+			$(e.target).closest(".ui-dialog").find(".source").find(".temp").each(function(){
+				$(e.target).closest(".ui-dialog").find(".target").append($(this).removeClass("temp"));
+			});
+			$(e.target).closest(".ui-dialog").find(".target").find(".temp").each(function(){
+				$(e.target).closest(".ui-dialog").find(".source").append($(this).removeClass("temp"));
+			});
+		},
    		updateAssigneesPagination:function(el){
 			var pag = el.find(".userPagination .text");
 			el.find(".userPagination .nextUserList").remove();
@@ -108,6 +124,7 @@ define([
 
                         click: function () {
                             self.addUserToTable("#targetUsers");
+							$(this).find(".temp").removeClass("temp");
                             $(this).dialog("close");
                         }
 
@@ -115,8 +132,11 @@ define([
                     cancel: {
                         text: "Cancel",
                         class: "btn",
-                        click: function () {
-                            $(this).dialog("close");
+                        click: function (e) {
+							self.closeDialog(e);
+							$(this).dialog("close");
+							$("#targetUsers").unbind("click");
+							$("#sourceUsers").unbind("click");
                         }
                     }
                 }
@@ -161,14 +181,19 @@ define([
                         class: "btn",
                         click: function () {
                             self.addUserToTable("#targetGroups");
+							$(this).find(".temp").removeClass("temp");
                             $(this).dialog("close");
                         }
                     },
                     cancel: {
                         text: "Cancel",
                         class: "btn",
-                        click: function () {
-                            $(this).dialog("close");
+                        click: function (e) {
+							self.closeDialog(e);
+							$(this).dialog("close");
+							$("#targetGroups").unbind("click");
+							$("#sourceGroups").unbind("click");
+
                         }
                     }
                 }
