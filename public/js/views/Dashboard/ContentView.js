@@ -99,17 +99,20 @@ define([
 				   this.renderPopulate();
                    this.renderPopulateSource();
 				   this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.startTime)+" ms</div>");
+				   $(window).resize(function(){
+					   self.renderPopulate();
+					   self.renderPopulateSource();
+				   });
                },
                renderPopulateSource: function () {
 				   
                    var self = this;
                    $(".chart").empty();
                    common.getLeadsForChart(true, this.dateRangeSource, this.dateItem, function (data) {
-					   console.log(data);
 					   $("#timeBuildingDataFromServer").text("Server response in " + self.buildTime + " ms");
 					   
                        var margin = { top: 20, right: 160, bottom: 30, left: 160 },
-					   width = $(window).width() - margin.left - margin.right,
+					   width = $("#wrapper").width() - margin.left - margin.right,
 					   height = 600 - margin.top - margin.bottom;
 
                        var y = d3.scale.ordinal()
@@ -196,7 +199,7 @@ define([
                    common.getLeadsForChart(null, this.dateRange, this.dateItem, function (data) {
 					   $("#timeBuildingDataFromServer").text("Server response in " + self.buildTime + " ms");
                        var margin = { top: 20, right: 160, bottom: 190, left: 160 },
-					   width = $(window).width() - margin.left - margin.right,
+					   width = $("#wrapper").width() - margin.left - margin.right,
 					   height = 500 - margin.top - margin.bottom;
                        var x = d3.scale.ordinal()
 						   .rangeRoundBands([0, width], .6);
@@ -322,8 +325,6 @@ define([
 					   }));
 					   unicSource = _.unique(unicSource);
 					   unicSource.sort(function (a, b) { return d3.ascending(a, b); });
-					   console.log("unicSource");
-					   console.log(unicSource);
 					   dataAll = []
 					   for (var z=0;z<unicSource.length;z++){
 						   var d1 = 0;
@@ -346,8 +347,6 @@ define([
 						   }
 						   dataAll.push(({source:unicSource[z],count:d1+d2}));
 					   }
-					   console.log("dataAll");
-					   console.log(dataAll);
                        var maxval = d3.max(data1, function (d) { return d.count; });
 					   data1 = dataAll;
                        var scale = 1;
@@ -364,8 +363,6 @@ define([
                        });
                        var maxval3 = d3.max(percent, function (d) { return d.count; });
                        var minval3 = d3.min(percent, function (d) { return d.count; });
-					   console.log("percent");
-					   console.log(percent);
                        x.domain(data.map(function (d) { return d.source; }));
                        y.domain([0, d3.max(data1, function (d) { return d.count; })]);
                        y2.domain([0, 100]);

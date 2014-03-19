@@ -1054,11 +1054,13 @@ app.post('/Departments', function (req, res) {
 });
 
 app.get('/Departments/:viewType', function (req, res) {
+	console.log("dijshlo");
     var data = {};
     for (var i in req.query) {
         data[i] = req.query[i];
     }
     var viewType = req.params.viewType;
+	console.log(viewType);
     switch (viewType) {
         case "form": requestHandler.getDepartmentById(req, res, data);
             break;
@@ -1269,6 +1271,12 @@ app.post('/Leads', function (req, res) {
 });
 
 app.put('/Leads/:_id', function (req, res) {
+    var data = {};
+    var id = req.param('_id');
+    data.lead = req.body;
+    requestHandler.updateLead(req, res, id, data);
+});
+app.patch('/Leads/:_id', function (req, res) {
     var data = {};
     var id = req.param('_id');
     data.lead = req.body;

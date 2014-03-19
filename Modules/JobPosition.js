@@ -267,7 +267,7 @@ var JobPosition = function (logWriter, mongoose, employee, department, models) {
         query.populate('department').
 			populate('createdBy.user').
             populate('editedBy.user').
-			populate('workflow','name _id');
+			populate('workflow', 'name _id');
         query.sort({ name: 1 });
         query.exec(function (err, result) {
             if (err) {
@@ -370,32 +370,78 @@ var JobPosition = function (logWriter, mongoose, employee, department, models) {
                         function (err, result) {
                             if (!err) {
                                 var query = models.get(req.session.lastDb - 1, "JobPosition", jobPositionSchema).find().where('_id').in(result);
-								console.log(data);
-                                if (data.sort) {
+                                console.log(data);
+                                if (data.sort && (!data.sort.totalForecastedEmployees && !data.sort.numberOfEmployees)) {
                                     query.sort(data.sort);
-                                }else{
-									query.sort({"editedBy.date":-1});
-								}
+                                } else {
+                                    query.sort({ "editedBy.date": -1 });
+                                }
                                 query.select("_id createdBy editedBy name department totalForecastedEmployees numberOfEmployees expectedRecruitment workflow").
                                     populate('createdBy.user', 'login').
                                     populate('editedBy.user', 'login').
                                     populate('department', 'departmentName').
-									populate('workflow','name _id').
+									populate('workflow', 'name _id').
                                     exec(function (error, _res) {
                                         if (!error) {
                                             res['data'] = _res;
                                             if (_res.length !== 0) {
-                                                _res.forEach(function(ellement, index) {
-                                                    models.get(req.session.lastDb - 1, 'Employees', employee.employeeSchema).find({ jobPosition: ellement._id }).count(function(err, count) {
+                                                _res.forEach(function (ellement, index) {
+                                                    models.get(req.session.lastDb - 1, 'Employees', employee.employeeSchema).find({ jobPosition: ellement._id }).count(function (err, count) {
                                                         if (count) {
                                                             ellement.numberOfEmployees = count;
-
+                                                            ellement.totalForecastedEmployees = ellement.numberOfEmployees + ellement.expectedRecruitment;
                                                         } else if (err) {
                                                             console.log(err);
                                                             response.send(500, { error: 'Some error occured in JobPosition' });
                                                         }
-                                                        if (index === result.length - 1)
+                                                        if (index === result.length - 1) {
+                                                            if (data.sort && (data.sort.totalForecastedEmployees || data.sort.numberOfEmployees)) {
+                                                                for (var i in data.sort) {
+                                                                    switch (i) {
+                                                                        case 'totalForecastedEmployees':
+                                                                            {
+                                                                                res['data'].sort(function (a, b) {
+                                                                                    if (+data.sort[i] === 1) {
+                                                                                        if (a.totalForecastedEmployees > b.totalForecastedEmployees)
+                                                                                            return 1;
+                                                                                        if (a.totalForecastedEmployees < b.totalForecastedEmployees)
+                                                                                            return -1;
+                                                                                        return 0;
+                                                                                    } else {
+                                                                                        if (a.totalForecastedEmployees < b.totalForecastedEmployees)
+                                                                                            return 1;
+                                                                                        if (a.totalForecastedEmployees > b.totalForecastedEmployees)
+                                                                                            return -1;
+                                                                                        return 0;
+                                                                                    }
+                                                                                });
+                                                                            };
+                                                                            break;
+                                                                        case 'numberOfEmployees':
+                                                                            {
+                                                                                res['data'].sort(function (a, b) {
+                                                                                    if (+data.sort[i] === 1) {
+                                                                                        if (a.numberOfEmployees > b.numberOfEmployees)
+                                                                                            return 1;
+                                                                                        if (a.numberOfEmployees < b.numberOfEmployees)
+                                                                                            return -1;
+                                                                                        return 0;
+                                                                                    } else {
+                                                                                        if (a.numberOfEmployees < b.numberOfEmployees)
+                                                                                            return 1;
+                                                                                        if (a.numberOfEmployees > b.numberOfEmployees)
+                                                                                            return -1;
+                                                                                        return 0;
+                                                                                    }
+                                                                                });
+                                                                            };
+                                                                            break;
+                                                                    }
+                                                                }
+
+                                                            }
                                                             response.send(res);
+                                                        }
                                                     }
                                                     );
                                                 });

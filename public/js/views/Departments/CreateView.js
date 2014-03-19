@@ -131,12 +131,9 @@ define([
             },
 
             saveItem: function () {
-
                 var self = this;
-
                 var mid = 39;
                 var departmentName = $.trim($("#departmentName").val());
-                
                 var parentDepartment = this.$("#parentDepartment").data("id")?this.$("#parentDepartment").data("id"):null;
                 var nestingLevel = this.$("#parentDepartment").data('level');
                 var departmentManager = this.$("#departmentManager").data("id");

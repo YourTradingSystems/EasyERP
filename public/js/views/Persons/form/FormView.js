@@ -143,7 +143,6 @@ define([
                 var objIndex = parent[0].id.split('_');
                 if (objIndex.length > 1) {
                     this.text = this.formModel.get(objIndex[0])[objIndex[1]];
-                    console.log(this.text);
                 } else {
                     this.text = this.formModel.get(objIndex[0]);
                 }
@@ -162,7 +161,6 @@ define([
                     $("#" + parent[0].id + " input").removeAttr('disabled');
                 } else {
                     $("#" + parent[0].id).text('');
-                    console.log(maxlength);
                     $("#" + parent[0].id).append('<input id="editInput" maxlength="' + maxlength + '" type="text" class="left"/>');
                 }
                 $('#editInput').val(this.text);
@@ -193,7 +191,6 @@ define([
 				var oldvalue = {};
                 if (objIndex.length > 1) {
 					for (var i in this.formModel.toJSON()[objIndex[0]]){
-						console.log(i);
 						oldvalue[i] = this.formModel.toJSON()[objIndex[0]][i];
 
 					}
@@ -222,7 +219,6 @@ define([
 				if (!valid){
 					newModel[objIndex[0]] = oldvalue;
 					this.formModel.set(newModel);
-					console.log(this.formModel);
 				}
             },
 
