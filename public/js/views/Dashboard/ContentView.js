@@ -87,27 +87,21 @@ define([
 
                render: function () {
 				   var self = this;
-				   $(window).resize(function(){
-					   if ($(window).width()<1370){
+                   this.$el.html(this.template());
+				   this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.startTime)+" ms</div>");
+				   $(window).unbind("resize").resize(function(){
+					   self.renderPopulate();
+					   self.renderPopulateSource();
+			   if ($(window).width()<1370){
 						   $(".legend-box").css("margin-top","10px");
 					   }else{
 						   $(".legend-box").css("margin-top","-39px");
 					   }
-
-				   });
-                   this.$el.html(this.template());
-				   this.renderPopulate();
-                   this.renderPopulateSource();
-				   this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.startTime)+" ms</div>");
-				   $(window).resize(function(){
-					   self.renderPopulate();
-					   self.renderPopulateSource();
 				   });
                },
                renderPopulateSource: function () {
 				   
                    var self = this;
-                   $(".chart").empty();
                    common.getLeadsForChart(true, this.dateRangeSource, this.dateItem, function (data) {
 					   $("#timeBuildingDataFromServer").text("Server response in " + self.buildTime + " ms");
 					   

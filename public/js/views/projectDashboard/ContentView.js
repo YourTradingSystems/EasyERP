@@ -46,7 +46,7 @@ define([
 					var k = collection.data.length;
 					$("#projectStatus").append("<tr></tr>");
 					for (var i=0;i<n;i++){
-						$("#projectStatus tr").append("<th>"+collection.workflow[i].status+"</th>");	
+						$("#projectStatus tr").append("<th>"+collection.workflow[i].name+"</th>");	
 					}
 					$("#projectStatus").append("<tr></tr>");
 					for (var i=0;i<n;i++){
