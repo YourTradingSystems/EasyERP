@@ -206,7 +206,12 @@ var JobPosition = function (logWriter, mongoose, employee, department, models) {
     function getJobPositionById(req, id, res) {
         var query = models.get(req.session.lastDb - 1, 'JobPosition', jobPositionSchema).findById(id);
         query.populate("department", "departmentName _id");
-        query.populate("workflow", "name _id");
+        query.populate("workflow", "name _id").
+			populate('createdBy.user').
+            populate('editedBy.user').
+            populate('groups.users').
+            populate('groups.group');
+
         query.exec(function (err, response) {
             if (err) {
                 console.log(err);

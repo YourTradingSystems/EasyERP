@@ -15,7 +15,7 @@
                   <textarea type="text" class="projectDescriptionEdit" name="description" placeholder="Add a Description..." id="description" maxlength="500"><%=model.description%></textarea>
                 </div>
               </div>
-            <div class="clearfix"></div>
+              <div class="clearfix"></div>
             </div>
             <div class="half-block left">
               <dl class="project-edit-info">
@@ -23,14 +23,14 @@
                   <label for="projectName">Project Name </label>
                 </dt>
                 <dd>
-                                    <input type="text" class="title-input blueback" name="projectName" id="projectName" required value="<%=model.projectName%>" maxlength="32" />
-                                </dd>
+                  <input type="text" class="title-input blueback" name="projectName" id="projectName" required value="<%=model.projectName%>" maxlength="32" />
+                </dd>
                 <dt>
                   <label for="projectShortDesc">Project Short Description </label>
                 </dt>
                 <dd>
-                                    <input type="text" class="title-input blueback" name="projectShortDesc" id="projectShortDesc" required value="<%=model.projectShortDesc%>" maxlength="32" />
-                                </dd>
+                  <input type="text" class="title-input blueback" name="projectShortDesc" id="projectShortDesc" required value="<%=model.projectShortDesc%>" maxlength="32" />
+                </dd>
                 <dt>
                   <label for="projectManagerDD">Project Manager</label>
                 </dt>
@@ -42,8 +42,8 @@
 				<dd>
 				  <a id="projectTypeDD" data-id="<%=model.projecttype?model.projecttype:''%>" class="current-selected" href="javascript:;"><%=model.projecttype?model.projecttype:'Select'%></a>			  
 				</dd>
-                                <dt><label for="StartDate">Start Date </label></dt>
-                                <dd><input class="extrainfo blueback" type="text" name="StartDate" id="StartDate" value="<%=model.StartDate%>" readonly /></dd>
+                <dt><label for="StartDate">Start Date </label></dt>
+                <dd><input class="extrainfo blueback" type="text" name="StartDate" id="StartDate" value="<%=model.StartDate%>" readonly /></dd>
                 <dt>
                   <label for="customerDd">Project Customer </label>
                 </dt>
@@ -53,28 +53,28 @@
                 <dt>
                   <label for="workflowsDd">Status</label>
                 </dt>
-                  <dd>
-                      <a id="workflowsDd" data-id="<%=(model.workflow) ? model.workflow._id : ''%>" class="current-selected" href="javascript:;"><%=(model.workflow)?model.workflow.name:'Undefinded'%></a>
-                  </dd>
-                  <dt><label for="health">Health</label></dt>
-                  <dd id="health">
-                      <a href="javascript:;" data-value="<%=model.health%>" class="health<%=model.health%>"></a>
-                      <ul>
-                          <li>
-                              <div class="health1"></div>
-                          </li>
-                          <li>
-                              <div class="health2"></div>
-                          </li>
-                          <li>
-                              <div class="health3"></div>
-                          </li>
-                      </ul>
-                  </dd>
-                                <dt><label for="EndDate">End Date </label></dt>
-                                <dd><input class="info blueback" type="text" name="EndDate" id="EndDate" value="<%=model.StartDate%>" readonly /></dd>
-                  <dt><label for="targetEndDate">Target End Date</label></dt>
-                  <dd><input class="info blueback" type="text" name="TargetEndtDate" id="EndDateTarget" value="<%=model.TargetEndDate%>" readonly /></dd>
+                <dd>
+                  <a id="workflowsDd" data-id="<%=(model.workflow) ? model.workflow._id : ''%>" class="current-selected" href="javascript:;"><%=(model.workflow)?model.workflow.name:'Undefinded'%></a>
+                </dd>
+                <dt><label for="health">Health</label></dt>
+                <dd id="health">
+                  <a href="javascript:;" data-value="<%=model.health%>" class="health<%=model.health%>"></a>
+                  <ul>
+                    <li>
+                      <div class="health1"></div>
+                    </li>
+                    <li>
+                      <div class="health2"></div>
+                    </li>
+                    <li>
+                      <div class="health3"></div>
+                    </li>
+                  </ul>
+                </dd>
+                <dt><label for="EndDate">End Date </label></dt>
+                <dd><input class="info blueback" type="text" name="EndDate" id="EndDate" value="<%=model.StartDate%>" readonly /></dd>
+                <dt><label for="targetEndDate">Target End Date</label></dt>
+                <dd><input class="info blueback" type="text" name="TargetEndtDate" id="EndDateTarget" value="<%=model.TargetEndDate%>" readonly /></dd>
               </dl>
             </div>
             <div class="clearfix"></div>
@@ -86,74 +86,7 @@
 		  
 
           <div class="dialog-tabs-item">
-			<div class="addUserAndGroup"><a href="javascript:;" class="addUser">Manage User</a> | <a href="javascript:;" class="addGroup">Manage Group</a></div>
-            <div class="clearfix"></div>
-
-			<div class="half-block left">
-              <div class="canReadAndWrite">
-                                <input type="radio" name="whoCanRW" value="everyOne" <%=(model.whoCanRW=="everyOne")?'checked="checked"':''%> />Everyone<br>
-                                <input type="radio" name="whoCanRW" value="owner" <%=(model.whoCanRW=="owner")?'checked="checked"':''%> />Owner<br>
-                                <input type="radio" name="whoCanRW" value="group" <%=(model.whoCanRW=="group")?'checked="checked"':''%> />Owner, Users and Users in Groups
-              </div>
-			</div>
-			<div class="half-block left">
-			  <dl class="project-owner-info">
-                                <dt><label for="allUsers">Owner</label></dt>
-                                <dd>
-
-                                    <select id="allUsers"></select>
-
-				</dd>
-			  </dl>
-			</div>
-
-
-            <div class="addUserDialog">
-
-			  <div class="formTitle">
-				<h3 class="left">Choose Users</h3>
-				<div class="clearfix"></div>
-			  </div>
-              <div class="groupsChooser">
-				<div class="left">
-                                    <ul id="sourceUsers" class="source"></ul>
-				</div>
-				<div class="left">
-				  <div class="swich"></div>
-				</div>
-				<div class="left">
-                                    <ul id="targetUsers" class="target"></ul>
-				</div>
-              </div>
-
-			  <div class="clearfix"></div>
-            </div>
-            <div class="addGroupDialog">
-			  <div class="formTitle">
-				<h3 class="left">Choose Groups</h3>
-				<div class="clearfix"></div>
-			  </div>
-              <div class="groupsChooser">
-				<div class="left">
-                                    <ul id="sourceGroups" class="source"></ul>
-				</div>
-				<div class="left">
-				  <div class="swich"></div>
-				</div>
-				<div class="left">
-                                    <ul id="targetGroups" class="target"></ul>
-				</div>
-			  </div>
-			  <div class="clearfix"></div>
-            </div>
-
-			<table class="groupsAndUser">
-			  <tr>
-                                <th>Groups and Users</th>
-                                <th></th>
-			  </tr>
-			</table>
-			<div class="clearfix"></div>
+			<div class="assignees-container"></div>
 		  </div>
           <div class="clearfix"></div>
         </div>

@@ -1,15 +1,16 @@
 define([
     "text!templates/Employees/EditTemplate.html",
-    'text!templates/Notes/AddAttachments.html',
+    'views/Notes/AttachView',
     "collections/Employees/EmployeesCollection",
     "collections/JobPositions/JobPositionsCollection",
     "collections/Departments/DepartmentsCollection",
     "collections/Customers/AccountsDdCollection",
     "collections/Users/UsersCollection",
+    'views/Assignees/AssigneesView',
     "common",
     "populate"
 ],
-    function (EditTemplate, addAttachTemplate, EmployeesCollection, JobPositionsCollection, DepartmentsCollection, AccountsDdCollection, UsersCollection, common, populate) {
+    function (EditTemplate, attachView, EmployeesCollection, JobPositionsCollection, DepartmentsCollection, AccountsDdCollection, UsersCollection, AssigneesView, common, populate) {
 
         var EditView = Backbone.View.extend({
             el: "#content-holder",
@@ -27,8 +28,6 @@ define([
                 this.currentModel = options.model;
             }
                 this.currentModel.urlRoot = '/Employees';
-                this.page=1;
-                this.pageG=1;
                 this.responseObj = {};
                 this.render();
             },
@@ -37,15 +36,7 @@ define([
                 "click #tabList a": "switchTab",
                 "mouseenter .avatar": "showEdit",
                 "mouseleave .avatar": "hideEdit",
-                "click .deleteAttach": "deleteAttach",
-                "change .inputAttach": "addAttach",
                 'click .dialog-tabs a': 'changeTab',
-                'click .addUser': 'addUser',
-                'click .addGroup': 'addGroup',
-                'click .unassign': 'unassign',
-                'click #targetUsers li': 'chooseUser',
-                'click #addUsers':'addUsers',
-                'click #removeUsers':'removeUsers',
                 'click .endContractReasonList, .withEndContract .arrow': 'showEndContractSelect',
                 'click .withEndContract .newSelectList li': 'endContract',
 				"click .current-selected": "showNewSelect",
@@ -95,99 +86,6 @@ define([
 					}
                 });
             },
-
-            fileSizeIsAcceptable: function(file){
-                if(!file){return false;}
-                return file.size < App.File.MAXSIZE;
-            },
-            addAttach: function (event) {
-                event.preventDefault();
-                var currentModel = this.currentModel;
-                var currentModelID = currentModel["id"];
-                var addFrmAttach = $("#editEmployeeForm");
-                var addInptAttach = $("#editEmployeeForm .input-file .inputAttach")[0].files[0];
-                if (!this.fileSizeIsAcceptable(addInptAttach)) {
-                    $('#inputAttach').val('');
-                    alert('File you are trying to attach is too big. MaxFileSize: ' + App.File.MaxFileSizeDisplay);
-                    return;
-                }
-                addFrmAttach.submit(function (e) {
-                    var bar = $('.bar');
-                    var status = $('.status');
-                    var formURL = "http://" + window.location.host + "/uploadEmployeesFiles";
-                    e.preventDefault();
-                    addFrmAttach.ajaxSubmit({
-                        url: formURL,
-                        type: "POST",
-                        processData: false,
-                        contentType: false,
-                        data: [addInptAttach],
-
-                        beforeSend: function (xhr) {
-                            xhr.setRequestHeader("id", currentModelID);
-                            status.show();
-                            var statusVal = '0%';
-                            bar.width(statusVal);
-                            status.html(statusVal);
-                        },
-                        
-                        uploadProgress: function(event, position, total, statusComplete) {
-                            var statusVal = statusComplete + '%';
-                            bar.width(statusVal);
-                            status.html(statusVal);
-                        },
-                        
-                        success: function (data) {
-                            var attachments = currentModel.get('attachments');
-  							attachments.length=0;
-							$('.attachContainer').empty();
-							data.data.attachments.forEach(function(item){
-								var date = common.utcDateToLocaleDate(item.uploadDate);
-								attachments.push(item);
-								$('.attachContainer').prepend(_.template(addAttachTemplate, { data: item, date: date }));
-							});
-                            console.log('Attach file');
-                            addFrmAttach[0].reset();
-                            status.hide();
-                        },
-
-                        error: function () {
-                            console.log("Attach file error");
-                        }
-                    });
-				});
-				addFrmAttach.submit();
-				addFrmAttach.off('submit');
-			},
-
-            deleteAttach: function (e) {
-                if (confirm("You realy want to remove file? ")) {
-                    if ($(e.target).closest("li").hasClass("attachFile")) {
-                        $(e.target).closest(".attachFile").remove();
-                    } else {
-                        var id = e.target.id;
-                        var currentModel = this.currentModel;
-                        var attachments = currentModel.get('attachments');
-                        var new_attachments = _.filter(attachments, function(attach) {
-                            if (attach._id != id) {
-                                return attach;
-                            }
-                        });
-                        var fileName = $('.attachFile_' + id + ' a')[0].innerHTML;
-                        currentModel.save({ 'attachments': new_attachments, fileName: fileName },
-                            {
-                                headers: {
-                                    mid: 39
-                                },
-                                patch: true,
-                                success: function(model, response, options) {
-                                    $('.attachFile_' + id).remove();
-                                }
-                            });
-                    }
-                }
-            },
-
             changeTab:function(e){
                 var holder = $(e.target);
                 holder.closest(".dialog-tabs").find("a.active").removeClass("active");
@@ -197,179 +95,6 @@ define([
                 dialog_holder.find(".dialog-tabs-item.active").removeClass("active");
                 dialog_holder.find(".dialog-tabs-item").eq(n).addClass("active");
             },
-			updateAssigneesPagination:function(el){
-				var pag = el.find(".userPagination .text");
-				el.find(".userPagination .nextUserList").remove();
-				el.find(".userPagination .prevUserList").remove();
-				el.find(".userPagination .nextGroupList").remove();
-				el.find(".userPagination .prevGroupList").remove();
-
-				var list = el.find("ul");
-				var count = list.find("li").length;
-				var s ="";
-				var page  = parseInt(list.attr("data-page"));
-				if (page>1){
-					el.find(".userPagination").prepend("<a class='prevUserList' href='javascript:;'>« prev</a>");
-				}
-				if (count===0){
-					s+="0-0 of 0";
-				}else{
-					if ((page)*20-1<count){
-						s+=((page-1)*20+1)+"-"+((page)*20)+" of "+count;
-					}else{
-						s+=((page-1)*20+1)+"-"+(count)+" of "+count;
-					}
-				}
-				
-				if (page<count/20){
-					el.find(".userPagination").append("<a class='nextUserList' href='javascript:;'>next »</a>");
-				}
-				el.find("ul li").hide();
-				for (var i=(page-1)*20;i<20*page;i++){
-					el.find("ul li").eq(i).show();
-				}
- 
-				pag.text(s);
-			},
-
-            addUser:function(){
-                var self = this;
-                $(".addUserDialog").dialog({
-                    dialogClass: "add-user-dialog",
-                    width: "900px",
-                    buttons:{
-                        save:{
-                            text:"Choose",
-                            class:"btn",
-
-                            click: function(){
-                                self.addUserToTable("#targetUsers");
-                                $( this ).dialog( "close" );
-                            }
-
-                        },
-                        cancel:{
-                            text:"Cancel",
-                            class:"btn",
-                            click: function(){
-                                $( this ).dialog( "close" );
-                            }
-                        }
-                    }
-
-                });
-				this.updateAssigneesPagination($("#sourceUsers").closest(".left"));
-				this.updateAssigneesPagination($("#targetUsers").closest(".left"));
-                $("#targetUsers").on("click", "li", {self:this},this.removeUsers);
-                $("#sourceUsers").on("click", "li", {self:this},this.addUsers);
-                $(document).on("click", ".nextUserList",{self:this}, function (e) {
-                    self.nextUserList(e);
-                });
-                $(document).on("click", ".prevUserList",{self:this}, function (e) {
-                    self.prevUserList(e);
-                });
-            },
-
-            addGroup:function(){
-                var self = this;
-                $(".addGroupDialog").dialog({
-                    dialogClass: "add-group-dialog",
-                    width: "900px",
-                    buttons:{
-                        save:{
-                            text:"Choose",
-                            class:"btn",
-                            click: function(){
-                                self.addUserToTable("#targetGroups");
-                                $( this ).dialog( "close" );
-                            }
-                        },
-                        cancel:{
-                            text:"Cancel",
-                            class:"btn",
-                            click: function(){
-                                $( this ).dialog( "close" );
-                            }
-                        }
-                    }
-
-                });
-				this.updateAssigneesPagination($("#sourceGroups").closest(".left"));
-				this.updateAssigneesPagination($("#targetGroups").closest(".left"));
-                $("#targetGroups").on("click", "li", {self:this},this.removeUsers);
-                $("#sourceGroups").on("click", "li", {self:this},this.addUsers);
-                $(document).on("click", ".nextUserList",{self:this}, function (e) {
-                    self.nextUserList(e);
-                });
-                $(document).on("click", ".prevUserList",{self:this}, function (e) {
-                    self.prevUserList(e);
-                });
-            },
-
-
-            nextUserList: function (e, page) {
-				$(e.target).closest(".left").find("ul").attr("data-page",parseInt($(e.target).closest(".left").find("ul").attr("data-page"))+1);
-				e.data.self.updateAssigneesPagination($(e.target).closest(".left"));
-            },
-
-            prevUserList: function (e, page) {
-				$(e.target).closest(".left").find("ul").attr("data-page",parseInt($(e.target).closest(".left").find("ul").attr("data-page"))-1);
-				e.data.self.updateAssigneesPagination($(e.target).closest(".left"));
-            },
-
-            addUsers: function (e) {
-                e.preventDefault();
-				$(e.target).parents("ul").find("li:not(:visible)").eq(0).show();
-				var div =$(e.target).parents(".left");
-                $(e.target).closest(".ui-dialog").find(".target").append($(e.target));
-				e.data.self.updateAssigneesPagination(div);
-				div =$(e.target).parents(".left");
-				e.data.self.updateAssigneesPagination(div);
-
-            },
-
-            removeUsers: function (e) {
-                e.preventDefault();
-				var div =$(e.target).parents(".left");
-                $(e.target).closest(".ui-dialog").find(".source").append($(e.target));
-				e.data.self.updateAssigneesPagination(div);
-				div =$(e.target).parents(".left");
-				e.data.self.updateAssigneesPagination(div);
-            },
-
-            unassign:function(e){
-                var id=$(e.target).closest("tr").data("id");
-                var type=$(e.target).closest("tr").data("type");
-                var text=$(e.target).closest("tr").find("td").eq(0).text();
-                $("#"+type).append("<option value='"+id+"'>"+text+"</option>");
-                $(e.target).closest("tr").remove();
-                if ($(".groupsAndUser").find("tr").length==1){
-                    $(".groupsAndUser").hide();
-                }
-
-            },
-
-            chooseUser:function(e){
-                $(e.target).toggleClass("choosen");
-            },
-
-            addUserToTable:function(id) {
-                var groupsAndUser_holder = $(".groupsAndUser");
-                var groupsAndUserHr_holder = $(".groupsAndUser tr");
-                groupsAndUser_holder.show();
-                groupsAndUserHr_holder.each(function(){
-                    if ($(this).data("type")==id.replace("#","")){
-                        $(this).remove();
-                    }
-                });
-                $(id).find("li").each(function(){
-                    groupsAndUser_holder.append("<tr data-type='"+id.replace("#","")+"' data-id='"+ $(this).attr("id")+"'><td>"+$(this).text()+"</td><td class='text-right'></td></tr>");
-                });
-                if ($(".groupsAndUser tr").length <2) {
-                    groupsAndUser_holder.hide();
-                }
-            },
-
             keydownHandler: function(e){
                 switch (e.which){
                     case 27:
@@ -577,13 +302,22 @@ define([
                         }
                     }
                 });
+				var notDiv = this.$el.find('.attach-container');
+                notDiv.append(
+                    new attachView({
+                        model: this.currentModel,
+						url:"/uploadEmployeesFiles"
+                    }).render().el
+                );
+				notDiv = this.$el.find('.assignees-container');
+                notDiv.append(
+                    new AssigneesView({
+                        model: this.currentModel,
+                    }).render().el
+                );
                 common.getWorkflowContractEnd("Applications", null, null, "/Workflows", null, "Contract End", function (workflow) {
                     $('.endContractReasonList').attr('data-id', workflow[0]._id);
                 });
-                common.populateUsersForGroups('#sourceUsers','#targetUsers',this.currentModel.toJSON(),this.page);
-                common.populateUsers("#allUsers", "/UsersForDd",this.currentModel.toJSON(),null,true);
-                common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",this.currentModel.toJSON(),this.pageG);
-
 				populate.get("#jobTypeDd", "/jobType", {}, "name", this);
                 populate.get2name("#projectManagerDD", "/getPersonsForDd", {}, this);
 				populate.get("#jobPositionDd", "/JobPositionForDd", {}, "name", this, false, true);

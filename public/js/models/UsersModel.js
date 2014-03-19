@@ -23,7 +23,7 @@ define(['Validation'],function (Validation) {
 	            Validation.checkLoginField(errors, true, attrs.login, "Login");
 	            Validation.checkEmailField(errors, false, attrs.email, "Email");
             } else {
-                Validation.checkLoginField(errors, true, attrs.login, "Login");
+                if (attrs.login) Validation.checkLoginField(errors, true, attrs.login, "Login");
                 Validation.checkPasswordField(errors, true, attrs.pass, "Password");
                 Validation.checkPasswordField(errors, true, options.confirmPass, "Confirm password");
                 Validation.comparePasswords(errors, attrs.pass, options.confirmPass);

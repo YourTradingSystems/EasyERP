@@ -12,6 +12,7 @@ function (common, Validation) {
                     var msg = errors.join('\n');
                     alert(msg);
                 }
+			
             });
         },
 
@@ -60,8 +61,7 @@ function (common, Validation) {
             if (errors.length > 0)
                 return errors;
         },
-
-        defaults: {
+ defaults: {
             id: null,
             imageSrc: '',
             type: 'Person',
@@ -94,7 +94,6 @@ function (common, Validation) {
             attachments: [],
             notes: []
         },
-
         urlRoot: function () {
             return "/Persons";
         }
