@@ -3,9 +3,10 @@ define([
     "models/EmployeesModel",
     "common",
     "populate",
-    'views/Notes/AttachView'
+    'views/Notes/AttachView',
+    'views/Assignees/AssigneesView'
 ],
-    function (CreateTemplate, EmployeeModel, common, populate, attachView) {
+    function (CreateTemplate, EmployeeModel, common, populate, attachView, AssigneesView) {
 
         var CreateView = Backbone.View.extend({
             el: "#content-holder",
@@ -25,11 +26,6 @@ define([
                 "mouseleave .avatar": "hideEdit",
                 'keydown': 'keydownHandler',
                 'click .dialog-tabs a': 'changeTab',
-                'click .addUser': 'addUser',
-                'click .addGroup': 'addGroup',
-                'click .unassign': 'unassign',
-                "click .prevUserList":"prevUserList",
-                "click .nextUserList":"nextUserList",
                 "click .current-selected": "showNewSelect",
                 "click .newSelectList li:not(.miniStylePagination)": "chooseOption",
                 "click .newSelectList li.miniStylePagination": "notHide",
@@ -113,141 +109,6 @@ define([
                 dialog_holder.find(".dialog-tabs-item.active").removeClass("active");
                 dialog_holder.find(".dialog-tabs-item").eq(n).addClass("active");
             },
-
-            addUser:function(){
-                var self = this;
-                $(".addUserDialog").dialog({
-                    dialogClass: "add-user-dialog",
-                    width: "900px",
-                    buttons:{
-                        save:{
-                            text:"Choose",
-                            class:"btn",
-
-                            click: function(){
-                                self.addUserToTable("#targetUsers");
-                                $( this ).dialog( "close" );
-                            }
-
-                        },
-                        cancel:{
-                            text:"Cancel",
-                            class:"btn",
-                            click: function(){
-                                $( this ).dialog( "close" );
-                            }
-                        }
-                    }
-
-                });
-				this.updateAssigneesPagination($("#sourceUsers").closest(".left"));
-				this.updateAssigneesPagination($("#targetUsers").closest(".left"));
-                $("#targetUsers").on("click", "li", {self:this},this.removeUsers);
-                $("#sourceUsers").on("click", "li", {self:this},this.addUsers);
-                $(document).on("click", ".nextUserList",{self:this}, function (e) {
-                    self.nextUserList(e);
-                });
-                $(document).on("click", ".prevUserList",{self:this}, function (e) {
-                    self.prevUserList(e);
-                });
-            },
-
-            addUserToTable:function(id) {
-                var groupsAndUser_holder = $(".groupsAndUser");
-                var groupsAndUserHr_holder = $(".groupsAndUser tr");
-                groupsAndUser_holder.show();
-                groupsAndUserHr_holder.each(function(){
-                    if ($(this).data("type")==id.replace("#","")){
-                        $(this).remove();
-                    }
-                });
-                $(id).find("li").each(function(){
-                    groupsAndUser_holder.append("<tr data-type='"+id.replace("#","")+"' data-id='"+ $(this).attr("id")+"'><td>"+$(this).text()+"</td><td class='text-right'></td></tr>");
-                });
-                if ($(".groupsAndUser tr").length <2) {
-                    groupsAndUser_holder.hide();
-                }
-            },
-
-            addGroup:function(){
-                var self = this;
-                $(".addGroupDialog").dialog({
-                    dialogClass: "add-group-dialog",
-                    width: "900px",
-                    buttons:{
-                        save:{
-                            text:"Choose",
-                            class:"btn",
-                            click: function(){
-                                self.addUserToTable("#targetGroups");
-                                $( this ).dialog( "close" );
-                            }
-                        },
-                        cancel:{
-                            text:"Cancel",
-                            class:"btn",
-                            click: function(){
-                                $( this ).dialog( "close" );
-                            }
-                        }
-                    }
-
-                });
-				this.updateAssigneesPagination($("#sourceGroups").closest(".left"));
-				this.updateAssigneesPagination($("#targetGroups").closest(".left"));
-                $("#targetGroups").on("click", "li", {self:this},this.removeUsers);
-                $("#sourceGroups").on("click", "li", {self:this},this.addUsers);
-                $(document).on("click", ".nextUserList",{self:this}, function (e) {
-                    self.nextUserList(e);
-                });
-                $(document).on("click", ".prevUserList",{self:this}, function (e) {
-                    self.prevUserList(e);
-                });
-            },
-
-            unassign:function(e){
-                var holder = $(e.target);
-                var id = holder.closest("tr").data("id");
-                var type = holder.closest("tr").data("type");
-                var text = holder.closest("tr").find("td").eq(0).text();
-                $("#"+type).append("<option value='"+id+"'>"+text+"</option>");
-                holder.closest("tr").remove();
-                var groupsAndUser_holder = $(".groupsAndUser");
-                if (groupsAndUser_holder.find("tr").length==1){
-                    groupsAndUser_holder.hide();
-                }
-            },
-
-            nextUserList: function (e, page) {
-				$(e.target).closest(".left").find("ul").attr("data-page",parseInt($(e.target).closest(".left").find("ul").attr("data-page"))+1);
-				e.data.self.updateAssigneesPagination($(e.target).closest(".left"));
-            },
-
-            prevUserList: function (e, page) {
-				$(e.target).closest(".left").find("ul").attr("data-page",parseInt($(e.target).closest(".left").find("ul").attr("data-page"))-1);
-				e.data.self.updateAssigneesPagination($(e.target).closest(".left"));
-            },
-
-            addUsers: function (e) {
-                e.preventDefault();
-				$(e.target).parents("ul").find("li:not(:visible)").eq(0).show();
-				var div =$(e.target).parents(".left");
-                $(e.target).closest(".ui-dialog").find(".target").append($(e.target));
-				e.data.self.updateAssigneesPagination(div);
-				div =$(e.target).parents(".left");
-				e.data.self.updateAssigneesPagination(div);
-
-            },
-
-            removeUsers: function (e) {
-                e.preventDefault();
-				var div =$(e.target).parents(".left");
-                $(e.target).closest(".ui-dialog").find(".source").append($(e.target));
-				e.data.self.updateAssigneesPagination(div);
-				div =$(e.target).parents(".left");
-				e.data.self.updateAssigneesPagination(div);
-            },
-
 
             keydownHandler: function(e){
                 switch (e.which){
@@ -427,11 +288,13 @@ define([
 						url:"/uploadEmployeesFiles",
 						isCreate:true
                     });
-
                 notDiv.append(this.attachView.render().el);
-                common.populateUsersForGroups('#sourceUsers','#targetUsers',null,1);
-                common.populateUsers("#allUsers", "/UsersForDd",null,null,true);
-                common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",null,1);
+				notDiv = this.$el.find('.assignees-container');
+                notDiv.append(
+                    new AssigneesView({
+                        model: this.currentModel,
+                    }).render().el
+                );
 
 				populate.get("#jobTypeDd", "/jobType", {}, "name", this, true);
                 populate.get2name("#projectManagerDD", "/getPersonsForDd", {}, this, true);

@@ -19,7 +19,6 @@ define([
                 this.currentModel.urlRoot = '/Projects/';
                 this.responseObj = {};
                 this.render();
-                console.log(this.currentModel);
             },
 
             events: {
