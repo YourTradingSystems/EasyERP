@@ -367,7 +367,10 @@ define([
                                     $(self).dialog("close");
                                     //that.opportunitiesCollection.add(model);
                                     Backbone.history.navigate("easyErp/Opportunities", { trigger: true });
-                                }
+                                },
+								error:function(model,xhr){
+									that.errorNotification(xhr);						
+								}
 
                             });
 

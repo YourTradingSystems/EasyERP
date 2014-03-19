@@ -565,15 +565,17 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
     function updateOnlySelectedFields(req, res, id, data) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
-            if (access) {
-                data.editedBy = {
-                    user: req.session.uId,
-                    date: new Date().toISOString()
-                };
-                project.updateOnlySelectedFields(req, id, data, res);
-            } else {
-                res.send(403);
-            }
+            access.getEditWritAccess(req, req.session.uId, 39, function (access) {
+				if (access) {
+					data.editedBy = {
+						user: req.session.uId,
+						date: new Date().toISOString()
+					};
+					project.updateOnlySelectedFields(req, id, data, res);
+				} else {
+					res.send(403);
+				}
+			});
         } else {
             res.send(401);
         }

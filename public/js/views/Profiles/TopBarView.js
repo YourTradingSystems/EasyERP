@@ -65,7 +65,7 @@ define([
             {
                 Backbone.history.navigate("home/content-"+this.contentType, {trigger:true});
             },
-            editEvent: function(){
+            editEvent: function(event){
                 event.preventDefault();
                 this.trigger('editEvent');
 

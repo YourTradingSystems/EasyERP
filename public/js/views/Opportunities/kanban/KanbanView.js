@@ -76,7 +76,11 @@ function (WorkflowsTemplate, kanbanSettingsTemplate, WorkflowsCollection, Kanban
 			else{
 				el.closest("table").css({"min-width":"100%"});
 			}
-			el.closest("table").css({"min-height":($(window).height()-110)+"px"});
+			var k = $(document).height()-115;
+			if (k<190){
+				k=190;
+			}
+			el.closest("table").css({"min-height":(k)+"px"});
             this.$(".column").sortable("enable");
             this.$(".column.fold").sortable("disable");
 		},

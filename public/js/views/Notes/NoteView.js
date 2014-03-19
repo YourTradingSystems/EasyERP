@@ -76,6 +76,7 @@ define([
         },
 
 		saveNote : function(e){
+			var self = this;
 			if ($(e.target).parents(".addNote").find("#noteArea").val().replace(/ /g,'') || $(e.target).parents(".addNote").find("#noteTitleArea").val().replace(/ /g,'')){
 				$(e.target).parents(".addNote").find("#noteArea").attr("placeholder","Add a Note...").parents(".addNote").removeClass("active");
 				$(".title-wrapper").hide();
@@ -136,7 +137,11 @@ define([
 
 										el.find('.formLeftColumn').find(".noteWrapper").empty();
 										el.find('.formLeftColumn').append(self.render());
-                                    }
+                                    },
+                                    error: function(models, xhr) {
+										self.errorNotification(xhr);						
+
+									}
                                 });
                         }
                         $('#noteArea').val('');
