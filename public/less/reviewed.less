@@ -2626,6 +2626,7 @@ body {
   font-family: @body-font;
   font-size: 12px;
   height: 100%;
+  min-width:810px;
 }
 
 dl {
@@ -2904,8 +2905,7 @@ dl {
   //	width:inherit;
   .fullsize;
   width:auto;
-  min-width:100%;
-  position: absolute;
+  min-width:810px;
 
   #content-holder {
     height: auto;
@@ -3944,6 +3944,9 @@ ul.dialog-tabs {
 
 ul.chart-tabs {
   .tabs(10px, 0px);
+  &.dashboard{
+	  margin:10px 0;
+  }
   .withEndContract {
     position: relative;
     .newSelectList {
