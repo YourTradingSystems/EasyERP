@@ -130,12 +130,13 @@ define([
                 var targetElement = $(e.target).parents("td");
                 var id = targetElement.attr("id");
                 var obj = this.collection.get(id);
-                obj.set({ workflow: $(e.target).attr("id"), workflowForList: true });
-                obj.save({}, {
+                obj.set({ workflow: $(e.target).attr("id") });
+                obj.save(obj.changed, {
                     headers: {
                         mid: 39
                     },
-                    success: function () {
+                    patch: true,
+                    success: function (model) {
                         self.showFilteredPage();
                     }
                 });

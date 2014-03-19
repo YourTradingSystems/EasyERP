@@ -46,53 +46,54 @@ define([
                 "click .currentPageList": "itemsNumber",
                 "click": "hideItemsNumber",
                 "click .oe_sortable": "goSort",
-				"click .stageSelect": "showNewSelect",
-				"click .newSelectList li": "chooseOption",
+                "click .stageSelect": "showNewSelect",
+                "click .newSelectList li": "chooseOption",
                 "click #firstShowPage": "firstPage",
                 "click #lastShowPage": "lastPage"
 
             },
-	           hideNewSelect: function (e) {
-	               $(".newSelectList").hide();;
-	           },
-	           showNewSelect: function (e) {
-	               if ($(".newSelectList").is(":visible")) {
-	                   this.hideNewSelect();
-	                   return false;
-	               } else {
-	                   $(e.target).parent().append(_.template(stagesTamplate, { stagesCollection: this.stages }));
-	                   return false;
-	               }
+            hideNewSelect: function (e) {
+                $(".newSelectList").hide();;
+            },
+            showNewSelect: function (e) {
+                if ($(".newSelectList").is(":visible")) {
+                    this.hideNewSelect();
+                    return false;
+                } else {
+                    $(e.target).parent().append(_.template(stagesTamplate, { stagesCollection: this.stages }));
+                    return false;
+                }
 
-	           },
+            },
 
-	           chooseOption: function (e) {
-				   var self = this;
-	               var targetElement = $(e.target).parents("td");
-	               var id = targetElement.attr("id").replace("stages_",'');
-	               var obj = this.collection.get(id);
-                   obj.urlRoot = '/JobPositions';
-				   obj.save({ workflow: $(e.target).attr("id"),
-							  expectedRecruitment:obj.toJSON().expectedRecruitment,
-							  totalForecastedEmployees:obj.toJSON().totalForecastedEmployees,
-							  numberOfEmployees:obj.toJSON().numberOfEmployees
-							}, {
-	                   headers: {
-	                       mid: 39
-	                   },
-					   patch:true,
-	                   success: function (err, model) {
-                           targetElement.find('.stageSelect').text($(e.target).text());
-					   }
-	               });
+            chooseOption: function (e) {
+                var self = this;
+                var targetElement = $(e.target).parents("td");
+                var id = targetElement.attr("id").replace("stages_", '');
+                var obj = this.collection.get(id);
+                obj.urlRoot = '/JobPositions';
+                obj.save({
+                    workflow: $(e.target).attr("id"),
+                    expectedRecruitment: obj.toJSON().expectedRecruitment,
+                    totalForecastedEmployees: obj.toJSON().totalForecastedEmployees,
+                    numberOfEmployees: obj.toJSON().numberOfEmployees
+                }, {
+                    headers: {
+                        mid: 39
+                    },
+                    patch: true,
+                    success: function (err, model) {
+                        targetElement.find('.stageSelect').text($(e.target).text());
+                    }
+                });
 
-	               this.hideNewSelect();
-	               return false;
-	           },
+                this.hideNewSelect();
+                return false;
+            },
 
-	           pushStages: function(stages) {
-	               this.stages = stages;
-	           },
+            pushStages: function (stages) {
+                this.stages = stages;
+            },
 
             fetchSortCollection: function (sortObject) {
                 this.sort = sortObject;
@@ -116,7 +117,7 @@ define([
                 $("#top-bar-deleteBtn").hide();
                 $('#check_all').prop('checked', false);
                 tBody.empty();
-                var itemView = new listItemView({ collection: this.collection,page: currentEl.find("#currentShowPage").val(), itemsNumber: currentEl.find("span#itemsNumber").text() });
+                var itemView = new listItemView({ collection: this.collection, page: currentEl.find("#currentShowPage").val(), itemsNumber: currentEl.find("span#itemsNumber").text() });
 
                 tBody.append(itemView.render());
             },
@@ -136,21 +137,21 @@ define([
                     sortClass = "sortDn";
                 }
                 switch (sortClass) {
-                        case "sortDn":
-                            {
-								target$.parent().find("th").removeClass('sortDn').removeClass('sortUp');
-                                target$.removeClass('sortDn').addClass('sortUp');
-                                sortConst = 1;
-                            }
-                            break;
-                        case "sortUp":
-                            {
-								target$.parent().find("th").removeClass('sortDn').removeClass('sortUp');
-                                target$.removeClass('sortUp').addClass('sortDn');
-                                sortConst = -1;
-                            }
-                            break;
-                    }
+                    case "sortDn":
+                        {
+                            target$.parent().find("th").removeClass('sortDn').removeClass('sortUp');
+                            target$.removeClass('sortDn').addClass('sortUp');
+                            sortConst = 1;
+                        }
+                        break;
+                    case "sortUp":
+                        {
+                            target$.parent().find("th").removeClass('sortDn').removeClass('sortUp');
+                            target$.removeClass('sortUp').addClass('sortDn');
+                            sortConst = -1;
+                        }
+                        break;
+                }
                 sortObject[sortBy] = sortConst;
                 this.fetchSortCollection(sortObject);
                 this.changeLocationHash(1, this.defaultItemsNumber);
@@ -168,14 +169,14 @@ define([
             },
 
             getTotalLength: function (currentNumber, itemsNumber) {
-                    dataService.getData('/totalCollectionLength/JobPositions', {
-                        currentNumber: currentNumber,
-                        newCollection: this.newCollection
-                    }, function (response, context) {
-                        var page = context.page || 1;
-                        context.listLength = response.count || 0;
-                        context.pageElementRender(response.count, itemsNumber, page);//prototype in main.js
-                    }, this);
+                dataService.getData('/totalCollectionLength/JobPositions', {
+                    currentNumber: currentNumber,
+                    newCollection: this.newCollection
+                }, function (response, context) {
+                    var page = context.page || 1;
+                    context.listLength = response.count || 0;
+                    context.pageElementRender(response.count, itemsNumber, page);//prototype in main.js
+                }, this);
             },
 
             render: function () {
@@ -185,7 +186,7 @@ define([
 
                 currentEl.html('');
                 currentEl.append(_.template(listTemplate));
-                var itemView = new listItemView({ collection: this.collection,page: this.page, itemsNumber: this.collection.namberToShow  });
+                var itemView = new listItemView({ collection: this.collection, page: this.page, itemsNumber: this.collection.namberToShow });
                 currentEl.append(itemView.render());
                 itemView.bind('incomingStages', itemView.pushStages, itemView);
                 $('#check_all').click(function () {
@@ -199,11 +200,11 @@ define([
                 $(document).on("click", function () {
                     self.hideItemsNumber();
                 });
-                common.populateWorkflowsList("Jobpositions", ".filter-check-list", ".filter-check-list", "/Workflows", null, function(stages) {
+                common.populateWorkflowsList("Jobpositions", ".filter-check-list", ".filter-check-list", "/Workflows", null, function (stages) {
                     self.stages = stages;
                     var stage = (self.filter) ? self.filter.workflow : null;
                     if (stage) {
-                        $('.filter-check-list input').each(function() {
+                        $('.filter-check-list input').each(function () {
                             var target = $(this);
                             target.attr('checked', $.inArray(target.val(), stage) > -1);
                         });
@@ -235,18 +236,18 @@ define([
             },
             //modified for filter Vasya
             nextPage: function (event) {
-                    event.preventDefault();
-                    $("#top-bar-deleteBtn").hide();
-                    $('#check_all').prop('checked', false);
-                    this.nextP({
-                        sort: this.sort,
-                        newCollection: this.newCollection,
-                    });
-                    dataService.getData('/totalCollectionLength/JobPositions', {
-                        newCollection: this.newCollection
-                    }, function (response, context) {
-                        context.listLength = response.count || 0;
-                    }, this);
+                event.preventDefault();
+                $("#top-bar-deleteBtn").hide();
+                $('#check_all').prop('checked', false);
+                this.nextP({
+                    sort: this.sort,
+                    newCollection: this.newCollection,
+                });
+                dataService.getData('/totalCollectionLength/JobPositions', {
+                    newCollection: this.newCollection
+                }, function (response, context) {
+                    context.listLength = response.count || 0;
+                }, this);
             },
 
             //first last page in paginations
@@ -284,25 +285,25 @@ define([
             },  //end first last page in paginations
 
             switchPageCounter: function (event) {
-                    event.preventDefault();
-                    this.startTime = new Date();
-                    var itemsNumber = event.target.textContent;
-                    this.defaultItemsNumber = itemsNumber;
-                    this.getTotalLength(null, itemsNumber);
-                    this.collection.showMore({
-                        count: itemsNumber,
-                        page: 1,
-                        newCollection: this.newCollection,
-                    });
-                    this.page = 1;
-                    $("#top-bar-deleteBtn").hide();
-                    $('#check_all').prop('checked', false);
-                    this.changeLocationHash(1, itemsNumber)
+                event.preventDefault();
+                this.startTime = new Date();
+                var itemsNumber = event.target.textContent;
+                this.defaultItemsNumber = itemsNumber;
+                this.getTotalLength(null, itemsNumber);
+                this.collection.showMore({
+                    count: itemsNumber,
+                    page: 1,
+                    newCollection: this.newCollection,
+                });
+                this.page = 1;
+                $("#top-bar-deleteBtn").hide();
+                $('#check_all').prop('checked', false);
+                this.changeLocationHash(1, itemsNumber)
             },
 
             showPage: function (event) {
                 event.preventDefault();
-                this.showP(event, { newCollection: this.newCollection,sort: this.sort });
+                this.showP(event, { newCollection: this.newCollection, sort: this.sort });
             },
 
             showMoreContent: function (newModels) {
@@ -329,12 +330,12 @@ define([
                 model.fetch({
                     data: { id: id },
                     success: function (model) {
-						new editView({ model: model });
+                        new editView({ model: model });
                     },
                     error: function () { alert('Please refresh browser'); }
                 });
             },
-  
+
             createItem: function () {
                 //create editView in dialog here
                 new createView();
@@ -345,9 +346,9 @@ define([
                     var checkLength = $("input.checkbox:checked").length;
                     if ($("input.checkbox:checked").length > 0) {
                         $("#top-bar-deleteBtn").show();
-                            if (checkLength == this.collection.length) {
-                                    $('#check_all').prop('checked', true);
-                            }
+                        if (checkLength == this.collection.length) {
+                            $('#check_all').prop('checked', true);
+                        }
                     }
                     else {
                         $("#top-bar-deleteBtn").hide();
@@ -356,35 +357,35 @@ define([
                 }
             },
             deleteItemsRender: function (deleteCounter, deletePage) {
-                    dataService.getData('/totalCollectionLength/JobPositions', {
-                        filter: this.filter,
-                        newCollection: this.newCollection
-                    }, function (response, context) {
-                        context.listLength = response.count || 0;
-                    }, this);
-                    this.deleteRender(deleteCounter, deletePage, {
-                        filter: this.filter,
-                        newCollection: this.newCollection,
-                        parrentContentId: this.parrentContentId
-                    });
-                    if (deleteCounter !== this.collectionLength) {
-                        var holder = this.$el;
-                        var created = holder.find('#timeRecivingDataFromServer');
-                        created.before(new listItemView({ collection: this.collection, page: holder.find("#currentShowPage").val(), itemsNumber: holder.find("span#itemsNumber").text()}).render());//added two parameters page and items number
-                    }
-                    var pagenation = this.$el.find('.pagination');
-                    if (this.collection.length === 0) {
-                            pagenation.hide();
-                    } else {
-                            pagenation.show();
-                    }
+                dataService.getData('/totalCollectionLength/JobPositions', {
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                }, function (response, context) {
+                    context.listLength = response.count || 0;
+                }, this);
+                this.deleteRender(deleteCounter, deletePage, {
+                    filter: this.filter,
+                    newCollection: this.newCollection,
+                    parrentContentId: this.parrentContentId
+                });
+                if (deleteCounter !== this.collectionLength) {
+                    var holder = this.$el;
+                    var created = holder.find('#timeRecivingDataFromServer');
+                    created.before(new listItemView({ collection: this.collection, page: holder.find("#currentShowPage").val(), itemsNumber: holder.find("span#itemsNumber").text() }).render());//added two parameters page and items number
+                }
+                var pagenation = this.$el.find('.pagination');
+                if (this.collection.length === 0) {
+                    pagenation.hide();
+                } else {
+                    pagenation.show();
+                }
             },
             deleteItems: function () {
                 var that = this,
                     mid = 39,
                     model;
                 var localCounter = 0;
-				var count = $("#listTable input:checked").length;
+                var count = $("#listTable input:checked").length;
                 this.collectionLength = this.collection.length;
                 $.each($("#listTable input:checked"), function (index, checkbox) {
                     model = that.collection.get(checkbox.value);
@@ -392,32 +393,32 @@ define([
                         headers: {
                             mid: mid
                         },
-						wait:true,
-						success:function(){
-							that.listLength--;
-							localCounter++;
+                        wait: true,
+                        success: function () {
+                            that.listLength--;
+                            localCounter++;
 
-							if (index==count-1){
-								that.deleteCounter =localCounter;
-								that.deletePage = $("#currentShowPage").val();
-								that.deleteItemsRender(that.deleteCounter, that.deletePage);
-								
-							}
-						},
-						error: function (model, res) {
-							if(res.status===403&&index===0){
-								alert("You do not have permission to perform this action");
-							}
-							that.listLength--;
-							localCounter++;
-							if (index==count-1){
-								that.deleteCounter =localCounter;
-								that.deletePage = $("#currentShowPage").val();
-								that.deleteItemsRender(that.deleteCounter, that.deletePage);
-								
-							}
+                            if (index == count - 1) {
+                                that.deleteCounter = localCounter;
+                                that.deletePage = $("#currentShowPage").val();
+                                that.deleteItemsRender(that.deleteCounter, that.deletePage);
 
-						}
+                            }
+                        },
+                        error: function (model, res) {
+                            if (res.status === 403 && index === 0) {
+                                alert("You do not have permission to perform this action");
+                            }
+                            that.listLength--;
+                            localCounter++;
+                            if (index == count - 1) {
+                                that.deleteCounter = localCounter;
+                                that.deletePage = $("#currentShowPage").val();
+                                that.deleteItemsRender(that.deleteCounter, that.deletePage);
+
+                            }
+
+                        }
                     });
 
                 });

@@ -149,9 +149,15 @@
                                       tr_holder.eq(4).find('a').data('id', project).text(editHolder.find("#projectDd").text());
                                       tr_holder.eq(5).find('a').text(editHolder.find("#workflowsDd").text());
                                       tr_holder.eq(6).text(editHolder.find("#assignedToDd").text());
-                                      tr_holder.eq(7).text(parseInt(editHolder.find("#estimated").val() || 0));
-                                      tr_holder.eq(8).text(parseInt(editHolder.find("#logged").val() || 0));
+                                      var estimated = parseInt(editHolder.find("#estimated").val() || 0);
+                                      var logged = parseInt(editHolder.find("#logged").val() || 0);
+                                      var progress = Math.round(logged / estimated * 100);
+                                      if ((progress === Infinity) || (progress === NaN))
+                                          progress = 0;
+                                      tr_holder.eq(7).text(estimated);
+                                      tr_holder.eq(8).text(logged);
                                       tr_holder.eq(9).find('a').text(editHolder.find("#type").text());
+                                      tr_holder.eq(10).find('progress').val(progress);
                                       if (data.workflow) {
                                           Backbone.history.fragment = "";
                                           Backbone.history.navigate(window.location.hash.replace("#", ""), { trigger: true });
@@ -189,7 +195,7 @@
                           }
                       },
                       error: function (model, xhr) {
-    					  self.errorNotification(xhr);
+                          self.errorNotification(xhr);
                       }
                   });
               },
@@ -239,7 +245,7 @@
                               self.hideDialog();
                           },
                           error: function (model, xhr) {
-    						  self.errorNotification(xhr);
+                              self.errorNotification(xhr);
                           }
                       });
                   }
@@ -271,18 +277,18 @@
                           }
                       }
                   });
-                  
+
                   var notDiv = this.$el.find('#divForNote');
                   notDiv.append(
                    new noteView({
                        model: this.currentModel
                    }).render().el);
-                notDiv.append(
-                    new attachView({
-                        model: this.currentModel,
-						url:"/uploadTasksFiles"
-                    }).render().el
-                );
+                  notDiv.append(
+                      new attachView({
+                          model: this.currentModel,
+                          url: "/uploadTasksFiles"
+                      }).render().el
+                  );
                   populate.get("#projectDd", "/getProjectsForDd", {}, "projectName", this);
                   populate.getWorkflow("#workflowsDd", "#workflowNamesDd", "/WorkflowsForDd", { id: "Tasks" }, "name", this);
                   populate.get2name("#assignedToDd", "/getPersonsForDd", {}, this);

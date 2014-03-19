@@ -20,7 +20,6 @@ define([
                 this.pageG = 1;
                 this.responseObj = {};
                 this.render();
-                console.log(this.currentModel);
             },
 
             events: {
@@ -366,11 +365,6 @@ define([
                             tr_holder.eq(8).find(".stageSelect").text(self.$el.find("#workflowsDd").text());
                             tr_holder.eq(9).find(".health-container a").attr("class", "health" + health).attr("data-value", health);
                             tr_holder.eq(11).text(model.toJSON().editedBy.date + " (" + model.toJSON().editedBy.user.login + ")");
-                            if (data.workflow != workflowStart) {
-                                Backbone.history.fragment = "";
-                                Backbone.history.navigate(window.location.hash.replace("#", ""), { trigger: true });
-
-                            }
                         } else {
                             var currentModel_holder = $("#" + self.currentModel.toJSON()._id);
                             currentModel_holder.find(".project-text span").eq(0).text(projectName);
@@ -380,6 +374,15 @@ define([
                             currentModel_holder.find(".bottom .stageSelect").text(self.$el.find("#workflowsDd").text()).attr("class", "stageSelect " + self.$el.find("#workflowsDd").text().toLowerCase().replace(" ", ''));
                             if (projectmanager)
                                 common.getImagesPM([projectmanager], "/getEmployeesImages", "#" + self.currentModel.toJSON()._id);
+                        }
+                        if (data.workflow != workflowStart) {
+                            var filter = window.location.hash.split('filter=')[1];
+                            var url = "#easyErp/Projects/thumbnails";
+                            if (filter)
+                                url += '/filter=' + filter;
+                            Backbone.history.fragment = "";
+                            Backbone.history.navigate(url, { trigger: true });
+
                         }
                     },
                     error: function (model, xhr) {

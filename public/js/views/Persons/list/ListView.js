@@ -288,7 +288,7 @@ function (listTemplate, createView, listItemView, aphabeticTemplate,contentColle
                 this.page = 1;
                 $("#top-bar-deleteBtn").hide();
                 $('#check_all').prop('checked', false);
-                this.changeLocationHash(1, itemsNumber,this.filter);
+                this.changeLocationHash(1, itemsNumber, this.filter);
         },
 
         showFilteredPage: function (e) {

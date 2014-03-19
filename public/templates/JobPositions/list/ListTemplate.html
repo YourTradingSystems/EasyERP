@@ -5,7 +5,8 @@
     <td><%=startNumber + index +1 %></td>
     <td><%=jobPosition.name%></td>
     <td><%= (jobPosition.department) ? jobPosition.department.departmentName : ''%> </td>
-    <td><%=jobPosition.numberOfEmployees + jobPosition.expectedRecruitment%></td>
+    <td><%=jobPosition.totalForecastedEmployees%></td>
+    <!--<td><%=jobPosition.numberOfEmployees + jobPosition.expectedRecruitment%></td>-->
     <td><%=jobPosition.numberOfEmployees%></td>
     <td><%=jobPosition.expectedRecruitment%></td>
     <td id='stages_<%=jobPosition._id%>'>

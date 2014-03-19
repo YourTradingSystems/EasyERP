@@ -712,9 +712,9 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                             if (!err) {
                                 var query = models.get(req.session.lastDb - 1, "Project", ProjectSchema).find().where('_id').in(result);
                                 if (data && data.filter && data.filter.workflow) {
-									data.filter.workflow = data.filter.workflow.map(function(item){
-										return item==="null"?null:item;
-									});
+                                    data.filter.workflow = data.filter.workflow.map(function (item) {
+                                        return item === "null" ? null : item;
+                                    });
 
                                     query.where('workflow').in(data.filter.workflow);
                                 } else if (data && (!data.newCollection || data.newCollection === 'false')) {
@@ -722,9 +722,9 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                                 }
                                 if (data.sort) {
                                     query.sort(data.sort);
-                                }else{
-									query.sort({"editedBy.date":-1});
-								}
+                                } else {
+                                    query.sort({ "editedBy.date": -1 });
+                                }
                                 query.select("_id createdBy editedBy workflow projectName health customer progress StartDate EndDate TargetEndDate").
                                     populate('createdBy.user', 'login').
                                     populate('editedBy.user', 'login').
@@ -926,15 +926,15 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                         if (!err) {
 
                             var query = models.get(req.session.lastDb - 1, "Project", ProjectSchema).find().where('_id').in(result);
-                                if (data && data.filter && data.filter.workflow) {
-									data.filter.workflow = data.filter.workflow.map(function(item){
-										return item==="null"?null:item;
-									});
+                            if (data && data.filter && data.filter.workflow) {
+                                data.filter.workflow = data.filter.workflow.map(function (item) {
+                                    return item === "null" ? null : item;
+                                });
 
-                                    query.where('workflow').in(data.filter.workflow);
-                                } else if (data && (!data.newCollection || data.newCollection === 'false')) {
-                                    query.where('workflow').in([]);
-                                }
+                                query.where('workflow').in(data.filter.workflow);
+                            } else if (data && (!data.newCollection || data.newCollection === 'false')) {
+                                query.where('workflow').in([]);
+                            }
                             query.select("_id projectName task workflow projectmanager customer health").
                                 populate('workflow', 'name').
                                 populate('projectmanager', 'name').
@@ -988,18 +988,18 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
         for (var i in req.query) {
             data[i] = req.query[i];
         }
-
+        console.log(data);
         res['showMore'] = false;
 
         if (data && data.parrentContentId) {
             addObj['_id'] = newObjectId(data.parrentContentId);
         }
         if (data && data.type !== 'Tasks' && data.filter && data.filter.workflow) {
-			 data.filter.workflow = data.filter.workflow.map(function(item){
-				 return item==="null"?null:item;
-			 });
+            data.filter.workflow = data.filter.workflow.map(function (item) {
+                return item === "null" ? null : item;
+            });
             addObj['workflow'] = { $in: data.filter.workflow.objectID() };
-        } else if (data && !data.newCollection) {
+        } else if (data && data.newCollection === 'false') {
             addObj['workflow'] = { $in: [] };
         }
         models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema).aggregate(
@@ -1015,6 +1015,7 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
             function (err, deps) {
                 if (!err) {
                     var arrOfObjectId = deps.objectID();
+                    console.log(addObj);
                     models.get(req.session.lastDb - 1, 'Project', ProjectSchema).aggregate(
                         {
                             $match: {
@@ -1057,14 +1058,13 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                         },
                         function (err, projectsId) {
                             if (!err) {
-                                console.log(data);
                                 if (data && data.type == 'Tasks') {
                                     var query = models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).
                                         where('project').in(projectsId.objectID());
                                     if (data && data.filter && data.filter.workflow) {
-										data.filter.workflow = data.filter.workflow.map(function(item){
-											return item==="null"?null:item;
-										});
+                                        data.filter.workflow = data.filter.workflow.map(function (item) {
+                                            return item === "null" ? null : item;
+                                        });
 
                                         query.where('workflow').in(data.filter.workflow);
                                     } else if (data && (!data.newCollection || data.newCollection === 'false')) {
@@ -1088,6 +1088,7 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                                     }
                                     res['count'] = projectsId.length;
                                     response.send(res);
+                                    console.log(res);
                                 }
                             } else {
                                 logWriter.log("Projects.js getListLength task.find " + err);
@@ -1341,6 +1342,8 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
             var StartDate = (data.StartDate) ? new Date(data.StartDate) : new Date();
             data.EndDate = calculateTaskEndDate(StartDate, data.estimated);
             data.duration = returnDuration(data.StartDate, data.EndDate);
+        } else if (!data.estimated && data.logged) {
+            data.progress = 0;
         }
         if (data.assignedTo && typeof (data.assignedTo) == 'object') {
             data.assignedTo = data.assignedTo._id;
@@ -1745,7 +1748,7 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                                           res['remaining'] = localRemaining;
                                           res['data'] = result;
                                           res['time'] = (new Date() - startTime);
-										  res['fold'] = (req.session.kanbanSettings.tasks.foldWorkflows&&req.session.kanbanSettings.tasks.foldWorkflows.indexOf(data.workflowId.toString())!==-1)
+                                          res['fold'] = (req.session.kanbanSettings.tasks.foldWorkflows && req.session.kanbanSettings.tasks.foldWorkflows.indexOf(data.workflowId.toString()) !== -1)
                                           response.send(res);
                                       } else {
                                           logWriter.log("Projects.js getTasksForKanban task.find" + err);
@@ -1830,9 +1833,9 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                                 var query = models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).
                                     where('project').in(projectsId.objectID());
                                 if (data && data.filter && data.filter.workflow) {
-									data.filter.workflow = data.filter.workflow.map(function(item){
-										return item==="null"?null:item;
-									});
+                                    data.filter.workflow = data.filter.workflow.map(function (item) {
+                                        return item === "null" ? null : item;
+                                    });
 
                                     console.log(data.filter.workflow);
                                     query.where('workflow').in(data.filter.workflow);
@@ -1841,9 +1844,9 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                                 }
                                 if (data.sort) {
                                     query.sort(data.sort);
-                                }else{
-									query.sort({ 'editedBy.date': -1 });
-								}
+                                } else {
+                                    query.sort({ 'editedBy.date': -1 });
+                                }
                                 query.select("-attachments -notes").
                                     populate('project', 'projectShortDesc projectName').
                                     populate('assignedTo', 'name').
