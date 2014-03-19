@@ -1,5 +1,5 @@
 define([
-    "text!templates/Persons/CreateTemplate.html",
+	"text!templates/Persons/CreateTemplate.html",
     "collections/Persons/PersonsCollection",
     "collections/Departments/DepartmentsCollection",
     'views/Assignees/AssigneesView',
@@ -212,7 +212,7 @@ define([
 				var notDiv = this.$el.find('.assignees-container');
                 notDiv.append(
                     new AssigneesView({
-                        model: this.currentModel
+                        model: null
 					}).render().el
                 );
                 var personModel = new PersonModel();

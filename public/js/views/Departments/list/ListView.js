@@ -1,11 +1,12 @@
 define([
     'text!templates/Departments/list/ListHeader.html',
     'views/Departments/CreateView',
+    'models/DepartmentsModel',
     'views/Departments/list/ListItemView',
     'views/Departments/EditView',
 ],
 
-function (ListTemplate, CreateView, ListItemView, EditView) {
+function (ListTemplate, CreateView, currentModel, ListItemView, EditView) {
     var DepartmentsListView = Backbone.View.extend({
         el: '#content-holder',
 
@@ -24,21 +25,21 @@ function (ListTemplate, CreateView, ListItemView, EditView) {
             "click #groupList .edit": "editItem",
             "click #groupList .trash": "deleteItem"
         },
-        /*createDepartmentListRow:function(department,index,className){
-			return ('<tr class="'+className+'" data-id="'+department._id+'">'+
-				'<td><input type="checkbox" value="department._id" class="checkbox"/></td>'+
-				'<td>'+index+'</td>'+
-				'<td>'+department.departmentName+'</td>'+
-				'<td>'+((department.departmentManager) ? department.departmentManager.name.first + ' ' + department.departmentManager.name.last : '')+'</td>'+
-				'<td><a href="#">'+department.users.length+'</a></td>'+
-				'</tr>');
-		},*/
 		createDepartmentListRow:function(department,index,className){
 		    return ('<li class="' + className + '" data-id="' + department._id + '" data-level="' + department.nestingLevel + '" data-sequence="' + department.sequence + '"><span class="content"><span class="dotted-line"></span><span class="text">' + department.departmentName + '<span title="Delete" class="trash icon">1</span><span title="Edit" class="edit icon">e</span></span></span></li>');
 		},
         editItem: function(e){
+			var self = this;
             //create editView in dialog here
-            new EditView({myModel:this.collection.get($(e.target).closest("li").data("id"))});
+            var model = new currentModel({ validate: false });
+            model.urlRoot = '/Departments/form/';
+            model.fetch({
+                data: { id: $(e.target).closest("li").data("id") },
+                success: function (model) {
+                    new EditView({ myModel: model });
+                },
+                error: function () { alert('Please refresh browser'); }
+            });
 			return false;
         },
         deleteItem: function(e){
@@ -80,12 +81,10 @@ function (ListTemplate, CreateView, ListItemView, EditView) {
 			});
 		},
         render: function () {
-            console.log('Departments render');
             $('.ui-dialog ').remove();
             this.$el.html(_.template(ListTemplate));
 //            this.$el.append(new ListItemView({ collection: this.collection, startNumber: this.startNumber }).render());
             var departments = this.collection.toJSON();
-			console.log(departments);
             var self = this;
             departments.forEach(function(elm, i) {
                 if (!elm.parentDepartment) {

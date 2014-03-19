@@ -22,6 +22,7 @@ define([
 				else{
 					this.currentModel = (options.model) ? options.model : options.collection.getElement();
 				}
+				this.currentModel.urlRoot = '/Departments';
 				this.responseObj = {};
                 this.render();
             },
@@ -252,8 +253,6 @@ define([
 								  click:self.deleteItem 
 							  }]
                 });
-/*				common.populateDepartments(App.ID.parentDepartment, "/getDepartmentsForEditDd", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.parentDepartment);} );
-                common.populateEmployeesDd(App.ID.departmentManager, "/getPersonsForDd", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.departmentManager);});*/
 				populate.get2name("#departmentManager", "/getPersonsForDd",{},this,false,true);
 				populate.getParrentDepartment("#parentDepartment", "/getDepartmentsForEditDd",{id:this.currentModel.toJSON()._id},this, false, true);
 

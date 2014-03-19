@@ -12,7 +12,7 @@ define(['Validation'], function (Validation) {
         },
         validate: function(attrs){
             var errors = [];
-            Validation.checkNameField(errors, true, attrs.profileName, "Profile name");
+            Validation.checkGroupsNameField(errors, true, attrs.profileName, "Profile name");
 
             if(errors.length > 0)
                 return errors;

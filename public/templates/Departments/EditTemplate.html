@@ -16,7 +16,7 @@
                 <dd><input type="text" class="title-input blueback" name="departmentName" id="departmentName" maxlength="32" value="<%=model.departmentName%>"/></dd>
                 <dt><label for="parentDepartment">Parent Department</label></dt>
                 <dd>								  
-				  <a id="parentDepartment" data-id="<%=(model.parentDepartment)?model.parentDepartment._id:""%>" class="current-selected" href="javascript:;"><%=(model.parentDepartment)?model.parentDepartment.departmentName:"Select"%></a>
+				  <a id="parentDepartment"  data-level="<%=(model.parentDepartment)?model.parentDepartment.nestingLevel:""%>" data-id="<%=(model.parentDepartment)?model.parentDepartment._id:""%>" class="current-selected" href="javascript:;"><%=(model.parentDepartment)?model.parentDepartment.departmentName:"Select"%></a>
 				</dd>
               </dl>
             </div>

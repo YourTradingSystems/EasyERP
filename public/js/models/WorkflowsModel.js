@@ -23,10 +23,10 @@ function (common, Validation){
           //  Validation.checkLoginField(errors, true, attrs.value[0].name);
 
             if (attrs.value && !attrs.name){
-                Validation.checkWorkflowNameField(errors, true, attrs.value[0].name,"Name");
+                Validation.checkGroupsNameField(errors, true, attrs.value[0].name,"Name");
             }
             else {
-                Validation.checkWorkflowNameField(errors, true, attrs.name,"Name");
+                Validation.checkGroupsNameField(errors, true, attrs.name,"Name");
             }
 
             if(errors.length > 0)

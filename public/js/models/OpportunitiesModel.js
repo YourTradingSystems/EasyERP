@@ -56,7 +56,7 @@ function (common, Validation) {
         validate: function (attrs) {
             var errors = [];
 
-            Validation.checkNameField(errors, true, attrs.name, "Subject");
+            Validation.checkGroupsNameField(errors, true, attrs.name, "Subject");
             if (attrs.expectedClosing && attrs.nextAction)
                 Validation.checkFirstDateIsGreater(errors, attrs.expectedClosing, "expected closing date", attrs.nextAction.date, "Next action date");
             //Country State City Validations like in Persons

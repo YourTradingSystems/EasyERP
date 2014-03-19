@@ -71,7 +71,7 @@ define([
                 if ($(e.target).text() == "All") {
                     selectedLetter = "";
                 }
-                this.filter = this.filter || {};
+                this.filter = (this.filter && this.filter !== 'empty') ? this.filter : {};
                 this.filter['letter'] = selectedLetter;
                 var itemsNumber = $("#itemsNumber").text();
                 this.changeLocationHash(1, itemsNumber, this.filter);
@@ -145,7 +145,7 @@ define([
                         filter: filter,
                         newCollection: this.newCollection,
                     }, function (response, context) {
-                        var page = context.page || 1;
+                        var page = 1;
                         context.listLength = response.count || 0;
                         context.pageElementRender(response.count, itemsNumber, page);//prototype in main.js
                     }, this);

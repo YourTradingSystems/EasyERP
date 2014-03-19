@@ -260,7 +260,14 @@ function uploadFileArray(req, res, callback) {
                     file._id = mongoose.Types.ObjectId();
                     file.name = item.name;
 					file.shortPas = encodeURIComponent(shortPas);
-                    file.size = Math.round(item.size / 1024 / 2024 * 100) / 100;
+                    //convert file size add Vasya
+                    if (item.size>=1024) {
+                        file.size = (Math.round(item.size / 1024 / 2024 * 1000) / 1000)+'&nbsp;Mb';
+                    }
+                    else{
+                        file.size = (Math.round(item.size / 1024 * 1000)/1000)+'&nbsp;Kb';
+                    }
+                    //end convert
                     file.uploadDate = new Date();
                     file.uploaderName = req.session.uName;
                     files.push(file);
@@ -1044,11 +1051,13 @@ app.post('/Departments', function (req, res) {
 });
 
 app.get('/Departments/:viewType', function (req, res) {
+	console.log("dijshlo");
     var data = {};
     for (var i in req.query) {
         data[i] = req.query[i];
     }
     var viewType = req.params.viewType;
+	console.log(viewType);
     switch (viewType) {
         case "form": requestHandler.getDepartmentById(req, res, data);
             break;

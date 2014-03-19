@@ -312,7 +312,7 @@ define([
 				   var workflowsModel = new WorkflowsModel();
 				   var wIds = $(".workflow-list li.active").text();
 				   var workflowCollection = this.collection.toJSON();
-				   
+				   var self = this;
 				   
                    var workflowArray = _.filter(workflowCollection, function (workflow) {
                        if (workflow.wId == wIds) {
