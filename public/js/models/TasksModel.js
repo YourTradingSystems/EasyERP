@@ -42,8 +42,8 @@ define([
             validate: function (attrs) {
                 var errors = [];
 
-                Validation.checkNameField(errors, true, attrs.summary, "Summary");
-                Validation.checkNameField(errors, true, attrs.project._id || attrs.project, "Project");
+                Validation.checkGroupsNameField(errors, true, attrs.summary, "Summary");
+                Validation.checkGroupsNameField(errors, true, attrs.project._id || attrs.project, "Project");
                 Validation.checkNameField(errors, true, attrs.assignedTo._id || attrs.assignedTo, "AssignedTo");
                 if (attrs.deadline && attrs.StartDate)
                     Validation.checkFirstDateIsGreater(errors, attrs.deadline, "deadline date", attrs.StartDate, "Start date");

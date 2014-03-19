@@ -40,7 +40,7 @@ function (common, Validation){
         validate: function(attrs){
             var errors = [];
 
-            Validation.checkNameField(errors, true, attrs.name.first, "Company");
+            Validation.checkGroupsNameField(errors, true, attrs.name.first, "Company");
             Validation.checkPhoneField(errors, false, attrs.phones.phone, "Phone");
             Validation.checkPhoneField(errors, false, attrs.phones.mobile, "Mobile");
             Validation.checkCountryCityStateField(errors, false, attrs.address.country, "Country");

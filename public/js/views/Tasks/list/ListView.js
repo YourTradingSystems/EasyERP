@@ -18,7 +18,7 @@ define([
             defaultItemsNumber: null,
             listLength: null,
             filter: null,
-            stages: null,
+            sort: null,
             newCollection: null,
             page: null, //if reload page, and in url is valid page
             contentType: 'Tasks',//needs in view.prototype.changeLocationHash
@@ -30,8 +30,9 @@ define([
                 this.collection = options.collection;
                 _.bind(this.collection.showMore, this.collection);
                 this.parrentContentId = options.collection.parrentContentId;
-                this.filter = options.filter;
                 this.stages = [];
+                this.sort = options.sort;
+                this.filter = options.filter;
                 this.defaultItemsNumber = this.collection.namberToShow || 50;
                 this.newCollection = options.newCollection;
                 this.deleteCounter = 0;
@@ -131,7 +132,7 @@ define([
                     newCollection: this.newCollection,
                     parrentContentId: this.parrentContentId
                 }, function (response, context) {
-                    var page = context.page || 1;
+                    var page = 1;
                     context.listLength = response.count || 0;
                     context.pageElementRender(response.count, itemsNumber, page);//prototype in main.js
                 }, this);
@@ -390,7 +391,7 @@ define([
                     newCollection: this.newCollection,
                     parrentContentId: this.parrentContentId
                 });
-                dataService.getData('/totalCollectionLength/Projects', {
+                dataService.getData('/totalCollectionLength/Tasks', {
                     type: 'Tasks',
                     filter: this.filter,
                     newCollection: this.newCollection,
@@ -452,7 +453,7 @@ define([
                 this.page = 1;
                 $("#top-bar-deleteBtn").hide();
                 $('#check_all').prop('checked', false);
-                this.changeLocationHash(1, itemsNumber);
+                this.changeLocationHash(1, itemsNumber, this.filter);
             },
 
             showPage: function (event) {

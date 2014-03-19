@@ -13,7 +13,7 @@
         validate: function(attrs){
             var errors = [];
 
-            Validation.checkNameField(errors, true, attrs.name, "Subject");
+            Validation.checkGroupsNameField(errors, true, attrs.name, "Subject");
             Validation.checkNameField(errors, false, attrs.contactName.first, "Contact first name");
             Validation.checkNameField(errors, false, attrs.contactName.last, "Contact last name");
             //Validation.checkNameField(errors, false, attrs.company.name, "Company");
