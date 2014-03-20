@@ -505,7 +505,8 @@
                   populate('createdBy.user').
                   populate('editedBy.user').
                   populate('groups.users').
-                  populate('groups.group');
+                  populate('groups.group').
+                  populate('groups.owner','_id login');
 
             query.exec(function (err, result) {
                 if (err) {
@@ -527,7 +528,8 @@
                   populate('createdBy.user').
                   populate('editedBy.user').
                   populate('groups.users').
-                  populate('groups.group');
+                  populate('groups.group').
+                  populate('groups.owner','_id login');
 
             query.exec(function (err, result) {
                 if (err) {

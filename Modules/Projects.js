@@ -973,7 +973,8 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
             populate('editedBy.user', '_id login').
             populate('groups.owner', '_id name').
             populate('groups.users', '_id login').
-            populate('groups.group', '_id departmentName');
+            populate('groups.group', '_id departmentName').
+            populate('groups.owner','_id login');
         query.exec(function (err, project) {
             if (err) {
                 logWriter.log("Project.js getProjectById project.find " + err);

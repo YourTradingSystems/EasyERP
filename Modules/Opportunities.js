@@ -504,7 +504,8 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
             populate('groups.users').
             populate('groups.group').
             populate('createdBy.user').
-            populate('editedBy.user');
+            populate('editedBy.user').
+            populate('groups.owner','_id login');
 
 
         query.exec(function (err, result) {

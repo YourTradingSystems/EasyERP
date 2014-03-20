@@ -126,7 +126,7 @@ define([
                     requirements: requirements,
                     department: department || null,
                     groups: {
-                        owner: $("#allUsers").val(),
+						owner: $("#allUsersSelect").data("id"),
                         users: usersId,
                         group: groupsId
                     },

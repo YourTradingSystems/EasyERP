@@ -193,7 +193,7 @@ define([
                         reffered: reffered,
                         workflow: workflow,
                         groups: {
-                            owner: $("#allUsers").val(),
+							owner: $("#allUsersSelect").data("id"),
                             users: usersId,
                             group: groupsId
                         },

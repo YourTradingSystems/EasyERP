@@ -167,7 +167,7 @@ define([
                         language: this.$el.find("#language").text()
                     },
                     groups: {
-                        owner: $("#allUsers").val(),
+                        owner: $("#allUsersSelect").data("id"),
                         users: usersId,
                         group: groupsId
                     },
