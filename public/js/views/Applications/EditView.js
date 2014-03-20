@@ -22,7 +22,7 @@
                 this.currentModel = (options.model) ? options.model : options.collection.getElement();
 				this.currentModel.urlRoot = "/Applications";
 				this.responseObj = {};
-                this.render();
+				this.workflowsCollection.bind("reset",this.render,this);
             },
 
             events: {
@@ -53,6 +53,7 @@
                 this.currentModel.save({
                     workflow: id
                 }, {
+                    patch: true,
                     success: function (model) {
 						model = model.toJSON();
 						var viewType = custom.getCurrentVT();
@@ -87,7 +88,8 @@
             isEmployee: function (e) {
 				e.preventDefault();
             	this.currentModel.save({
-                    isEmployee: true
+            	    isEmployee: true,
+            	    hired: true // for recalculate Birtdays only
                 }, {
                     headers: {
                         mid: 39
@@ -358,8 +360,14 @@
             },
 
             render: function () {
+                var workflow = this.workflowsCollection.findWhere({ name: "Refused" });
+				var id =null;
+				if (workflow){
+					id = workflow.get('_id');
+				}
                 var formString = this.template({
-                    model: this.currentModel.toJSON()
+                    model: this.currentModel.toJSON(),
+					refuseId: id
                 });
                 var self = this;
                 this.$el = $(formString).dialog({
