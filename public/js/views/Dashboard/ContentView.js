@@ -172,7 +172,6 @@ define([
                        chart.append("g")
 						   .attr("class", "y axis")
 						   .call(yAxis);
-					   console.log(self.source);
 
 
                        data1 = _.filter(data, function (item) {
@@ -188,7 +187,6 @@ define([
                                }
                            }
                        }
-					   console.table(data1);
 
                        chart.selectAll(".bar2")
 						   .data(data2)

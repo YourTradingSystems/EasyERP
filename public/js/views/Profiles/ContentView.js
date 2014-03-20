@@ -109,6 +109,8 @@ define([
 					alert("You cannot edit this Profile!");
 					return;
 				}
+				$('#profilesList li.active a').hide();
+				$('#profilesList li.active').append("<div class='editProfileContainer'><input type='text' class='editProfileName' maxlength='12' value='"+$('#profilesList > li.active > a').text().replace(" Profile","")+"'/></div>");
 
                 $('#top-bar-saveBtn').show();
                 $('#top-bar-editBtn').hide();
