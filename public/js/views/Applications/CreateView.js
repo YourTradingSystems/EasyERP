@@ -117,7 +117,7 @@ define([
                 var self = this;
                 var mid = 39;
 
-                var isEmployee = false;
+                var isyeeEmplo = false;
                 if (this.$("#hire>span").hasClass("pressed")) {
                     isEmployee = true;
                     self.contentType = "Employees";
@@ -150,7 +150,7 @@ define([
 
                 var jobPositionId = $("#jobPositionDd").data("id");
                 var jobType= this.$el.find("#jobTypeDd").data("id");
-                var expectedSalary = $.trim($("#expectedSalary").val());
+                var expectedSalary = $.trim($("#expectedSalary").val())
                 var proposedSalary = $.trim($("#proposedSalary").val());
                 var tags = $.trim($("#tags").val()).split(',');
                 var otherInfo = $("#otherInfo").val();
