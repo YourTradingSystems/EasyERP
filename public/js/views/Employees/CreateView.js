@@ -162,6 +162,7 @@ define([
                     first: $.trim(this.$el.find("#first").val()),
                     last: $.trim(this.$el.find("#last").val())
                 };
+				$("#createBtnDialog").attr("disabled","disabled");
                 var workAddress = {};
                 $("dd").find(".workAddress").each(function () {
                     var el = $(this);
@@ -216,7 +217,7 @@ define([
 
                 });
                 var whoCanRW = this.$el.find("[name='whoCanRW']:checked").val();
-                employeeModel.save({
+                var valid = employeeModel.save({
                     name: name,
                     gender: gender ? gender : "",
                     jobType: jobType ? jobType : "",
@@ -261,6 +262,9 @@ define([
     					self.errorNotification(xhr);
                     }
                 });
+				if (!valid){
+						$("#createBtnDialog").removeAttr("disabled");
+				}
             },
 
             render: function () {
@@ -274,6 +278,7 @@ define([
                         save:{
                             text: "Create",
                             class: "btn",
+							id:"createBtnDialog",
                             click: self.saveItem
                         },
                         cancel:{
