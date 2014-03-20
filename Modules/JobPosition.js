@@ -381,7 +381,7 @@ var JobPosition = function (logWriter, mongoose, employee, department, models) {
                                     populate('createdBy.user', 'login').
                                     populate('editedBy.user', 'login').
                                     populate('department', 'departmentName').
-									populate('workflow', 'name _id').
+									populate('workflow', 'name _id status').
                                     skip((data.page - 1) * data.count).
                                     limit(data.count).
                                     exec(function (error, _res) {
