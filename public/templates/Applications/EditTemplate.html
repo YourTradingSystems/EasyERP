@@ -5,7 +5,7 @@
         <ul class="dialog-tabs">
           <li><a class="active" href="javascript:;">Main</a></li>
           <li><a href="javascript:;">Assignees</a></li>
-          <li class="right"><button class="red hireEmployee"><span>Hire & Create Employee</span></button>  <button class="red refuseEmployee"><span>Refuse</span></button></li>
+          <li class="right"><button class="red hireEmployee"><span>Hire & Create Employee</span></button>  <% if (!(model.workflow&&model.workflow._id==refuseId)){%><button class="red refuseEmployee"><span>Refuse</span></button></li><%}%>
         </ul>
         <div class="clearfix"></div>
         <div class="dialog-tabs-items">
