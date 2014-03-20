@@ -2449,32 +2449,26 @@ input::-ms-clear {
 }
 
 .input-file {
-  position: relative;
-  overflow: hidden;
-  display: block;
-  float: left;
-  width: 60px;
-  margin-right: 10px;
-  text-align: center;
-  //    padding: 2p===x 4px;
-  border: @thin-border #ccc;
-  line-height: 20px;
-  height: 20px;
-  cursor: pointer;
+    position: relative;
+    overflow: hidden;
+      float: left;
+      width: 60px;
+      margin-right: 10px;
+      text-align: center;
+      border: @thin-border #ccc;
+      line-height: 20px;
+      height: 20px;
+      cursor: pointer;
 
-  input {
-    position: absolute;
-    top: 0;
-    left: 0px;
-    width: 60px;
-    height: 20px;
-    opacity: 0;
-    font-size: 20px;
-    cursor: pointer;
-    padding: 0px;
-    margin: 0px;
-    border: none;
-  }
+          input {
+            position: absolute;
+            top: 0;
+            right: 0;
+            font-size: 200px;
+            opacity: 0;
+            filter: alpha(opacity=0);
+            cursor: pointer;
+          }
 }
 
 input, textarea, select {

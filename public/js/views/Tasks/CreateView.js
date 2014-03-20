@@ -158,7 +158,7 @@ define([
                        title: "Create Task",
                        buttons: {
                            save: {
-                               text: "Save",
+                               text: "Create",
                                class: "btn",
                                click: self.saveItem
                            },

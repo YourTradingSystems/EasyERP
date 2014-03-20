@@ -6,7 +6,8 @@ define([
     function (ContentTopBarTemplate, Custom, Common) {
         var TopBarView = Backbone.View.extend({
             el:'#top-bar',
-            contentType: "Groups",
+            contentType: "Departments",
+            headerType: "Groups",
             actionType: null, //Content, Edit, Create
             template: _.template(ContentTopBarTemplate),
             
@@ -20,18 +21,18 @@ define([
                 "click #top-bar-createBtn": "createEvent"
             },
             
-            changeContentViewType:  function (e) {
+            changeContentViewType: function (e) {
                 Custom.changeContentViewType(e, this.contentType, this.collection);
+            },
+
+            changeItemIndex: function (e) {
+                Custom.changeItemIndex(e, "Content", this.contentType, this.collection);
             },
             createEvent: function (event) {
                 event.preventDefault();
                 this.trigger('createEvent');
             },
 
-            changeItemIndex: function (e) {
-                var actionType = "Content";
-                Custom.changeItemIndex(e, actionType, this.contentType, this.collection);
-            },
             editEvent: function (event) {
                 event.preventDefault();
                 this.trigger('editEvent');
@@ -49,12 +50,12 @@ define([
             },
 
             render: function(){
-                $('title').text(this.contentType);
+                $('title').text(this.headerType);
                 var viewType = Custom.getCurrentVT();
                 //var collectionLength = this.collection.length;
                 //var itemIndex = Custom.getCurrentII();
             	
-                this.$el.html(this.template({ viewType: viewType, contentType: this.contentType}));
+                this.$el.html(this.template({ viewType: viewType, contentType: this.contentType, headerType:this.headerType}));
                 Common.displayControlBtnsByActionType('Content', viewType);
 
                 return this;

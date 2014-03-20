@@ -136,7 +136,7 @@ define([
                     title: "Create Profile",
                     buttons: {
                       save: {
-                            text: "Save",
+                            text: "Create",
                             id: "saveBtn",
                             class: "btn",
                             click: self.saveItem

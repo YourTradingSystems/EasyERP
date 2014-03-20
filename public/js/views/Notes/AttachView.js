@@ -19,6 +19,7 @@ define([
 		
         addAttach: function (event) {
 			if (this.isCreate){
+
 				var s = this.$el.find(".inputAttach:last").val().split("\\")[ this.$el.find(".inputAttach:last").val().split('\\').length - 1];
                 this.$el.find(".attachContainer").append('<li class="attachFile">' +
                                              '<span class="blue">' + s + '</span>' +
@@ -71,6 +72,7 @@ define([
 			}
 
             addFrmAttach.submit(function (e) {
+                $(".input-file-button").off("click");
                 var bar =  self.$el.find('.bar');
                 var status =  self.$el.find('.status');
 
