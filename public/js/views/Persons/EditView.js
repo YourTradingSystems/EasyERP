@@ -1,5 +1,5 @@
 define([
-    "text!templates/Persons/EditTemplate.html",
+    "text!templates/Persons/CreateTemplate.html",
     'views/Assignees/AssigneesView',
     "common",
     "custom",

@@ -62,23 +62,23 @@ require(['app'], function (app) {
         }
 
     };
-    Backbone.View.prototype.errorNotification = function (xhr){
-		if (xhr){
-			if (xhr.status === 401||xhr.status === 403) {
-				if (xhr.status === 401){
-					Backbone.history.navigate("login", { trigger: true });
-				}else{
-					alert("You do not have permission to perform this action");								
-				}
-			} else {
-				if (xhr.responseJSON){
-					alert(xhr.responseJSON.error);
-				}else{
+    Backbone.View.prototype.errorNotification = function (xhr) {
+        if (xhr) {
+            if (xhr.status === 401 || xhr.status === 403) {
+                if (xhr.status === 401) {
+                    Backbone.history.navigate("login", { trigger: true });
+                } else {
+                    alert("You do not have permission to perform this action");
+                }
+            } else {
+                if (xhr.responseJSON) {
+                    alert(xhr.responseJSON.error);
+                } else {
                     Backbone.history.navigate("home", { trigger: true });
-				}
-			}
-		}
-	};
+                }
+            }
+        }
+    };
     Backbone.View.prototype.pageElementRender = function (totalCount, itemsNumber, currentPage) {
         //var itemsNumber = this.defaultItemsNumber;
         $("#itemsNumber").text(itemsNumber);
@@ -264,10 +264,10 @@ require(['app'], function (app) {
             }
         }
         else if (pageNumber >= itemsOnPage && page <= itemsOnPage) {
-             for (var i = 1; i <= itemsOnPage; i++) {
-                 $("#pageList").append('<li class="showPage">' + i + '</li>');
-             }
-         }
+            for (var i = 1; i <= itemsOnPage; i++) {
+                $("#pageList").append('<li class="showPage">' + i + '</li>');
+            }
+        }
 
         else if (page >= pageNumber - 3) {
             for (var i = pageNumber - 6; i <= pageNumber; i++) {
@@ -400,28 +400,28 @@ require(['app'], function (app) {
             var itemsOnPage = 7;
             $("#pageList").empty();
             if (parseInt(lastPage) <= itemsOnPage) {
-                for (var i = 1; i <= parseInt(lastPage); i++) {
+                for (var i = 1; i <= parseInt(lastPage) ; i++) {
                     $("#pageList").append('<li class="showPage">' + i + '</li>');
                 }
             }
             else if (page >= 5 && page <= itemsOnPage) {
-                for (var i = parseInt (page) - 3; i <= parseInt(page) + 3; i++) {
+                for (var i = parseInt(page) - 3; i <= parseInt(page) + 3; i++) {
                     $("#pageList").append('<li class="showPage">' + i + '</li>');
                 }
             }
-                else if (lastPage >= itemsOnPage && page <= itemsOnPage) {
-                        for (var i = 1; i <= itemsOnPage; i++) {
-                            $("#pageList").append('<li class="showPage">' + i + '</li>');
-                        }
-                    }
+            else if (lastPage >= itemsOnPage && page <= itemsOnPage) {
+                for (var i = 1; i <= itemsOnPage; i++) {
+                    $("#pageList").append('<li class="showPage">' + i + '</li>');
+                }
+            }
             else if (lastPage >= itemsOnPage && page > 3 && page <= parseInt(lastPage) - 3) {
-                for (var i = parseInt(page) - 3; i <= parseInt(page)+3; i++) {
+                for (var i = parseInt(page) - 3; i <= parseInt(page) + 3; i++) {
                     $("#pageList").append('<li class="showPage">' + i + '</li>');
                 }
             }
 
             else if (page >= parseInt(lastPage) - 3) {
-                for (var i = lastPage - 6; i <= parseInt(lastPage); i++) {
+                for (var i = lastPage - 6; i <= parseInt(lastPage) ; i++) {
                     $("#pageList").append('<li class="showPage">' + i + '</li>');
                 }
             }
@@ -563,27 +563,27 @@ require(['app'], function (app) {
 
             //number page show (Vasya)
             var itemsOnPage = 7;
-            if (pageNumber <= itemsOnPage){
+            if (pageNumber <= itemsOnPage) {
                 for (var i = 1; i <= pageNumber; i++) {
                     $("#pageList").append('<li class="showPage">' + i + '</li>');
                 }
             }
             else if (pageNumber >= itemsOnPage && currentPage <= itemsOnPage) {
-                 for (var i = 1; i <= itemsOnPage; i++) {
-                     $("#pageList").append('<li class="showPage">' + i + '</li>');
-                 }
+                for (var i = 1; i <= itemsOnPage; i++) {
+                    $("#pageList").append('<li class="showPage">' + i + '</li>');
+                }
             }
 
             else if (pageNumber >= itemsOnPage && currentPage > 3 && currentPage <= pageNumber - 3) {
-                 for (var i = currentPage - 3; i <= currentPage + 3; i++) {
-                     $("#pageList").append('<li class="showPage">' + i + '</li>');
-                 }
+                for (var i = currentPage - 3; i <= currentPage + 3; i++) {
+                    $("#pageList").append('<li class="showPage">' + i + '</li>');
+                }
             }
 
             else if (currentPage >= pageNumber - 3) {
-                 for (var i = pageNumber - 6; i <= pageNumber; i++) {
-                     $("#pageList").append('<li class="showPage">' + i + '</li>');
-                 }
+                for (var i = pageNumber - 6; i <= pageNumber; i++) {
+                    $("#pageList").append('<li class="showPage">' + i + '</li>');
+                }
             }
 
             $("#lastPage").text(pageNumber);

@@ -67,7 +67,13 @@ define([
             },
 
             chooseOption: function (e) {
-                var self = this;
+                var afterPage = '';
+                var location = window.location.hash;
+                var pageSplited = location.split('/p=')[1];
+                if (pageSplited) {
+                    afterPage = pageSplited.split('/')[1];
+                    location = location.split('/p=')[0] + '/p=1' + '/' + afterPage;
+                }
                 var targetElement = $(e.target).parents("td");
                 var id = targetElement.attr("id").replace("stages_", '');
                 var obj = this.collection.get(id);
@@ -83,9 +89,9 @@ define([
                     },
                     patch: true,
                     success: function (err, model) {
-						Backbone.history.fragment = '';
-						Backbone.history.navigate(window.location.hash, { trigger: true });
-						//                       targetElement.find('.stageSelect').text($(e.target).text());
+                        //targetElement.find('.stageSelect').text($(e.target).text());
+                        Backbone.history.fragment = "";
+                        Backbone.history.navigate(location, { trigger: true });
                     }
                 });
 

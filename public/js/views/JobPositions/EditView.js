@@ -81,6 +81,13 @@ define([
             },
 
             saveItem: function () {
+                var afterPage = '';
+                var location = window.location.hash;
+                var pageSplited = location.split('/p=')[1];
+                if (pageSplited) {
+                    afterPage = pageSplited.split('/')[1];
+                    location = location.split('/p=')[0] + '/p=1' + '/' + afterPage;
+                }
                 var self = this;
 
                 var mid = 39;
@@ -135,7 +142,8 @@ define([
                     patch: true,
                     success: function (model) {
                         self.hideDialog();
-                        Backbone.history.navigate("easyErp/JobPositions", { trigger: true });
+                        Backbone.history.fragment = "";
+                        Backbone.history.navigate(location, { trigger: true });
                     },
                     error: function (model, xhr) {
     					self.errorNotification(xhr);
