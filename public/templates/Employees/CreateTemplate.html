@@ -21,7 +21,7 @@
                   <dt><label for="first">First Name</label></dt><dd><input type="text" id="first" required maxlength="32"/></dd>
                   <dt><label for="last">Last Name</label></dt><dd><input type="text" id="last" required maxlength="32"/></dd>
                   <dt><label for="dateBirth">Date of Birth </label></dt><dd><input type="text" name="dateBirth" id="dateBirth" readonly/></dd>
-                  <dt><label for="mobile">Personal Mobile</label></dt><dd><input type="text" id="mobile" maxlength="32"/></dd>
+                  <dt><label for="mobile">Personal Mobile</label></dt><dd><input type="text" id="mobile" maxlength="20"/></dd>
                   <dt><label for="personalEmail">Personal Email</label></dt><dd><input type="text" id="personalEmail" maxlength="48"/></dd>
                   <dt><label for="skype">Skype</label></dt><dd><input type="text" id="skype" maxlength="32"/></dd>
                   <dt><label for="relatedUsersDd">Related User</label></dt>
@@ -89,10 +89,7 @@
               <dl class="edit-employee-info">
                 <dt><label for="bankAccountNo">Bank Account №</label></dt>
                 <dd>
-				  <a id="bankAccountNo" data-id="" class="current-selected" href="javascript:;">Select</a>
-				  <ul class="newSelectList hidden">
-                    <li id="">Select</li>
-				  </ul>
+                    <input type="text" name="bankAccountNo" id="bankAccountNo" class="blueback" maxlength="32"/>
                 </dd>
                 <dt><label for="otherId">Other Id </label></dt><dd><input type="text" name="otherId" id="otherId" class="blueback" maxlength="32"/></dd>
               </dl>

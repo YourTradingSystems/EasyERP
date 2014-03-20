@@ -3,7 +3,7 @@ define(
         //Removed cyrillic chars
         var phoneRegExp = /^[0-9\+]?([0-9-\s()])+[0-9()]$/,
             intNumberRegExp = /[0-9]+/,
-            nameRegExp = /^[a-zA-Z]?[a-zA-Z-_\s]+$/,
+            nameRegExp = /^[a-zA-Z]+[a-zA-Z-_\s]+$/,
             groupsNameRegExp = /[a-zA-Z0-9]+[a-zA-Z0-9-,#@&*-_\s()\.\/\s]+$/,
             loginRegExp = /^[\w\.@]{6,100}$/,
             skypeRegExp = /^[\w\._@]{6,100}$/,
