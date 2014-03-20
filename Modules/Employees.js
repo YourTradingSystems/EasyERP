@@ -550,7 +550,6 @@ var Employee = function (logWriter, mongoose, event, department, models) {
     };
 
     function getFilter(req, response) {
-
         var data = {};
         for (var i in req.query) {
             data[i] = req.query[i];
@@ -699,6 +698,9 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                                     limit(data.count).
                                     exec(function (error, _res) {
                                         if (!error) {
+                                            console.log('data count ----- ' + data.count);
+                                            console.log('data page ----- ' + data.page);
+                                            console.log('response length ------  ' + _res.length);
                                             res['data'] = _res;
                                             response.send(res);
                                         } else {

@@ -511,7 +511,7 @@ require(['app'], function (app) {
                 $("#pageList").empty();
 
                 for (var i = 1; i <= pageNumber; i++) {
-                    $("#pageList").append('<li class="showPage">' + i + '</li>')
+                    $("#pageList").append('<li class="showPage">' + i + '</li>');
                 }
                 $("#lastPage").text(pageNumber);
 
@@ -552,7 +552,10 @@ require(['app'], function (app) {
         } else {
             $("#listTable").empty();
             $("#grid-start").text((deletePage - 1) * itemsNumber + 1);
-            $("#grid-end").text((deletePage - 1) * itemsNumber + this.collectionLength - deleteCounter);
+            if (itemsNumber === this.collectionLength)
+                $("#grid-end").text(itemsNumber);
+            else
+                $("#grid-end").text((deletePage - 1) * itemsNumber + this.collectionLength - deleteCounter);
             $("#grid-count").text(this.listLength);
             $("#currentShowPage").val(deletePage);
 

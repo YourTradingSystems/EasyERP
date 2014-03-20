@@ -305,9 +305,9 @@ define([
                 }
             },
             deleteItems: function () {
-                var that = this,
-                    mid = 39,
-                    model;
+                var that = this;
+                var mid = 39;
+                var model;
                 var localCounter = 0;
                 this.collectionLength = this.collection.length;
                 var count = $("#listTable input:checked").length;
