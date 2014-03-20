@@ -88,8 +88,8 @@ define([
 
 				var self = this;
                 e.preventDefault();
-                var val = $('#noteArea').val().replace(/</g, "&#60;").replace(/>/g, "&#62;");
-                var title = $('#noteTitleArea').val().replace(/</g, "&#60;").replace(/>/g, "&#62;");
+                var val = $.trim($('#noteArea').val()).replace(/</g, "&#60;").replace(/>/g, "&#62;");
+                var title = $.trim($('#noteTitleArea').val()).replace(/</g, "&#60;").replace(/>/g, "&#62;");
                 if (!val&&!title) { //textarrea notes not be empty
                     alert("Note can not be empty");
                 } else {
