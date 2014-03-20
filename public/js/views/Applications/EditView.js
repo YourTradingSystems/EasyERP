@@ -22,7 +22,7 @@
                 this.currentModel = (options.model) ? options.model : options.collection.getElement();
 				this.currentModel.urlRoot = "/Applications";
 				this.responseObj = {};
-                this.render();
+				this.workflowsCollection.bind("reset",this.render,this);
             },
 
             events: {
@@ -52,7 +52,7 @@
 				var workflowStart = this.currentModel.get("workflow")&&this.currentModel.get("workflow")._id?this.currentModel.get("workflow")._id:this.currentModel.get("workflow");
                 this.currentModel.save({
                     workflow: id
-                }, {
+                },{
                     success: function (model) {
 						model = model.toJSON();
 						var viewType = custom.getCurrentVT();
@@ -357,8 +357,14 @@
             },
 
             render: function () {
+                var workflow = this.workflowsCollection.findWhere({ name: "Refused" });
+				var id =null;
+				if (workflow){
+					id = workflow.get('_id');
+				}
                 var formString = this.template({
-                    model: this.currentModel.toJSON()
+                    model: this.currentModel.toJSON(),
+					refuseId: id
                 });
                 var self = this;
                 this.$el = $(formString).dialog({
