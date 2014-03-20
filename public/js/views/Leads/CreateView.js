@@ -119,6 +119,13 @@ define([
             },
 
             saveItem: function () {
+                var afterPage = '';                                                                 //Masalovych bag 803
+                var location = window.location.hash;                                                //Masalovych bag 803
+                var pageSplited = location.split('/p=')[1];                                         //Masalovych bag 803
+                if (pageSplited) {                                                                  //Masalovych bag 803
+                    afterPage = pageSplited.split('/')[1];                                          //Masalovych bag 803
+                    location = location.split('/p=')[0] + '/p=1' + '/' + afterPage;                 //Masalovych bag 803
+                }                                                                                   //Masalovych bag 803
                 var self = this;
                 var $company = this.$("#company");
                 var mid = 39;
@@ -193,7 +200,7 @@ define([
                         reffered: reffered,
                         workflow: workflow,
                         groups: {
-                            owner: $("#allUsers").val(),
+							owner: $("#allUsersSelect").data("id"),
                             users: usersId,
                             group: groupsId
                         },
@@ -203,10 +210,11 @@ define([
                         headers: {
                             mid: mid
                         },
-
                         success: function () {
                             self.hideDialog();
-                            Backbone.history.navigate("easyErp/Leads", { trigger: true });
+                            Backbone.history.fragment = "";                                  //Masalovych bag 803
+                            Backbone.history.navigate(location, { trigger: true });          //Masalovych bag 803
+                          // Backbone.history.navigate("easyErp/Users", { trigger: true });
                         },
 						error: function (model, xhr) {
 							self.errorNotification(xhr);

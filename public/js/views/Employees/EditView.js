@@ -224,7 +224,7 @@ define([
                     source: sourceId,
                     imageSrc: this.imageSrc,
                     groups: {
-                        owner: $("#allUsers").val(),
+						owner: $("#allUsersSelect").data("id"),
                         users: usersId,
                         group: groupsId
                     },

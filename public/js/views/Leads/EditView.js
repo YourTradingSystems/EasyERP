@@ -184,7 +184,7 @@ define([
                     //optout: optout,
                     reffered: reffered,
                     groups: {
-                        owner: $("#allUsers").val(),
+						owner: $("#allUsersSelect").data("id"),
                         users: usersId,
                         group: groupsId
                     },

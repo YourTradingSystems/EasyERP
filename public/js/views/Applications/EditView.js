@@ -17,12 +17,14 @@
             initialize: function (options) {
                 _.bindAll(this, "saveItem");
                 _.bindAll(this, "render", "deleteItem");
-                this.workflowsCollection = new WorkflowsCollection({ id: 'Applications' });
                 this.employeesCollection = options.collection;
                 this.currentModel = (options.model) ? options.model : options.collection.getElement();
 				this.currentModel.urlRoot = "/Applications";
 				this.responseObj = {};
-				this.workflowsCollection.bind("reset",this.render,this);
+                this.workflowsCollection = new WorkflowsCollection({ id: 'Applications' });
+//				this.workflowsCollection.bind("reset",this.render, this);
+				this.render();
+
             },
 
             events: {
@@ -220,11 +222,12 @@
                     department: department,
                     jobPosition: jobPositionId,
                     expectedSalary: $.trim(this.$el.find("#expectedSalary").val()),
-                    proposedSalary: $.trim(this.$el.find("#proposedSalary").val()),
+                    //proposedSalary: $.trim(this.$el.find("#proposedSalary").val()),
+                    proposedSalary: parseInt($.trim(this.$el.find("#proposedSalary").val()), 10),     //Masalovych bag 812
                     tags: $.trim(this.$el.find("#tags").val()).split(','),
                     otherInfo: this.$el.find("#otherInfo").val(),
                     groups: {
-                        owner: $("#allUsers").val(),
+						owner: $("#allUsersSelect").data("id"),
                         users: usersId,
                         group: groupsId
                     },

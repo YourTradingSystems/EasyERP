@@ -242,7 +242,7 @@ define([
                     active: active,
                     source:sourceId,
                     groups: {
-                        owner: $("#allUsers").val(),
+						owner: $("#allUsersSelect").data("id"),
                         users: usersId,
                         group: groupsId
                     },

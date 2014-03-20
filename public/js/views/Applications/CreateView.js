@@ -150,7 +150,7 @@ define([
 
                 var jobPositionId = $("#jobPositionDd").data("id");
                 var jobType= this.$el.find("#jobTypeDd").data("id");
-                var expectedSalary = $.trim($("#expectedSalary").val());
+                var expectedSalary = $.trim($("#expectedSalary").val())
                 var proposedSalary = $.trim($("#proposedSalary").val());
                 var tags = $.trim($("#tags").val()).split(',');
                 var otherInfo = $("#otherInfo").val();
@@ -186,7 +186,7 @@ define([
                     otherInfo: otherInfo,
                     workflow: workflow,
                     groups: {
-                        owner: $("#allUsers").val(),
+						owner: $("#allUsersSelect").data("id"),
                         users: usersId,
                         group: groupsId
                     },

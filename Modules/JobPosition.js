@@ -210,7 +210,8 @@ var JobPosition = function (logWriter, mongoose, employee, department, models) {
 			populate('createdBy.user').
             populate('editedBy.user').
             populate('groups.users').
-            populate('groups.group');
+            populate('groups.group').
+            populate('groups.owner','_id login');
 
         query.exec(function (err, response) {
             if (err) {

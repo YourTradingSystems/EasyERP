@@ -1,5 +1,5 @@
 define([
-    "text!templates/Persons/CreateTemplate.html",
+    "text!templates/Persons/EditTemplate.html",
     'views/Assignees/AssigneesView',
     "common",
     "custom",
@@ -142,7 +142,7 @@ define([
                         active: $('#isActiveInput').is(':checked')
                     },
                     groups: {
-                        owner: $("#allUsers").val(),
+                        owner: $("#allUsersSelect").data("id"),
                         users: usersId,
                         group: groupsId
                     },

@@ -9,13 +9,9 @@
   </div>
 </div>
 <div class="half-block left">
-  <dl class="project-owner-info">
-    <dt><label for="allUsers">Owner</label></dt><dd>
-
-      <select id="allUsers">
-
-      </select>
-
+  <dl class="assignees-info">
+    <dt><label for="allUsersSelect">Owner</label></dt><dd>
+      <a href="javascript:;" class="current-selected" id="allUsersSelect" data-id="<%=owner._id%>"><%=owner?owner.login:"Select"%></a>
     </dd>
   </dl>
 </div>
