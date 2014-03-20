@@ -117,7 +117,7 @@ define([
                 var self = this;
                 var mid = 39;
 
-                var isyeeEmplo = false;
+                var isEmployee = false;
                 if (this.$("#hire>span").hasClass("pressed")) {
                     isEmployee = true;
                     self.contentType = "Employees";
