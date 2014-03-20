@@ -473,7 +473,6 @@ define([
                         success: function () {
                             that.listLength--;
                             localCounter++;
-
                             if (index === count - 1) {
                                 that.deleteCounter = localCounter;
                                 that.deletePage = $("#currentShowPage").val();

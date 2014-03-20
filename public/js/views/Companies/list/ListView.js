@@ -421,7 +421,22 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, contentColl
 						success:function(){
 							that.listLength--;
 							localCounter++;
+							var currentEl = that.$el;
+								common.buildAphabeticArray(that.collection, function (arr) {
 
+									$("#startLetter").remove();
+									that.alphabeticArray = arr;
+									currentEl.prepend(_.template(aphabeticTemplate, { alphabeticArray: that.alphabeticArray, selectedLetter: (that.selectedLetter == "" ? "All" : that.selectedLetter), allAlphabeticArray: that.allAlphabeticArray }));
+									var currentLetter = (that.filter) ? that.filter.letter : null
+									if (currentLetter) {
+										$('#startLetter a').each(function() {
+											var target = $(this);
+											if (target.text() == currentLetter) {
+												target.addClass("current");
+											}
+										});
+									}
+								});
 							if (index==count-1){
 								that.deleteCounter =localCounter;
 								that.deletePage = $("#currentShowPage").val();
