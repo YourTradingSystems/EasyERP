@@ -16,7 +16,7 @@
             Validation.checkGroupsNameField(errors, true, attrs.name, "Subject");
             Validation.checkNameField(errors, false, attrs.contactName.first, "Contact first name");
             Validation.checkNameField(errors, false, attrs.contactName.last, "Contact last name");
-            //Validation.checkNameField(errors, false, attrs.company.name, "Company");
+            Validation.checkGroupsNameField(errors, false, attrs.company.name, "Company");
             Validation.checkPhoneField(errors, false, attrs.phones.phone, "Phone");
             Validation.checkPhoneField(errors, false, attrs.phones.mobile, "Mobile");
             Validation.checkCountryCityStateField(errors, false, attrs.address.country, "Country");
