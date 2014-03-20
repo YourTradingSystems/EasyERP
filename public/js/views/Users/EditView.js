@@ -16,14 +16,14 @@
                 _.bindAll(this, "saveItem");
                 _.bindAll(this, "render", "deleteItem");
                 this.currentModel = (options.model) ? options.model : options.collection.getElement();
-				this.currentModel.urlRoot = "/Users";
+                this.currentModel.urlRoot = "/Users";
                 this.responseObj = {};
                 this.render();
             },
             events: {
                 "mouseenter .avatar": "showEdit",
                 "mouseleave .avatar": "hideEdit",
-				"click .current-selected": "showNewSelect",
+                "click .current-selected": "showNewSelect",
                 "click .newSelectList li:not(.miniStylePagination)": "chooseOption",
                 "click .newSelectList li.miniStylePagination": "notHide",
                 "click .newSelectList li.miniStylePagination .next:not(.disabled)": "nextSelect",
@@ -57,7 +57,7 @@
             showEdit: function () {
                 $(".upload").animate({
                     height: "20px",
-                    display:"block"
+                    display: "block"
                 }, 250);
 
             },
@@ -68,7 +68,7 @@
                 }, 250);
 
             },
-            
+
             saveItem: function () {
                 var self = this;
 
@@ -79,44 +79,45 @@
                     login: $('#login').val(),
                     profile: $('#profilesDd').data("id")
                 };
-
-                this.currentModel.save(data, {
+                this.currentModel.set(data);
+                this.currentModel.save(this.currentModel.changed, {
                     headers: {
                         mid: mid
                     },
-                    wait: true,
-                    success: function () {
+                    patch: true,
+                    success: function (model, response) {
                         self.hideDialog();
-                        Backbone.history.navigate("easyErp/" + self.contentType, { trigger: true });
+                        if (response && response.logout)
+                            window.location.pathname = '/logout';
+                        else
+                            Backbone.history.navigate("easyErp/" + self.contentType, { trigger: true });
                     },
                     error: function (model, xhr) {
-    					self.errorNotification(xhr);
+                        self.errorNotification(xhr);
                     },
-
-                    confirmPass: $('#confirmpassword').val(),
                     editMode: true
                 });
 
 
             },
-            deleteItem: function(event) {
+            deleteItem: function (event) {
                 var mid = 39;
                 event.preventDefault();
                 var self = this;
-                    var answer = confirm("Realy DELETE items ?!");
-                    if (answer == true) {
-                        this.currentModel.destroy({
-                            headers: {
-                                mid: mid
-                            },
-                            success: function () {
-                                $('.edit-dialog').remove();
-                                Backbone.history.navigate("easyErp/" + self.contentType, { trigger: true });
-                            },
-                            error: function (model, xhr) {
-    							self.errorNotification(xhr);
-                            }
-                        });
+                var answer = confirm("Realy DELETE items ?!");
+                if (answer == true) {
+                    this.currentModel.destroy({
+                        headers: {
+                            mid: mid
+                        },
+                        success: function () {
+                            $('.edit-dialog').remove();
+                            Backbone.history.navigate("easyErp/" + self.contentType, { trigger: true });
+                        },
+                        error: function (model, xhr) {
+                            self.errorNotification(xhr);
+                        }
+                    });
                 }
             },
 
@@ -127,28 +128,28 @@
                     dialogClass: "edit-dialog",
                     width: 600,
                     title: "Edit User",
-                    buttons:{
-                        save:{
-                            text:"Save",
-                            class:"btn",
+                    buttons: {
+                        save: {
+                            text: "Save",
+                            class: "btn",
                             click: self.saveItem
                         },
-                        cancel:{
-                            text:"Cancel",
-                            class:"btn",
-                            click: function(){
+                        cancel: {
+                            text: "Cancel",
+                            class: "btn",
+                            click: function () {
                                 self.hideDialog();
                             }
                         },
-                        delete:{
+                        delete: {
                             text: "Delete",
                             class: "btn",
                             click: self.deleteItem
                         }
                     }
                 });
-				populate.get("#profilesDd", "ProfilesForDd", {}, "profileName", this);
-//                common.populateProfilesDd("#profilesDd", "/ProfilesForDd", this.currentModel.toJSON());
+                populate.get("#profilesDd", "ProfilesForDd", {}, "profileName", this);
+                //                common.populateProfilesDd("#profilesDd", "/ProfilesForDd", this.currentModel.toJSON());
                 common.canvasDraw({ model: this.model.toJSON() }, this);
                 return this;
             }

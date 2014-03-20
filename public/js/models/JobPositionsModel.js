@@ -13,7 +13,7 @@
         validate: function(attrs){
             var errors = [];
 
-            Validation.checkNameField(errors, true, attrs.name, "Job name");
+            Validation.checkGroupsNameField(errors, true, attrs.name, "Job name");
             Validation.checkNumberField(errors, true, attrs.expectedRecruitment, "Expected in Recruitment");
 
             if(errors.length > 0)

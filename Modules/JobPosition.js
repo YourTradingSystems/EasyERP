@@ -356,12 +356,12 @@ var JobPosition = function (logWriter, mongoose, employee, department, models) {
                                 ]
                             }
                         },
-                        {
-                            $skip: (data.page - 1) * data.count
-                        },
-                        {
-                            $limit: parseInt(data.count)
-                        },
+                        //{
+                        //    $skip: (data.page - 1) * data.count
+                        //},
+                        //{
+                        //    $limit: parseInt(data.count)
+                        //},
                         {
                             $project: {
                                 _id: 1
@@ -369,6 +369,7 @@ var JobPosition = function (logWriter, mongoose, employee, department, models) {
                         },
                         function (err, result) {
                             if (!err) {
+                                console.log(result.length);
                                 var query = models.get(req.session.lastDb - 1, "JobPosition", jobPositionSchema).find().where('_id').in(result);
                                 console.log(data);
                                 if (data.sort && (!data.sort.totalForecastedEmployees && !data.sort.numberOfEmployees)) {
@@ -380,7 +381,9 @@ var JobPosition = function (logWriter, mongoose, employee, department, models) {
                                     populate('createdBy.user', 'login').
                                     populate('editedBy.user', 'login').
                                     populate('department', 'departmentName').
-									populate('workflow', 'name _id status').
+									populate('workflow', 'name _id').
+                                    skip((data.page - 1) * data.count).
+                                    limit(data.count).
                                     exec(function (error, _res) {
                                         if (!error) {
                                             res['data'] = _res;
@@ -394,7 +397,8 @@ var JobPosition = function (logWriter, mongoose, employee, department, models) {
                                                             console.log(err);
                                                             response.send(500, { error: 'Some error occured in JobPosition' });
                                                         }
-                                                        if (index === result.length - 1) {
+                                                        //if (index === result.length - 1) {
+                                                        if (index === data.count - 1 || ((result.length < data.count) && (index === result.length - 1))) {
                                                             if (data.sort && (data.sort.totalForecastedEmployees || data.sort.numberOfEmployees)) {
                                                                 for (var i in data.sort) {
                                                                     switch (i) {
@@ -442,8 +446,7 @@ var JobPosition = function (logWriter, mongoose, employee, department, models) {
                                                             }
                                                             response.send(res);
                                                         }
-                                                    }
-                                                    );
+                                                    });
                                                 });
                                             } else {
                                                 response.send(res);

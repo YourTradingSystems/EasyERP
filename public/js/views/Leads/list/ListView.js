@@ -213,7 +213,7 @@ define([
                     filter: filter,
                     newCollection: this.newCollection
                 }, function (response, context) {
-                    var page = context.page || 1;
+                    var page = 1;
                     context.listLength = response.count || 0;
                     context.pageElementRender(response.count, itemsNumber, page);//prototype in main.js
                 }, this);
@@ -371,7 +371,6 @@ define([
             //modified for filter Vasya
             //Added startNumber parameter to listItemView to show correct page index by Andrew
             showMoreContent: function (newModels) {
-                console.log('ShowMoreContent <><><><>>>>> ' + newModels.length);
                 var holder = this.$el;
                 holder.find("#listTable").empty();
                 //var startNumber = (this.collection.page - 2) * this.collection.namberToShow;

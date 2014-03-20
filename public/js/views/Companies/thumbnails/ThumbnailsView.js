@@ -77,7 +77,7 @@
                     if ($(e.target).text() == "All") {
                         selectedLetter = "";
                     }
-                    this.filter = this.filter || {};
+                    this.filter = (this.filter && this.filter !== 'empty') ? this.filter : {};
                     this.filter['letter'] = selectedLetter;
                     this.defaultItemsNumber = 0;
                     this.changeLocationHash(null, this.defaultItemsNumber, this.filter);
@@ -137,14 +137,17 @@
                 var showMore = holder.find('#showMoreDiv');
                 var created = holder.find('#timeRecivingDataFromServer');
                 this.defaultItemsNumber += newModels.length;
-                this.changeLocationHash(null, this.defaultItemsNumber, this.filter);
+                this.changeLocationHash(null, (this.defaultItemsNumber < 50) ? 50 : this.defaultItemsNumber, this.filter);
                 this.getTotalLength(this.defaultItemsNumber, this.filter);
 
                 if (showMore.length != 0) {
-                     showMore.before(this.template({  collection: this.collection.toJSON() }));
-                     showMore.after(created);
+                    showMore.before(this.template({ collection: this.collection.toJSON() }));
+                    $(".filter-check-list").eq(1).remove();
+
+                    showMore.after(created);
                 } else {
-                     content.html(this.template({ collection: this.collection.toJSON() }));
+                    content.html(this.template({ collection: this.collection.toJSON() }));
+
                 }
                 this.asyncLoadImgs(newModels);
             },
@@ -156,7 +159,7 @@
                 var showMore = holder.find('#showMoreDiv');
                 var content = holder.find(".thumbnailwithavatar");
                 this.defaultItemsNumber += newModels.length;
-                this.changeLocationHash(null, this.defaultItemsNumber, this.filter);
+                this.changeLocationHash(null, (this.defaultItemsNumber < 50) ? 50 : this.defaultItemsNumber, this.filter);
                 this.getTotalLength(this.defaultItemsNumber, this.filter);
                 holder.append(this.template({ collection: newModels.toJSON() }));
                 holder.prepend(alphaBet);

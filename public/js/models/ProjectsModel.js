@@ -15,8 +15,8 @@ define(['Validation', 'common'],
             validate: function (attrs) {
                 var errors = [];
 
-                Validation.checkNameField(errors, true, attrs.projectName, "Project name");
-                Validation.checkNameField(errors, true, attrs.projectShortDesc, "Short description");
+                Validation.checkGroupsNameField(errors, true, attrs.projectName, "Project name");
+                Validation.checkGroupsNameField(errors, true, attrs.projectShortDesc, "Short description");
 
                 if (errors.length > 0)
                     return errors;

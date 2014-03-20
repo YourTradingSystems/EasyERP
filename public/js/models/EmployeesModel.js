@@ -49,7 +49,7 @@
             Validation.checkCountryCityStateField(errors, false, attrs.homeAddress.state, "State");
             Validation.checkZipField(errors, false, attrs.homeAddress.zip, "Zip");
             Validation.checkStreetField(errors, false, attrs.homeAddress.street, "Street");
-            Validation.checkNameField(errors, true, attrs.department._id || attrs.department, "Department");
+
 
             if(errors.length > 0)
                 return errors;

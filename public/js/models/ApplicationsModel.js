@@ -45,7 +45,7 @@ function (common, Validation) {
             Validation.checkNameField(errors, true, attrs.name.last, "Last name");
             Validation.checkEmailField(errors, false, attrs.personalEmail, "Email");
 			if (attrs.department)
-            Validation.checkNameField(errors, true, attrs.department._id || attrs.department, "Department");
+            //Validation.checkNameField(errors, true, attrs.department._id || attrs.department, "Department");
             Validation.checkPhoneField(errors, false, attrs.workPhones.phone, "Phone");
             Validation.checkPhoneField(errors, false, attrs.workPhones.mobile, "Mobile");
             Validation.checkMoneyField(errors, false, attrs.expectedSalary, "Expected salary");

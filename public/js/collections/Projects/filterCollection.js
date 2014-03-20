@@ -12,7 +12,6 @@
             initialize: function (options) {
                 var that = this;
                 this.startTime = new Date();
-                this.namberToShow = options.count;
                 if (options && options.count) {
                     this.namberToShow = options.count;
                     this.count = options.count;

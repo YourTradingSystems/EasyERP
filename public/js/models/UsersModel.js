@@ -19,15 +19,12 @@ define(['Validation'],function (Validation) {
 
         validate: function(attrs, options){
             var errors = [];
-            if(options.editMode){
 	            Validation.checkLoginField(errors, true, attrs.login, "Login");
 	            Validation.checkEmailField(errors, false, attrs.email, "Email");
-            } else {
                 if (attrs.login) Validation.checkLoginField(errors, true, attrs.login, "Login");
-                Validation.checkPasswordField(errors, true, attrs.pass, "Password");
-                Validation.checkPasswordField(errors, true, options.confirmPass, "Confirm password");
+                if (attrs.pass)Validation.checkPasswordField(errors, true, attrs.pass, "Password");
+                if (attrs.confirmPass) Validation.checkPasswordField(errors, true, options.confirmPass, "Confirm password");
                 Validation.comparePasswords(errors, attrs.pass, options.confirmPass);
-            }
             if(errors.length > 0)
                 return errors;
         },

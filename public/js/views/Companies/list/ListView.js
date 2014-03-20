@@ -125,7 +125,7 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, contentColl
                 if ($(e.target).text() == "All") {
                     selectedLetter = "";
                 }
-                this.filter = this.filter || {};
+                this.filter = (this.filter && this.filter !== 'empty') ? this.filter : {};
                 this.filter['letter'] = selectedLetter;
                 var itemsNumber = $("#itemsNumber").text();
                 $("#top-bar-deleteBtn").hide();
@@ -150,7 +150,7 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, contentColl
                     filter: filter,
                     newCollection: this.newCollection
                 }, function (response, context) {
-                    var page = context.page || 1;
+                    var page = 1;
                     context.listLength = response.count || 0;
                     context.pageElementRender(response.count, itemsNumber, page);//prototype in main.js
                 }, this);

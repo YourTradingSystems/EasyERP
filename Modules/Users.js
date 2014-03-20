@@ -3,7 +3,6 @@ var Users = function (logWriter, mongoose, models, department) {
     var ObjectId = mongoose.Schema.Types.ObjectId;
     var newObjectId = mongoose.Types.ObjectId;
     var crypto = require('crypto');
-    var collection = 'Users';
 
     var userSchema = mongoose.Schema({
         imageSrc: { type: String, default: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAAAAACPAi4CAAAACXBIWXMAAABIAAAASABGyWs+AAAACXZwQWcAAABAAAAAQADq8/hgAAAEaElEQVRYw82X6XLbNhCA+f4PVomk5MRyHDtp63oEgDcl3vfRBQhQIEVKSvsnO+OxRBEfFnthV+n/pyi/NaCryzzL8rJu/wOgzQPXJBgjhDExnXPW/Aqgy30DI0yIwYQQ4Bhe2j0I6BIbI1jL9meC2TdkRu0jgMxCGN5H2HT8IIzjKPAdE9NngEjuAhqfv3rOpe3aIrDAFoB1qtuA3ADlMXKuz9vlLqZokt4CxPAOQXa2bPDCRVSJYB0QIDA4ibp+TVKDbuCvAeh6YpX9DWkcUGJCkAARXW9UfXeL0PmUcF4CZBA4cALv5nqQM+yD4mtATQMOGMi9RzghiKriCuBiAzsB1e8uwUUGtroZIAEsqfqHCI2JjdGZHNDSZzHYb0boQK4JOTVXNQFEoJXDPskEvrYTrJHgIwOdZEBrggXzfkbo+sY7Hp0Fx9bUYbUEAAtgV/waHAcCnOew3arbLy5lVXGSXIrKGQkrKKMLcnHsPjEGAla1PYi+/YCV37e7DRp1qUDjwREK1wjbo56hezRoPLxt9lzUg+m96Hvtz3BMcU9syQAxKBSJ/c2Nqv0Em5C/97q+BdGoEuoORN98CkAqzsAAPh690vdv2tOOEcx/dodP0zq+qjpoQQF7/Vno2UA0OgLQQbUZI6t/1+BlRgAlyywvqtNXja0HFQ7jGVwoUA0HUBNcMvRdpW8PpzDPYRAERfmNE/TDuE8Ajis4oJAiUwB2+g+am3YEEmT5kz4HgOdRygHUIPEMsFf/YvXJYoSKbPczQI4HwysSbKKBdk4dLAhJsptrUHK1lSERUDYD6E9pGLsjoXzRZgAIJVaYBCCfA57zMBoJYfV9CXDigHhRgww2Hgngh4UjnCUbJAs2CEdCkl25kbou5ABh0KkXPupA6IB8fOUF4TpFOs5Eg50eFSOBfOz0GYCWoJwDoJzwcjQBfM2rMAjD0CEsL/Qp4ISG/FHkuJ4A9toXv66KomosMMNAuAA6GxOWPwqP64sb3kTm7HX1Fbsued9BXjACZKNIphLz/FF4WIps6vqff+jaIFAONiBbTf1hDITti5RLg+cYoDOxqJFwxb0dXmT5Bn/Pn8wOh9dQnMASK4aaSGuk+G24DObCbm5XzkXs9RdASTuytUZO6Czdm2BCA2cSgNbIWedxk0AV4FVYEYFJpLK4SuA3DrsceQEQl6svXy33CKfxIrwAanqZBA8R4AAQWeUMwJ6CZ7t7BIh6utfos0uLwxqP7BECMaTUuQCoawhO+9sSUWtjs1kA9I1Fm8DoNiCl64nUCsp9Ym1SgncjoLoz7YTl9dNOtbGRYSAjWbMDNPKw3py0otNeufVYN2wvzha5g6iGzlTDebsfEdbtW9EsLOvYZs06Dmbsq4GjcoeBgThBWtRN2zZ1mYUuGZ7axfz9hZEns+mMQ+ckzIYm/gn+WQvWWRq6uoxuSNi4RWWAYGfRuCtjXx25Bh25MGaTFzaccCVX1wfPtkiCk+e6nh/ExXps/N6z80PyL8wPTYgPwzDiAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDExLTAxLTE5VDAzOjU5OjAwKzAxOjAwaFry6QAAACV0RVh0ZGF0ZTptb2RpZnkAMjAxMC0xMi0yMVQxNDozMDo0NCswMTowMGxOe/8AAAAZdEVYdFNvZnR3YXJlAEFkb2JlIEltYWdlUmVhZHlxyWU8AAAAAElFTkSuQmCC' },
@@ -19,15 +18,15 @@ var Users = function (logWriter, mongoose, models, department) {
         kanbanSettings: {
             opportunities: {
                 countPerPage: { type: Number, default: 10 },
-				foldWorkflows: [{ type: String, default: '' }]
+                foldWorkflows: [{ type: String, default: '' }]
             },
             applications: {
                 countPerPage: { type: Number, default: 10 },
-				foldWorkflows: [{ type: String, default: '' }]
+                foldWorkflows: [{ type: String, default: '' }]
             },
             tasks: {
                 countPerPage: { type: Number, default: 10 },
-				foldWorkflows: [{ type: String, default: '' }]
+                foldWorkflows: [{ type: String, default: '' }]
             }
         },
         RelatedEmployee: { type: ObjectId, ref: 'Employees', default: null }
@@ -37,14 +36,14 @@ var Users = function (logWriter, mongoose, models, department) {
 
     function getAllUserWithProfile(req, id, response) {
         var res = {};
-        var query = models.get(req.session.lastDb - 1, 'Users', userSchema).find({profile:id}, {_id:0, login:1});
+        var query = models.get(req.session.lastDb - 1, 'Users', userSchema).find({ profile: id }, { _id: 0, login: 1 });
         query.exec(function (err, result) {
             if (!err) {
                 res.count = result.length;
-                res.data = result.map(function(item){
-					return item.login;
-				});
-				res.isOwnProfile = res.data.indexOf(req.session.uName)!=-1;
+                res.data = result.map(function (item) {
+                    return item.login;
+                });
+                res.isOwnProfile = res.data.indexOf(req.session.uName) != -1;
                 response.send(res);
             } else {
                 logWriter.log("JobPosition.js getTotalCount JobPositions.find " + err);
@@ -189,9 +188,9 @@ var Users = function (logWriter, mongoose, models, department) {
                         }
                     }); //End find method
                 } else {
-					console.log("Incorect Incoming Data");
-					res.send(400);
-				}
+                    console.log("Incorect Incoming Data");
+                    res.send(400);
+                }
                 //End Validating input data for login
             }
             else {
@@ -229,10 +228,10 @@ var Users = function (logWriter, mongoose, models, department) {
 
     function getUsersForDd(req, response) {
         var res = {};
-		var data ={};
-		for (var i in req.query){
-			data[i]=req.query[i];
-		}
+        var data = {};
+        for (var i in req.query) {
+            data[i] = req.query[i];
+        }
         res['data'] = [];
         var query = models.get(req.session.lastDb - 1, 'Users', userSchema).find();
         query.select("_id login");
@@ -256,8 +255,8 @@ var Users = function (logWriter, mongoose, models, department) {
     function getUserById(req, id, response) {
         var query = models.get(req.session.lastDb - 1, 'Users', userSchema).findById(id);
         query.populate('profile');
-        query.populate('RelatedEmployee','imageSrc name');
-        
+        query.populate('RelatedEmployee', 'imageSrc name');
+
         query.exec(function (err, result) {
             if (err) {
                 console.log(err);
@@ -278,10 +277,10 @@ var Users = function (logWriter, mongoose, models, department) {
         }
         var query = models.get(req.session.lastDb - 1, 'Users', userSchema).find({}, { __v: 0, upass: 0 });
         if (data.sort) {
-                query.sort(data.sort);
-        }else{
-			query.sort({"lastAccess":-1});
-		}
+            query.sort(data.sort);
+        } else {
+            query.sort({ "lastAccess": -1 });
+        }
         query.populate('profile');
         query.skip((data.page - 1) * data.count).limit(data.count);
         query.exec(function (err, result) {
@@ -298,15 +297,15 @@ var Users = function (logWriter, mongoose, models, department) {
 
     function updateUser(req, _id, data, res, options) {
         try {
-            delete data._id;
-            var updateFields = {};
-            console.log(data);
+            //delete data._id;
+            //var updateFields = {};
+            //console.log(data);
+            //delete data.RelatedEmployee;
             if (options && options.changePass) {
                 delete data.login;
                 delete data.profile;
                 delete data.email;
                 delete data.imageSrc;
-                delete data.RelatedEmployee;
                 var shaSum = crypto.createHash('sha256');
                 shaSum.update(data.pass);
                 data.pass = shaSum.digest('hex');
@@ -331,25 +330,28 @@ var Users = function (logWriter, mongoose, models, department) {
                 });
             } else updateUser();
             function updateUser() {
-               // console.log("--->"+JSON.stringify(data, ""));
-                for (var i in data) {
-                    //commented condition to rewrite empty data
-                    // if (data[i]) {
-                        updateFields[i] = data[i];
-                    //}
-                }
+                // console.log("--->"+JSON.stringify(data, ""));
+                //for (var i in data) {
+                //    //commented condition to rewrite empty data
+                //    // if (data[i]) {
+                //        updateFields[i] = data[i];
+                //    //}
+                //}
 
-                var _object = { $set: updateFields };
+                //var _object = { $set: updateFields };
                 //console.log("--->"+JSON.stringify(_object, ""));
-                models.get(req.session.lastDb - 1, 'Users', userSchema).findByIdAndUpdate(_id, _object, function (err, result) {
+                models.get(req.session.lastDb - 1, 'Users', userSchema).findByIdAndUpdate(_id, { $set: data }, function (err, result) {
 
                     if (err) {
                         console.log(err);
                         logWriter.log("User.js update profile.update" + err);
-                        res.send(500, { error: 'User.update BD error' });
+                        res.send(500, { error: 'User.update DB error' });
                     } else {
                         req.session.kanbanSettings = result.kanbanSettings;
-                        res.send(200, { success: 'User updated success' });
+                        if (data.profile && (result._id == req.session.uId))
+                            res.send(200, { success: 'User updated success', logout: true });
+                        else
+                            res.send(200, { success: 'User updated success' });
                     }
                 });
             }
@@ -362,25 +364,25 @@ var Users = function (logWriter, mongoose, models, department) {
     }
 
     function removeUser(req, _id, res) {
-		if (req.session.uId == _id){
+        if (req.session.uId == _id) {
             res.send(400, { error: 'You cannot delete current user' });
-		}
-		else
-        models.get(req.session.lastDb - 1, 'Users', userSchema).remove({ _id: _id }, function (err, result) {
-            if (err) {
-                console.log(err);
-                logWriter.log("Users.js remove user.remove " + err);
-				res.send(500, { error: 'User.remove BD error' });
+        }
+        else
+            models.get(req.session.lastDb - 1, 'Users', userSchema).remove({ _id: _id }, function (err, result) {
+                if (err) {
+                    console.log(err);
+                    logWriter.log("Users.js remove user.remove " + err);
+                    res.send(500, { error: 'User.remove BD error' });
 
-            } else {
-                res.send(200, { success: 'User remove success' });
-            }
-        });
+                } else {
+                    res.send(200, { success: 'User remove success' });
+                }
+            });
     }
 
     return {
-		getAllUserWithProfile:getAllUserWithProfile,
-		
+        getAllUserWithProfile: getAllUserWithProfile,
+
         getTotalCount: getTotalCount,
 
         createUser: createUser,
