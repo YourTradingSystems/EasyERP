@@ -271,7 +271,7 @@ define([
                     title: "Create Employee",
                     buttons:{
                         save:{
-                            text: "Save",
+                            text: "Create",
                             class: "btn",
                             click: self.saveItem
                         },

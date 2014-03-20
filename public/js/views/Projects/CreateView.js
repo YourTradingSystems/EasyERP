@@ -169,7 +169,7 @@ define([
                     title: "Create Project",
                     buttons: {
                         save: {
-                            text: "Save",
+                            text: "Create",
                             class: "btn",
                             click: function () {
                                 self.saveItem();
