@@ -407,6 +407,9 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                 if (data.jobType) {
                     _employee.jobType = data.jobType;
                 }
+                if (data.nationality) {
+                    _employee.nationality = data.nationality;
+                }
                 ///////////////////////////////////////////////////
                 event.emit('updateSequence', models.get(req.session.lastDb - 1, "Employees", employeeSchema), "sequence", 0, 0, _employee.workflow, _employee.workflow, true, false, function (sequence) {
                     _employee.sequence = sequence;

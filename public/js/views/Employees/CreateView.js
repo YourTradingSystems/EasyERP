@@ -190,7 +190,7 @@ define([
                 var manager = $("#projectManagerDD").data("id");
                 var coach = $("#coachDd").data("id");
                 var identNo = $.trim($("#identNo").val());
-
+				var nationality =  $("#nationality").data("id");
                 var passportNo = $.trim($("#passportNo").val());
                 var bankAccountNo = $.trim($("#bankAccountNo").val());
                 var otherId = $.trim($("#otherId").val());
@@ -241,6 +241,7 @@ define([
                     dateBirth: dateBirthSt,
                     active: active,
                     source:sourceId,
+					nationality:nationality,
                     groups: {
 						owner: $("#allUsersSelect").data("id"),
                         users: usersId,
@@ -299,6 +300,7 @@ define([
                 );
 
 				populate.get("#jobTypeDd", "/jobType", {}, "name", this, true);
+				populate.get("#nationality", "/nationality", {}, "_id", this, true);
                 populate.get2name("#projectManagerDD", "/getPersonsForDd", {}, this, true);
 				populate.get("#jobPositionDd", "/JobPositionForDd", {}, "name", this, true, true);
 				populate.get("#relatedUsersDd", "/UsersForDd", {}, "login", this, true, true);
