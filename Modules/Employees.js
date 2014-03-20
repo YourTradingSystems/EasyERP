@@ -961,7 +961,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
         } else {
             models.get(req.session.lastDb - 1, 'Employees', employeeSchema).findByIdAndUpdate(_id, { $set: updateObject }, function (err, result) {
                 if (!err) {
-                    if (updateObject.dateBirth || updateObject.contractEnd) {
+                    if (updateObject.dateBirth || updateObject.contractEnd || updateObject.hired) {
                         event.emit('recalculate', req);
                     }
                     if (fileName) {

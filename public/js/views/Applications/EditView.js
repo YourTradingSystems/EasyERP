@@ -53,6 +53,7 @@
                 this.currentModel.save({
                     workflow: id
                 }, {
+                    patch: true,
                     success: function (model) {
 						model = model.toJSON();
 						var viewType = custom.getCurrentVT();
@@ -87,7 +88,8 @@
             isEmployee: function (e) {
 				e.preventDefault();
             	this.currentModel.save({
-                    isEmployee: true
+            	    isEmployee: true,
+            	    hired: true // for recalculate Birtdays only
                 }, {
                     headers: {
                         mid: 39
