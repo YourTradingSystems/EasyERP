@@ -469,7 +469,6 @@ require(['app'], function (app) {
     };
 
     Backbone.View.prototype.deleteRender = function (deleteCounter, deletePage, dataObject) {
-        console.log('deleteRender: deleteCounter=' + deleteCounter + '  this.collectionLength=' + this.collectionLength);
         this.startTime = new Date();
         $("#top-bar-deleteBtn").hide();
         var itemsNumber = parseInt($("#itemsNumber").text());

@@ -150,7 +150,7 @@ define([
                         active: $('#isActiveInput').is('checked')
                     },
                     groups: {
-                        owner: $("#allUsers").val(),
+                        owner: $("#allUsersSelect").data("id"),
                         users: usersId,
                         group: groupsId
                     },

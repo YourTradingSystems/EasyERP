@@ -130,7 +130,7 @@ define([
                     projecttype: projecttype ? projecttype : "",
                     description: description,
                     groups: {
-                        owner: $("#allUsers").val(),
+						owner: $("#allUsersSelect").data("id"),
                         users: usersId,
                         group: groupsId
                     },
@@ -190,6 +190,7 @@ define([
 						url:"/uploadProjectsFiles",
 						isCreate:true
                     });
+                notDiv.append(this.attachView.render().el);
 
 				notDiv = this.$el.find('.assignees-container');
                 notDiv.append(
@@ -197,7 +198,6 @@ define([
                         model: this.currentModel,
                     }).render().el
                 );
-                notDiv.append(this.attachView.render().el);
                 populate.get("#projectTypeDD", "/projectType", {}, "name", this, true, true);
                 populate.get2name("#projectManagerDD", "/getPersonsForDd", {}, this, true);
                 populate.get2name("#customerDd", "/Customer", {}, this, true, true);

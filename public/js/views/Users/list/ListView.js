@@ -279,21 +279,25 @@ define([
                 }
             },
             deleteItemsRender: function (deleteCounter, deletePage) {
+                $('#check_all').prop('checked', false);
                 dataService.getData('/totalCollectionLength/Users', {
                     newCollection: this.newCollection
-                },
-                    function (response, context) {
-                        context.listLength = response.count || 0;
-                    }, this);
+                }, function (response, context) {
+                    context.listLength = response.count || 0;
+                }, this);
+                
                 this.deleteRender(deleteCounter, deletePage, {
                     newCollection: this.newCollection
                 });
+                
                 if (deleteCounter !== this.collectionLength) {
                     var holder = this.$el;
                     var created = holder.find('#timeRecivingDataFromServer');
                     created.before(new listItemView({ collection: this.collection, page: holder.find("#currentShowPage").val(), itemsNumber: holder.find("span#itemsNumber").text() }).render());
                 }
+                
                 var pagenation = this.$el.find('.pagination');
+                
                 if (this.collection.length === 0) {
                     pagenation.hide();
                 } else {
@@ -314,11 +318,12 @@ define([
                             mid: mid
                         },
                         wait: true,
-                        success: function () {
+                        success: function (model) {
                             that.listLength--;
                             localCounter++;
-
-                            if (index == count - 1) {
+                            count--;
+                            that.$el.find('#listTable [data-id=' + model.id + ']').remove();
+                            if (count === 0) {
                                 that.deleteCounter = localCounter;
                                 that.deletePage = $("#currentShowPage").val();
                                 that.deleteItemsRender(that.deleteCounter, that.deletePage);
@@ -327,11 +332,9 @@ define([
                         },
                         error: function (model, res) {
                             alert(JSON.parse(res.responseText).error);
-                            $(checkbox).prop("checked", false);
                             that.listLength--;
-                            localCounter++;
                             count--;
-                            if (index == count - 1) {
+                            if (count === 0) {
                                 that.deleteCounter = localCounter;
                                 that.deletePage = $("#currentShowPage").val();
                                 that.deleteItemsRender(that.deleteCounter, that.deletePage);

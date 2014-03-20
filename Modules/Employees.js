@@ -894,7 +894,8 @@ var Employee = function (logWriter, mongoose, event, department, models) {
 			populate('createdBy.user').
             populate('editedBy.user').
             populate('groups.users').
-            populate('groups.group');
+            populate('groups.group').
+            populate('groups.owner','_id login');
 
         query.exec(function (err, findedEmployee) {
             if (err) {
