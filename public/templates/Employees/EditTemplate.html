@@ -111,10 +111,7 @@
 				<dl class="edit-employee-info">
                   <dt><label for="bankAccountNo">Bank Account №</label></dt>
                   <dd>
-					<a id="bankAccountNo" data-id="<%=model.bankAccountNo?model.bankAccountNo:''%>" class="current-selected" href="javascript:;"><%=model.bankAccountNo?(model.bankAccountNo):'Select'%></a>
-					<ul class="newSelectList hidden">
-                      <li id="">Select</li>
-					</ul>
+                    <input type="text" id="bankAccountNo" name="bankAccountNo" value="<%=model.bankAccountNo?model.bankAccountNo:''%>">
                   </dd>
                   <dt><label for="otherId">Other Id</label></dt><dd><input type="text" name="otherId" id="otherId" value="<%=model.otherId%>" required maxlength="32"/></dd>
 				</dl>

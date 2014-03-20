@@ -192,6 +192,7 @@ define([
                 var identNo = $.trim($("#identNo").val());
 
                 var passportNo = $.trim($("#passportNo").val());
+                var bankAccountNo = $.trim($("#bankAccountNo").val());
                 var otherId = $.trim($("#otherId").val());
                 var homeAddress = {};
                 $("dd").find(".homeAddress").each(function () {
@@ -230,6 +231,7 @@ define([
                     relatedUser: relatedUser ? relatedUser : "",
                     department: department,
                     jobPosition: jobPosition? jobPosition : "",
+                    bankAccountNo:bankAccountNo,
                     manager: manager ? manager : "",
                     coach: coach ? coach : "",
                     identNo: identNo,

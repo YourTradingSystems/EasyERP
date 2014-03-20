@@ -209,6 +209,7 @@ define([
                         mobile: $.trim(this.$el.find("#mobile").val())
                     },
                     officeLocation: $.trim(this.$el.find("#officeLocation").val()),
+                    bankAccountNo : $.trim($("#bankAccountNo").val()),
                     relatedUser: relatedUser,
                     department: department,
                     jobPosition: jobPosition,
@@ -331,7 +332,7 @@ define([
                     changeMonth : true,
                     changeYear : true,
                     yearRange: '-100y:c+nn',
-                    maxDate: '-1d'
+                    maxDate: '-18y'
                     //onChangeMonthYear: function (year, month) {
                     //    var target = $(this);
                     //    var day = target.val().split('/')[0];
