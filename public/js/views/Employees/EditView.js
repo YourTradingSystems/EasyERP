@@ -184,7 +184,7 @@ define([
 
                 });
                 var whoCanRW = this.$el.find("[name='whoCanRW']:checked").val();
-
+				var nationality =  $("#nationality").data("id");
                 var data = {
                     name: {
                         first: $.trim(this.$el.find("#first").val()),
@@ -223,6 +223,7 @@ define([
                     active: active,
                     source: sourceId,
                     imageSrc: this.imageSrc,
+					nationality:nationality,
                     groups: {
 						owner: $("#allUsersSelect").data("id"),
                         users: usersId,
@@ -320,6 +321,7 @@ define([
                     $('.endContractReasonList').attr('data-id', workflow[0]._id);
                 });
 				populate.get("#jobTypeDd", "/jobType", {}, "name", this);
+				populate.get("#nationality", "/nationality", {}, "_id", this);
                 populate.get2name("#projectManagerDD", "/getPersonsForDd", {}, this);
 				populate.get("#jobPositionDd", "/JobPositionForDd", {}, "name", this, false, true);
 				populate.get("#relatedUsersDd", "/UsersForDd", {}, "login", this, false, true);

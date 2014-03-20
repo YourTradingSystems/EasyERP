@@ -986,6 +986,10 @@ app.get('/getCompaniesAlphabet', function (req, res) {
 });
 
 //------------------JobPositions---------------------------------------------------
+app.get('/nationality', function (req, res) {
+    requestHandler.getNationality(req, res);
+});
+
 app.get('/jobType', function (req, res) {
     requestHandler.getJobType(req, res);
 });
