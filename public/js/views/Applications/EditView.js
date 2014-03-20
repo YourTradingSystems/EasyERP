@@ -218,7 +218,8 @@
                     department: department,
                     jobPosition: jobPositionId,
                     expectedSalary: $.trim(this.$el.find("#expectedSalary").val()),
-                    proposedSalary: $.trim(this.$el.find("#proposedSalary").val()),
+                    //proposedSalary: $.trim(this.$el.find("#proposedSalary").val()),
+                    proposedSalary: parseInt($.trim(this.$el.find("#proposedSalary").val()), 10),     //Masalovych bag 812
                     tags: $.trim(this.$el.find("#tags").val()).split(','),
                     otherInfo: this.$el.find("#otherInfo").val(),
                     groups: {
