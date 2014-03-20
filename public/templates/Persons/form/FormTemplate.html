@@ -2,7 +2,7 @@
     <div class="formLeftColumn">
         <form class="form notDialog" id="createEmployeeForm" data-id="<%=_id%>">
             <div class="formTitle withMargin">
-                <h3>Details</h3> 
+                <h3>Details</h3>
             </div>
             <div class="inner overflovHidden">
                 <div class="avatar-wrapper left">
@@ -27,17 +27,17 @@
                     <div class="half-block left">
 
                         <dl class="customer-info">
-                          <dt><span>Job Position </span></dt>
+                            <dt><span>Job Position </span></dt>
                             <dd id="jobPosition" class="editable" title="<%=jobPosition%>"><span class="no-long" data-maxlength="32"><%=jobPosition%></span></dd>
-                          <dt><span>Date of Birth </span></dt>
-                          <dd id="dateBirth" class="editable"><span class="no-long" data-maxlength="32"><%=dateBirth%></span></dd>
-                          <dt><span>Email</span></dt>
+                            <dt><span>Date of Birth </span></dt>
+                            <dd id="dateBirth" class="editable"><span class="no-long" data-maxlength="32"><%=dateBirth%></span></dd>
+                            <dt><span>Email</span></dt>
                             <dd id="email" class="editable"><a id="email" data-maxlength="48" class="no-long" href="mailto:<%=email%>" title="<%=email%>"><%=email%></a></dd>
-                          <dt><span>Skype</span></dt>
+                            <dt><span>Skype</span></dt>
                             <dd id="skype" class="editable" title="<%=skype%>"><a class="no-long" id="skype" data-maxlength="32" href="skype:<%=skype%>?call"><%=skype%></a></dd>
-                          <dt><span>Phone</span></dt>
+                            <dt><span>Phone</span></dt>
                             <dd id="phones_phone" class="editable" title="<%=phones.phone%>"><a class="no-long" id="phones_phone" data-maxlength="32" href="skype:<%=phones.phone%>?call"><%=phones.phone%></a></dd>
-                          <dt><span>Mobile</span></dt>
+                            <dt><span>Mobile</span></dt>
                             <dd id="phones_mobile" class="editable" title="<%=phones.mobile%>"><a class="no-long" data-maxlength="32" id="phones_mobile" href="skype:<%=phones.mobile%>?call"><%=phones.mobile%></a></dd>
                         </dl>
 
@@ -45,19 +45,19 @@
                     <div class="half-block left">
 
                         <dl class="customer-info">
-                          <dt><span>Street</span></dt>
+                            <dt><span>Street</span></dt>
                             <dd id="address_street" class="editable" title="<%=address.street%>"> <span class="no-long" data-maxlength="32"><%=address.street%></span></dd>
 
-                          <dt><span>City</span></dt>
+                            <dt><span>City</span></dt>
                             <dd id="address_city" class="editable" title="<%=address.city%>"><span class="no-long" data-maxlength="32"><%=address.city%></span></dd>
 
-                          <dt><span>State</span></dt>
+                            <dt><span>State</span></dt>
                             <dd id="address_state" class="editable" title="<%=address.state%>"><span class="no-long" data-maxlength="32"><%=address.state%></span></dd>
 
-                          <dt><span>Zip</span></dt>
+                            <dt><span>Zip</span></dt>
                             <dd id="address_zip" class="editable" title="<%=address.zip%>"><span class="no-long" data-maxlength="32"><%=address.zip%></span></dd>
 
-                          <dt><span>Country</span></dt>
+                            <dt><span>Country</span></dt>
                             <dd id="address_country" class="editable" title="<%=address.country%>"><span class="no-long" data-maxlength="32"><%=address.country%></span></dd>
                         </dl>
                     </div>
@@ -68,18 +68,12 @@
                     <p style="text-align:center;"><%if(editedBy.date){%><span style="font-style: italic;">Last Edited <%=editedBy.date%> by <%=editedBy.user ?  editedBy.user.login:""%></span>| <%}%><span style="font-style: italic;">Created On <%=createdBy.date %> by <%=createdBy.user ? createdBy.user.login:""%></span></p>
                 </div>
                 <div class="clearfix"></div>
-   <!--             <div class="details right person">...</div> -->
-
-
                 <div class="clearfix"></div>
                 <div id="details" class="person-details">
                     <div class="half-block left">
                         <dl class="customer-info">
                             <dt>Website </dt>
                             <dd id="website" class="editable" title="<%=website%>"><%=website%></dd>
-                         
-<!--                            <dt>Title </dt>
-                            <dd id="title" class="editable" title="<%=title%>"><%=title%></dd>-->
                         </dl>
                     </div>
                     <div class="half-block left">
@@ -87,26 +81,7 @@
 
                             <dt>Fax </dt>
                             <dd id="phones_fax" class="editable" title="<%=phones.fax%>"><%=phones.fax%></dd>
-<!--                            <dt>Title </dt>
-                            <dd id="title" class="editable" title="<%=title%>"><%=title%></dd>-->
                         </dl>
-<!--                        <div class="sale-purchase">
-                            <span>Sales & Purchases</span>
-                            <dl class="customer-info">
-                                <dt>Customer </dt>
-                                <dd id="salesPurchases_isCustomer" class="with-checkbox">
-                                    <input class="left" type="checkbox" <%=((salesPurchases.isCustomer)? 'checked' : '') %>/>
-                                </dd>
-                                <dt>Supplier </dt>
-                                <dd id="salesPurchases_isSupplier" class="with-checkbox">
-                                    <input class="left" type="checkbox" <%=((salesPurchases.isSupplier)? 'checked' : '') %>/>
-                                </dd>
-                                <dt>Active </dt>
-                                <dd id="salesPurchases_active" class="with-checkbox">
-                                    <input class="left" type="checkbox" <%=((salesPurchases.active)? 'checked' : '') %> />
-                                </dd>
-                            </dl>
-                        </div>-->
                     </div>
                     <div class="clearfix"></div>
                 </div>
