@@ -32,6 +32,7 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, contentColl
             this.page = options.collection.page;
             this.render();
             this.getTotalLength(null, this.defaultItemsNumber, this.filter);
+            this.contentCollection = contentCollection;
         },
 
         events: {
@@ -395,12 +396,6 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, contentColl
                 newCollection: this.newCollection,
                 parrentContentId: this.parrentContentId
             });
-            
-            if (deleteCounter !== this.collectionLength) {
-                var holder = this.$el;
-                var created = holder.find('#timeRecivingDataFromServer');
-                created.before(new listItemView({ collection: this.collection, page: holder.find("#currentShowPage").val(), itemsNumber: holder.find("span#itemsNumber").text() }).render());
-            }
             
             var pagenation = this.$el.find('.pagination');
             

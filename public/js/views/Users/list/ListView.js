@@ -28,6 +28,7 @@ define([
                 this.sort = options.sort;
                 this.render();
                 this.getTotalLength(null, this.defaultItemsNumber);
+                this.contentCollection = contentCollection;
             },
 
             events: {
@@ -290,12 +291,6 @@ define([
                     newCollection: this.newCollection
                 });
                 
-                if (deleteCounter !== this.collectionLength) {
-                    var holder = this.$el;
-                    var created = holder.find('#timeRecivingDataFromServer');
-                    created.before(new listItemView({ collection: this.collection, page: holder.find("#currentShowPage").val(), itemsNumber: holder.find("span#itemsNumber").text() }).render());
-                }
-                
                 var pagenation = this.$el.find('.pagination');
                 
                 if (this.collection.length === 0) {
@@ -318,11 +313,10 @@ define([
                             mid: mid
                         },
                         wait: true,
-                        success: function (model) {
+                        success: function () {
                             that.listLength--;
                             localCounter++;
                             count--;
-                            that.$el.find('#listTable [data-id=' + model.id + ']').remove();
                             if (count === 0) {
                                 that.deleteCounter = localCounter;
                                 that.deletePage = $("#currentShowPage").val();

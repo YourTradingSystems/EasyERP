@@ -473,7 +473,7 @@ require(['app'], function (app) {
         $("#top-bar-deleteBtn").hide();
         var itemsNumber = parseInt($("#itemsNumber").text());
         var pageNumber;
-        if (deleteCounter == this.collectionLength) {
+        if (deleteCounter === this.collectionLength) {
             pageNumber = Math.ceil(this.listLength / itemsNumber);
             if (deletePage > 1) {
                 deletePage = deletePage - 1;
@@ -544,13 +544,27 @@ require(['app'], function (app) {
                     page: deletePage
                 };
                 if (dataObject) _.extend(serchObject, dataObject);
-                console.log('triger showMore');
                 this.collection.showMore(serchObject);
                 this.changeLocationHash(deletePage, itemsNumber);
             }
             $('#check_all').prop('checked', false);
         } else {
-            $("#listTable").empty();
+            var newFetchModels = new this.contentCollection({
+                viewType: 'list',
+                sort: this.sort,
+                page: this.page,
+                count: this.defaultItemsNumber,
+                filter: this.filter,
+                parrentContentId: this.parrentContentId,
+                contentType: this.contentType,
+                newCollection: this.newCollection
+            });
+            var that = this;
+            newFetchModels.bind('reset', function () {
+                that.collection.add(newFetchModels.models, { merge: true });
+                that.showMoreContent(that.collection);//added two parameters page and items number
+            });
+            
             $("#grid-start").text((deletePage - 1) * itemsNumber + 1);
             if (itemsNumber === this.collectionLength)
                 $("#grid-end").text(itemsNumber);
@@ -614,8 +628,9 @@ require(['app'], function (app) {
                 $("#firstShowPage").prop("disabled", true);
                 $("#lastShowPage").prop("disabled", true);
             }
-            $('#timeRecivingDataFromServer').remove();
-            this.$el.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
+            
+            //$('#timeRecivingDataFromServer').remove();
+            //this.$el.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
         }
     };
 

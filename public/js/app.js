@@ -4,11 +4,11 @@ define([
    'communication',
    'custom'
 ], function (Router, Communication, Custom) {
-    var initialize = function(){
+    var initialize = function () {
         var appRouter = new Router();
-    	Communication.checkLogin(Custom.runApplication);
+        Communication.checkLogin(Custom.runApplication);
     };
-    var applyDefaults = function(){
+    var applyDefaults = function () {
         $.datepicker.setDefaults({
             //dateFormat:"dd/mm/yy"
             firstDay: 1
@@ -23,19 +23,19 @@ define([
         }
         //add startsWith function to strings
         if (typeof String.prototype.startsWith != 'function') {
-            String.prototype.startsWith = function (str){
-				if (str=="All") return true;
-				if (str=="0-9")	return !isNaN(parseInt(this[0]));
+            String.prototype.startsWith = function (str) {
+                if (str == "All") return true;
+                if (str == "0-9") return !isNaN(parseInt(this[0]));
                 return this.indexOf(str) == 0;
             };
         }
 
         $.extend($.ui.dialog.prototype.options, {
-            modal:true,
+            modal: true,
             resizable: false,
-            draggable:true,
-            autoOpen:true,
-            width:700
+            draggable: true,
+            autoOpen: true,
+            width: 700
         });
         $.datepicker.setDefaults({
             dateFormat: "d M, yy",
@@ -66,7 +66,7 @@ define([
                         break;
                     case 12: mon = 'Dec';
                         break;
-            };
+                };
                 var target = $(this);
                 var day = target.val().split(' ')[0] || '01';
                 target.val(day + ' ' + mon + ', ' + year);
@@ -76,6 +76,6 @@ define([
 
     return {
         initialize: initialize,
-        applyDefaults:applyDefaults
+        applyDefaults: applyDefaults
     }
 });

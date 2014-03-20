@@ -37,6 +37,8 @@ define([
                 this.page = options.collection.page;
                 this.render();
                 this.getTotalLength(null, this.defaultItemsNumber, this.filter);
+                //for main.js used in delete render 
+                this.contentCollection = contentCollection;
             },
 
             events: {
@@ -427,27 +429,7 @@ define([
                     contentType: this.contentType,
                     newCollection: this.newCollection
                 });
-
-                if (deleteCounter !== this.collectionLength) {
-                    var holder = this.$el;
-                    var created = holder.find('#timeRecivingDataFromServer');
-                    var newFetchModels = new contentCollection({
-                        viewType: 'list',
-                        sort: this.sortObject,
-                        page: this.page,
-                        count: this.defaultItemsNumber,
-                        filter: this.filter,
-                        parrentContentId: this.parrentContentId,
-                        contentType: this.contentType,
-                        newCollection: this.newCollection
-                    });
-                    var that = this;
-                    newFetchModels.bind('reset', function () {
-                        that.collection.add(newFetchModels.models, { merge: true });
-                        created.before(new listItemView({ collection: that.collection, page: holder.find("#currentShowPage").val(), itemsNumber: holder.find("span#itemsNumber").text() }).render());//added two parameters page and items number
-                    });  
-                }
-
+                
                 var pagenation = this.$el.find('.pagination');
                 if (this.collection.length === 0) {
                     pagenation.hide();
@@ -455,6 +437,7 @@ define([
                     pagenation.show();
                 }
             },
+            
             deleteItems: function () {
                 var that = this;
                 var mid = 39;
@@ -477,7 +460,6 @@ define([
                                 that.deleteCounter = localCounter;
                                 that.deletePage = $("#currentShowPage").val();
                                 that.deleteItemsRender(that.deleteCounter, that.deletePage);
-
                             }
                         },
                         error: function (model, res) {
