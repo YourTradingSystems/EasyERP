@@ -3,9 +3,10 @@ define([
     "text!templates/myProfile/ChangePassword.html",
     'common',
     "models/UsersModel",
-    'dataService'
+    'dataService',
+	"populate"
 ],
-    function (UsersPagesTemplate, ChangePassword, common, UsersModel, dataService) {
+    function (UsersPagesTemplate, ChangePassword, common, UsersModel, dataService, populate) {
         var ContentView = Backbone.View.extend({
             el: '#content-holder',
             contentType: "myProfile",
@@ -15,6 +16,7 @@ define([
             initialize: function (options) {
                 this.startTime = options.startTime;
                 this.render();
+				this.responseObj = {};
             },
             events: {
                 "click .changePassword": "changePassword",
@@ -22,8 +24,38 @@ define([
                 "mouseleave .avatar": "hideEdit",
                 "click #resetBtn": "resetForm",
                 "click #saveBtn": "save",
-                "click #RelatedEmployee li > a": "gotoEmployeesForm"
+                "click #RelatedEmployee li > a": "gotoEmployeesForm",
+                "click": "hideNewSelect",
+                "click .current-selected": "showNewSelect",
+				"click .newSelectList li:not(.miniStylePagination)": "chooseOption",
+                "click .newSelectList li.miniStylePagination": "notHide",
+                "click .newSelectList li.miniStylePagination .next:not(.disabled)": "nextSelect",
+                "click .newSelectList li.miniStylePagination .prev:not(.disabled)": "prevSelect"
+         
             },
+            showNewSelect:function(e,prev,next){
+                populate.showSelect(e,prev,next,this);
+                return false;
+                
+            },
+            hideNewSelect: function () {
+                $(".newSelectList").hide();
+            },
+            notHide: function () {
+				return false;
+            },
+            hideNewSelect: function () {
+                $(".newSelectList").hide();
+            },
+            chooseOption: function (e) {
+                $(e.target).parents("dd").find(".current-selected").text($(e.target).text()).attr("data-id",$(e.target).attr("id"));
+            },
+			nextSelect:function(e){
+				this.showNewSelect(e,false,true);
+			},
+			prevSelect:function(e){
+				this.showNewSelect(e,true,false);
+			},
 
             changePassword: function (e) {
                 e.preventDefault();

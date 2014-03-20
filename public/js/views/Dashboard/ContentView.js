@@ -438,22 +438,59 @@ define([
 							   .attr("style", "text-anchor:end;")
 							   .attr("y", "2")
 					   }
-					   if (self.dateRange=="365"){
-						   chart.append("g")
-							   .attr("class", "x axis")
-							   .attr("transform", "translate(0," + height + ")")
-							   .call(xAxis)
-							   .selectAll("text")
-							   .attr("transform","rotate(-90)")
-							   .attr("x", function(d,i){
-								   if (i%5!=0){
-									   return 1000;
-								   }
-								   return -10;
-							   })
-							   .attr("y", "2")
-							   .attr("style", "text-anchor:end;")
-					   }
+						   if (self.dateRange=="365"){
+							   if (width>1350){
+								   chart.append("g")
+									   .attr("class", "x axis")
+									   .attr("transform", "translate(0," + height + ")")
+									   .call(xAxis)
+									   .selectAll("text")
+									   .attr("transform","rotate(-90)")
+									   .attr("x", function(d,i){
+										   if (i%5!=0){
+											   return 1000;
+										   }
+										   return -10;
+									   })
+									   .attr("y", "2")
+									   .attr("style", "text-anchor:end;")
+								   
+							   }
+							   if (width>1200&&width<1350){
+								   chart.append("g")
+									   .attr("class", "x axis")
+									   .attr("transform", "translate(0," + height + ")")
+									   .call(xAxis)
+									   .selectAll("text")
+									   .attr("transform","rotate(-60)")
+									   .attr("x", function(d,i){
+										   if (i%7!=0){
+											   return 1000;
+										   }
+										   return -10;
+									   })
+									   .attr("y", "2")
+									   .attr("style", "text-anchor:end;")
+								   
+							   }
+							   if (width<1200){
+								   chart.append("g")
+									   .attr("class", "x axis")
+									   .attr("transform", "translate(0," + height + ")")
+									   .call(xAxis)
+									   .selectAll("text")
+									   .attr("transform","rotate(-60)")
+									   .attr("x", function(d,i){
+										   if (i%20!=0){
+											   return 1000;
+										   }
+										   return -10;
+									   })
+									   .attr("y", "2")
+									   .attr("style", "text-anchor:end;")
+								   
+							   }
+						   }
 					   }
 
                        chart.append("g")

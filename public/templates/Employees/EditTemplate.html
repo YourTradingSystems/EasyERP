@@ -98,9 +98,10 @@
 				<dl class="edit-employee-info">
                   <dt><label for="nationality">Nationality</label></dt>
                   <dd>
-					<select id="nationality">
-                      <option selected="selected" value="0">Select...</option>
-					</select>
+				  <a id="nationality" data-id="" class="current-selected" href="javascript:;">Select</a>
+				  <ul class="newSelectList hidden">
+                    <li id="">Select</li>
+				  </ul>
                   </dd>
                   <dt><label for="identNo">Identification №</label></dt><dd><input type="text" name="identNo" id="identNo" value="<%=model.identNo%>" required maxlength="32"/></dd>
                   <dt><label for="passportNo">Passport №</label></dt><dd><input type="text" name="passportNo" id="passportNo" value="<%=model.passportNo%>" required maxlength="32"/></dd>
