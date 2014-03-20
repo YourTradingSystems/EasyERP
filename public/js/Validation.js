@@ -10,7 +10,7 @@ define(
             workflowRegExp = /^[a-zA-Z0-9\s]{2,100}$/,
             invalidCharsRegExp = /[~<>\^\*₴]/,
             countryRegExp = /[a-zA-Z\s-]+/,
-            zipRegExp = /[a-zA-Z0-9\s-]+/,
+            zipRegExp = /[a-zA-Z0-9\s-]+$/,
             streetRegExp = /^[a-zA-Z0-9\s][a-zA-Z0-9-,\s\.\/\s]+$/,
             moneyAmountRegExp = /^([0-9]{1,9})\.?([0-9]{1,2})?$/,
             emailRegExp = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,

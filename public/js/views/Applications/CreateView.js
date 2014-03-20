@@ -16,7 +16,7 @@ define([
             initialize: function () {
                 _.bindAll(this, "saveItem", "render");
                 this.model = new ApplicationModel();
-                this.responseObj = {};
+				this.responseObj = {};
                 this.render();
             },
             events: {
@@ -35,15 +35,15 @@ define([
                 "click .newSelectList li.miniStylePagination .prev:not(.disabled)": "prevSelect"
             },
             notHide: function (e) {
-                return false;
+				return false;
             },
 
             nextSelect: function (e) {
                 this.showNewSelect(e, false, true);
-            },
+			},
             prevSelect: function (e) {
                 this.showNewSelect(e, true, false);
-            },
+			},
             keydownHandler: function (e) {
                 switch (e.which) {
                     case 27:
@@ -112,7 +112,7 @@ define([
                 }, 250);
 
             },
-
+ 
             saveItem: function () {
                 var self = this;
                 var mid = 39;
@@ -186,7 +186,7 @@ define([
                     otherInfo: otherInfo,
                     workflow: workflow,
                     groups: {
-                        owner: $("#allUsersSelect").data("id"),
+						owner: $("#allUsersSelect").data("id"),
                         users: usersId,
                         group: groupsId
                     },
@@ -202,14 +202,14 @@ define([
                         self.attachView.sendToServer(null, currentModel);
                     },
                     error: function (model, xhr) {
-                        self.errorNotification(xhr);
+    					self.errorNotification(xhr);
                     }
 
                 });
             },
             hideNewSelect: function () {
-                $(".newSelectList").hide();
-            },
+				$(".newSelectList").hide();
+			},
             showNewSelect: function (e, prev, next) {
                 populate.showSelect(e, prev, next, this);
                 return false;
@@ -217,19 +217,19 @@ define([
 
             chooseOption: function (e) {
                 $(e.target).parents("dd").find(".current-selected").text($(e.target).text()).attr("data-id", $(e.target).attr("id"));
-            },
+			},
 
             render: function () {
                 var formString = this.template();
                 var self = this;
                 this.$el = $(formString).dialog({
-                    closeOnEscape: false,
+					closeOnEscape: false,
                     dialogClass: "edit-dialog create-app-dialog",
                     width: 690,
                     title: "Create Application",
-                    buttons: {
-                        save: {
-                            text: "Save",
+                    buttons:{
+                        save:{
+                            text: "Create",
                             class: "btn",
                             click: self.saveItem
                         },
@@ -240,14 +240,14 @@ define([
                         }
                     }
                 });
-                var notDiv = this.$el.find('.attach-container');
-                this.attachView = new attachView({
+				var notDiv = this.$el.find('.attach-container');
+				this.attachView = new attachView({
                     model: new ApplicationModel(),
                     url: "/uploadApplicationFiles",
                     isCreate: true
                 });
                 notDiv.append(this.attachView.render().el);
-                notDiv = this.$el.find('.assignees-container');
+				notDiv = this.$el.find('.assignees-container');
                 notDiv.append(
                     new AssigneesView({
                         model: this.currentModel,
