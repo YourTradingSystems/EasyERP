@@ -96,7 +96,6 @@ define([
                    var estimated = $.trim(this.$el.find("#estimated").val());
                    var logged = $.trim(this.$el.find("#logged").val());
                    var priority = $("#priorityDd").data("id");
-                   //var priority = common.toObject(idPriority, this.priorityCollection);
                    var type = this.$("#type").data("id");
                    this.model.save({
                        type: type,
@@ -120,11 +119,11 @@ define([
                        wait: true,
                        success: function (model, response) {
                            var currentModel = model.changed;
-						   self.attachView.sendToServer(null,currentModel);
+                           self.attachView.sendToServer(null,currentModel);
                        },
 
                        error: function (model, xhr) {
-    					   self.errorNotification(xhr);
+                           self.errorNotification(xhr);
                        }
 
                    });
@@ -169,11 +168,11 @@ define([
                            }
                        }
                    });
-				   var notDiv = this.$el.find('.attach-container');
-				   this.attachView = new attachView({
+                   var notDiv = this.$el.find('.attach-container');
+                   this.attachView = new attachView({
                        model: new TaskModel(),
-					   url:"/uploadTasksFiles",
-					   isCreate:true
+                       url:"/uploadTasksFiles",
+                       isCreate:true
                    });
 
                    notDiv.append(this.attachView.render().el);
@@ -190,7 +189,6 @@ define([
                        changeMonth: true,
                        changeYear: true
                    });
-                   // for input type number
                    this.$el.find("#logged").spinner({
                        min: 0,
                        max: 9999
@@ -199,13 +197,6 @@ define([
                        min: 0,
                        max: 9999
                    });
-                   //$('#deadline').datepicker({
-                   //    dateFormat: "d M, yy",
-                   //    changeMonth: true,
-                   //    changeYear: true,
-                   //    minDate: new Date()
-                   //});
-                   //$("#ui-datepicker-div").addClass("createFormDatepicker");
 
                    this.delegateEvents(this.events);
                    return this;

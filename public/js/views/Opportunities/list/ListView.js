@@ -206,7 +206,7 @@ define([
                     filter: filter,
                     newCollection: this.newCollection
                 }, function (response, context) {
-                    var page = 1;
+                    var page = context.page || 1;
                     context.listLength = response.count || 0;
                     context.pageElementRender(response.count, itemsNumber, page);//prototype in main.js
                 }, this);

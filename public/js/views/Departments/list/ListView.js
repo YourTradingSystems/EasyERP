@@ -30,7 +30,6 @@ function (ListTemplate, CreateView, currentModel, ListItemView, EditView) {
 		},
         editItem: function(e){
 			var self = this;
-            //create editView in dialog here
             var model = new currentModel({ validate: false });
             model.urlRoot = '/Departments/form/';
             model.fetch({
@@ -61,13 +60,11 @@ function (ListTemplate, CreateView, currentModel, ListItemView, EditView) {
 						if (err.status===403){
 							alert("You do not have permission to perform this action");
 						}else{
-
 							Backbone.history.navigate("home", { trigger: true });
 						}
                     }
                 });
             }
-
 			return false;
         },
 		groupMove:function (){
@@ -83,7 +80,6 @@ function (ListTemplate, CreateView, currentModel, ListItemView, EditView) {
         render: function () {
             $('.ui-dialog ').remove();
             this.$el.html(_.template(ListTemplate));
-//            this.$el.append(new ListItemView({ collection: this.collection, startNumber: this.startNumber }).render());
             var departments = this.collection.toJSON();
             var self = this;
             departments.forEach(function(elm, i) {
@@ -95,12 +91,8 @@ function (ListTemplate, CreateView, currentModel, ListItemView, EditView) {
 						par.append("<ul style='margin-left:20px'></ul>");
 					}
 					par.find("ul").append(self.createDepartmentListRow(elm, i + 1, "child"));
-					
-
-						
                 }
             });
-//			this.groupMove();
 			self = this;
 			this.$("ul").sortable({
 				connectWith: 'ul',
@@ -120,7 +112,6 @@ function (ListTemplate, CreateView, currentModel, ListItemView, EditView) {
 					ui.item.attr("data-sequence",sequence);
 				}
 			});
-//            this.$el.append(new ListItemView({ collection: this.collection, startNumber: this.startNumber }).render());
             $('#check_all').click(function () {
                 $(':checkbox').prop('checked', this.checked);
                 if ($("input.checkbox:checked").length > 0)
@@ -140,14 +131,8 @@ function (ListTemplate, CreateView, currentModel, ListItemView, EditView) {
             new ListItemView({ collection: newModels, startNumber: this.startNumber }).render();
             this.startNumber += newModels.length;
         },
-        /*gotoForm: function (e) {
-            App.ownContentType = true;
-            var id = $(e.target).closest("li").data("id");
-            //window.location.hash = "#easyErp/Departments/form/" + id;
-        },*/
 
         createItem: function () {
-            //create editView in dialog here
             new CreateView();
         },
 
@@ -175,11 +160,8 @@ function (ListTemplate, CreateView, currentModel, ListItemView, EditView) {
                     }
                 });
             });
-
             this.collection.trigger('reset');
         }
-
     });
-
     return DepartmentsListView;
 });

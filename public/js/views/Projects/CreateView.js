@@ -1,12 +1,11 @@
 define([
     "text!templates/Projects/CreateTemplate.html",
     "models/ProjectsModel",
-    "common",
 	"populate",
     'views/Notes/AttachView',
     'views/Assignees/AssigneesView',
 ],
-    function (CreateTemplate, ProjectModel, common, populate, attachView, AssigneesView) {
+    function (CreateTemplate, ProjectModel, populate, attachView, AssigneesView) {
 
         var CreateView = Backbone.View.extend({
             el: "#content-holder",
@@ -208,7 +207,6 @@ define([
                     changeMonth: true,
                     changeYear: true,
                     onSelect: function () {
-                        //Setting minimum of endDate to picked startDate
                         var endDate = $('#StartDate').datepicker('getDate');
                         endDate.setDate(endDate.getDate());
                         $('#EndDateTarget').datepicker('option', 'minDate', endDate);

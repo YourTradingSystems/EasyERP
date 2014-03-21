@@ -8,7 +8,7 @@ define([
     'views/Projects/EditView',
     'models/ProjectsModel',
     'collections/Tasks/filterCollection',
-	'common',
+    'common',
     'dataService'
 ],
 
@@ -61,7 +61,7 @@ define([
                 "click .filter-check-list li": "checkCheckbox",
                 "click #firstShowPage": "firstPage",
                 "click #lastShowPage": "lastPage",
-				"click .oe_sortable": "goSort"
+                "click .oe_sortable": "goSort"
             },
 
             fetchSortCollection: function (sortObject) {
@@ -106,14 +106,14 @@ define([
                 switch (sortClass) {
                         case "sortDn":
                             {
-								target$.parent().find("th").removeClass('sortDn').removeClass('sortUp');
+                                target$.parent().find("th").removeClass('sortDn').removeClass('sortUp');
                                 target$.removeClass('sortDn').addClass('sortUp');
                                 sortConst = 1;
                             }
                             break;
                         case "sortUp":
                             {
-								target$.parent().find("th").removeClass('sortDn').removeClass('sortUp');
+                                target$.parent().find("th").removeClass('sortDn').removeClass('sortUp');
                                 target$.removeClass('sortUp').addClass('sortDn');
                                 sortConst = -1;
                             }
@@ -133,7 +133,7 @@ define([
                     newCollection: this.newCollection,
                     parrentContentId: this.parrentContentId
                 }, function (response, context) {
-                    var page = 1;
+                    var page = context.page || 1;
                     context.listLength = response.count || 0;
                     context.pageElementRender(response.count, itemsNumber, page);//prototype in main.js
                 }, this);
@@ -251,7 +251,6 @@ define([
                         validate: false,
                         success: function (model) {
                             that.showFilteredPage();//When add filter by Type, then uncoment this code
-                            //targetParrentElement.find('#' + model.id).text(type);
                         }
                     });
                 }
@@ -504,7 +503,7 @@ define([
                 var mid = 39;
                 var model;
                 var localCounter = 0;
-				var count = $("#listTable input:checked").length;
+                var count = $("#listTable input:checked").length;
                 this.collectionLength = this.collection.length;
                 $.each($("tbody input:checked"), function (index, checkbox) {
                     model = that.collection.get(checkbox.value);
@@ -512,32 +511,32 @@ define([
                         headers: {
                             mid: mid
                         },
-						wait:true,
-						success:function(){
-							that.listLength--;
-							localCounter++;
-							count--;
-							if (count === 0) {
-								that.deleteCounter =localCounter;
-								that.deletePage = $("#currentShowPage").val();
-								that.deleteItemsRender(that.deleteCounter, that.deletePage);
-								
-							}
-						},
-						error: function (model, res) {
-							if(res.status===403&&index===0){
-								alert("You do not have permission to perform this action");
-							}
-							that.listLength--;
-							count--;
-							if (count === 0) {
-								that.deleteCounter =localCounter;
-								that.deletePage = $("#currentShowPage").val();
-								that.deleteItemsRender(that.deleteCounter, that.deletePage);
-								
-							}
+                        wait:true,
+                        success:function(){
+                            that.listLength--;
+                            localCounter++;
+                            count--;
+                            if (count === 0) {
+                                that.deleteCounter =localCounter;
+                                that.deletePage = $("#currentShowPage").val();
+                                that.deleteItemsRender(that.deleteCounter, that.deletePage);
+                                
+                            }
+                        },
+                        error: function (model, res) {
+                            if(res.status===403&&index===0){
+                                alert("You do not have permission to perform this action");
+                            }
+                            that.listLength--;
+                            count--;
+                            if (count === 0) {
+                                that.deleteCounter =localCounter;
+                                that.deletePage = $("#currentShowPage").val();
+                                that.deleteItemsRender(that.deleteCounter, that.deletePage);
+                                
+                            }
 
-						}
+                        }
                     });
 
                 });

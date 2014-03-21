@@ -346,9 +346,7 @@ define([
                 var alphaBet = holder.find('#startLetter');
                 var created = holder.find('#timeRecivingDataFromServer');
                 var countPerPage = this.countPerPage = newModels.length;
-
                 content.remove();
-
                 holder.append(this.template({ collection: newModels.toJSON(), page: holder.find("#currentShowPage").val(), itemsNumber: holder.find("span#itemsNumber").text() }));
                 $("#top-bar-deleteBtn").hide();
                 $('#check_all').prop('checked', false);
@@ -356,7 +354,6 @@ define([
                 created.text("Created in " + (new Date() - this.startTime) + " ms");
                 holder.prepend(alphaBet);
                 holder.append(created);
-                this.asyncLoadImgs(newModels);
             },
 
             gotoForm: function (e) {
@@ -393,13 +390,13 @@ define([
                 }, function (response, context) {
                     context.listLength = response.count || 0;
                 }, this);
-
+                
                 this.deleteRender(deleteCounter, deletePage, {
                     filter: this.filter,
                     newCollection: this.newCollection,
                     parrentContentId: this.parrentContentId
                 });
-
+                
                 var pagenation = this.$el.find('.pagination');
                 if (this.collection.length === 0) {
                     pagenation.hide();

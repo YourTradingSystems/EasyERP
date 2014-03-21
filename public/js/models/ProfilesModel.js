@@ -1,7 +1,6 @@
 define(['Validation'], function (Validation) {
     var ProfilesModel = Backbone.Model.extend({
         idAttribute:"_id",
-
         initialize: function(){
             this.on('invalid', function(model, errors){
                 if(errors.length > 0){
@@ -21,6 +20,5 @@ define(['Validation'], function (Validation) {
              return "/Profiles";
         }
     });
-
     return ProfilesModel;
 });

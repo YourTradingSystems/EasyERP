@@ -416,7 +416,6 @@ define([
                     getModel.fetch({
                         data: { id: modelId },
                         success: function(model) {
-                            console.log(model);
                             var topbarView = new topBarView({ actionType: "Content" });
                             var contentView = new contentFormView({ model: model, startTime: startTime });
 

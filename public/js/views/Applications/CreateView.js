@@ -7,7 +7,6 @@ define([
     'views/Assignees/AssigneesView'
 ],
     function (CreateTemplate, ApplicationModel, common, populate, attachView, AssigneesView) {
-
         var CreateView = Backbone.View.extend({
             el: "#content-holder",
             contentType: "Applications",
@@ -81,7 +80,6 @@ define([
             changeWorkflows: function () {
                 var name = this.$("#workflowNames option:selected").val();
                 var value = this.workflowsCollection.findWhere({ name: name }).toJSON().value;
-                //$("#selectWorkflow").html(_.template(selectTemplate, { workflows: this.getWorkflowValue(value) }));
             },
 
             isEmployee: function (e) {
@@ -122,7 +120,6 @@ define([
                     isEmployee = true;
                     self.contentType = "Employees";
                 }
-                //var subject = $.trim($("#subject").val());
                 var first = $.trim($("#first").val());
                 var last = $.trim($("#last").val());
                 var name = {
@@ -140,21 +137,15 @@ define([
                 var workflow = $("#workflowsDd").data("id");
                 var relatedUserId = $("#relatedUsersDd option:selected").val();
                 var nextAction = $.trim($("#nextAction").val());
-                /*var nextAction = "";
-                if (nextActionSt) {
-                    nextAction = new Date(Date.parse(nextActionSt)).toISOString();
-                }*/
                 var sourceId = $("#sourceDd").data("id");
                 var referredBy = $.trim($("#referredBy").val());
                 var departmentId = $("#departmentDd").data("id");
-
                 var jobPositionId = $("#jobPositionDd").data("id");
                 var jobType = this.$el.find("#jobTypeDd").data("id");
                 var expectedSalary = $.trim($("#expectedSalary").val())
                 var proposedSalary = $.trim($("#proposedSalary").val());
                 var tags = $.trim($("#tags").val()).split(',');
                 var otherInfo = $("#otherInfo").val();
-
                 var usersId = [];
                 var groupsId = [];
                 $(".groupsAndUser tr").each(function () {
@@ -204,7 +195,6 @@ define([
                     error: function (model, xhr) {
     					self.errorNotification(xhr);
                     }
-
                 });
             },
             hideNewSelect: function () {
@@ -267,8 +257,6 @@ define([
                 this.delegateEvents(this.events);
                 return this;
             }
-
         });
-
         return CreateView;
     });

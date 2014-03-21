@@ -48,7 +48,6 @@ define([
                     this.collection = options.collection;
                     this.collection.bind('reset', _.bind(this.render, this));
                 }
-
                 this.render();
             },
 
@@ -80,8 +79,6 @@ define([
                 event.preventDefault();
                 this.trigger('editKanban');
             }
-
         });
-
         return TopBarView;
     });

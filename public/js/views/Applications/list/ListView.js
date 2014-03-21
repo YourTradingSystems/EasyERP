@@ -9,7 +9,6 @@ define([
     'dataService',
     'text!templates/stages.html'
 ],
-
     function (listTemplate, createView, listItemView, editView, currentModel, contentCollection, common, dataService, stagesTamplate) {
         var ApplicationsListView = Backbone.View.extend({
             el: '#content-holder',
@@ -18,9 +17,9 @@ define([
             filter: null,
             sort: null,
             newCollection: null,
-            page: null, //if reload page, and in url is valid page
-            contentType: 'Applications',//needs in view.prototype.changeLocationHash
-            viewType: 'list',//needs in view.prototype.changeLocationHash
+            page: null,
+            contentType: 'Applications',
+            viewType: 'list',
 
             initialize: function (options) {
                 $(document).off("click");
@@ -37,7 +36,6 @@ define([
                 this.page = options.collection.page;
                 this.render();
                 this.getTotalLength(null, this.defaultItemsNumber, this.filter);
-                //for main.js used in delete render 
                 this.contentCollection = contentCollection;
             },
 
@@ -201,9 +199,9 @@ define([
                     filter: filter,
                     newCollection: this.newCollection
                 }, function (response, context) {
-                    var page = 1;
+                    var page = context.page || 1;
                     context.listLength = response.count || 0;
-                    context.pageElementRender(response.count, itemsNumber, page);//prototype in main.js
+                    context.pageElementRender(response.count, itemsNumber, page);
                 }, this);
             },
 
@@ -216,9 +214,7 @@ define([
                 currentEl.append(_.template(listTemplate));
                 var itemView = new listItemView({ collection: this.collection, page: this.page, itemsNumber: this.collection.namberToShow });
                 currentEl.append(itemView.render());
-
                 itemView.bind('incomingStages', itemView.pushStages, itemView);
-
                 $('#check_all').click(function () {
                     $(':checkbox').prop('checked', this.checked);
                     if ($("input.checkbox:checked").length > 0)
@@ -226,7 +222,6 @@ define([
                     else
                         $("#top-bar-deleteBtn").hide();
                 });
-
 
                 $(document).on("click", function (e) {
                     self.hideItemsNumber(e);
@@ -258,7 +253,6 @@ define([
                 $("#top-bar-deleteBtn").hide();
                 $('#check_all').prop('checked', false);
                 var itemView = new listItemView({ collection: this.collection, page: currentEl.find("#currentShowPage").val(), itemsNumber: currentEl.find("span#itemsNumber").text() });
-
                 tBody.append(itemView.render());
             },
             previousPage: function (event) {
@@ -278,7 +272,7 @@ define([
                     context.listLength = response.count || 0;
                 }, this);
             },
-            //modified for filter Vasya
+
             nextPage: function (event) {
                 event.preventDefault();
                 $("#top-bar-deleteBtn").hide();
@@ -331,10 +325,8 @@ define([
                 }, function (response, context) {
                     context.listLength = response.count || 0;
                 }, this);
-            },  //end first last page in paginations
+            },
 
-
-            //modified for filter Vasya
             switchPageCounter: function (event) {
                 event.preventDefault();
                 this.startTime = new Date();
@@ -357,7 +349,7 @@ define([
                 event.preventDefault();
                 this.showP(event, { filter: this.filter, newCollection: this.newCollection, sort: this.sort });
             },
-            //modified for filter Vasya
+
             showMoreContent: function (newModels) {
                 var holder = this.$el;
                 holder.find("#listTable").empty();
@@ -390,7 +382,6 @@ define([
                 });
             },
             createItem: function () {
-                //create editView in dialog here
                 new createView();
             },
 
@@ -409,7 +400,7 @@ define([
                     }
                 }
             },
-            //modified for filter Vasya
+
             deleteItemsRender: function (deleteCounter, deletePage) {
                 $('#check_all').prop('checked', false);
                 dataService.getData('/totalCollectionLength/Applications', {
@@ -479,8 +470,6 @@ define([
                     });
                 });
             }
-
         });
-
         return ApplicationsListView;
     });

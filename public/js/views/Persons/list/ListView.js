@@ -139,7 +139,7 @@ function (listTemplate, createView, listItemView, aphabeticTemplate,contentColle
                     filter: filter,
                     newCollection: this.newCollection
                 }, function (response, context) {
-                    var page = 1;
+                    var page = context.page || 1;
                     context.listLength = response.count || 0;
                     context.pageElementRender(response.count, itemsNumber, page);//prototype in main.js
                 }, this);
@@ -345,7 +345,6 @@ function (listTemplate, createView, listItemView, aphabeticTemplate,contentColle
             created.text("Created in " + (new Date() - this.startTime) + " ms");
             holder.prepend(alphaBet);
             holder.append(created);
-            this.asyncLoadImgs(newModels);
         },
 
         gotoForm: function (e) {

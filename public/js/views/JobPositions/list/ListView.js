@@ -17,9 +17,9 @@ define([
             listLength: null,
             sort: null,
             newCollection: null,
-            page: null, //if reload page, and in url is valid page
-            contentType: 'JobPositions',//needs in view.prototype.changeLocationHash
-            viewType: 'list',//needs in view.prototype.changeLocationHash
+            page: null,
+            contentType: 'JobPositions',
+            viewType: 'list',
 
             initialize: function (options) {
                 this.startTime = options.startTime;
@@ -64,7 +64,6 @@ define([
                     $(e.target).parent().append(_.template(stagesTamplate, { stagesCollection: this.stages }));
                     return false;
                 }
-
             },
 
             chooseOption: function (e) {
@@ -90,12 +89,10 @@ define([
                     },
                     patch: true,
                     success: function (err, model) {
-                        //targetElement.find('.stageSelect').text($(e.target).text());
                         Backbone.history.fragment = "";
                         Backbone.history.navigate(location, { trigger: true });
                     }
                 });
-
                 this.hideNewSelect();
                 return false;
             },
@@ -184,7 +181,7 @@ define([
                 }, function (response, context) {
                     var page = context.page || 1;
                     context.listLength = response.count || 0;
-                    context.pageElementRender(response.count, itemsNumber, page);//prototype in main.js
+                    context.pageElementRender(response.count, itemsNumber, page);
                 }, this);
             },
 
@@ -192,7 +189,6 @@ define([
                 $('.ui-dialog ').remove();
                 var self = this;
                 var currentEl = this.$el;
-
                 currentEl.html('');
                 currentEl.append(_.template(listTemplate));
                 var itemView = new listItemView({ collection: this.collection, page: this.page, itemsNumber: this.collection.namberToShow });
@@ -205,7 +201,6 @@ define([
                     else
                         $("#top-bar-deleteBtn").hide();
                 });
-
                 $(document).on("click", function () {
                     self.hideItemsNumber();
                 });
@@ -243,7 +238,7 @@ define([
                     context.listLength = response.count || 0;
                 }, this);
             },
-            //modified for filter Vasya
+
             nextPage: function (event) {
                 event.preventDefault();
                 $("#top-bar-deleteBtn").hide();
@@ -259,7 +254,6 @@ define([
                 }, this);
             },
 
-            //first last page in paginations
             firstPage: function (event) {
                 event.preventDefault();
                 $("#top-bar-deleteBtn").hide();
@@ -291,7 +285,7 @@ define([
                 }, function (response, context) {
                     context.listLength = response.count || 0;
                 }, this);
-            },  //end first last page in paginations
+            },
 
             switchPageCounter: function (event) {
                 event.preventDefault();
@@ -346,7 +340,6 @@ define([
             },
 
             createItem: function () {
-                //create editView in dialog here
                 new createView();
             },
 
@@ -372,13 +365,11 @@ define([
                 }, function (response, context) {
                     context.listLength = response.count || 0;
                 }, this);
-
                 this.deleteRender(deleteCounter, deletePage, {
                     filter: this.filter,
                     newCollection: this.newCollection,
                     parrentContentId: this.parrentContentId
                 });
-
                 var pagenation = this.$el.find('.pagination');
                 if (this.collection.length === 0) {
                     pagenation.hide();
@@ -408,7 +399,6 @@ define([
                                 that.deleteCounter = localCounter;
                                 that.deletePage = $("#currentShowPage").val();
                                 that.deleteItemsRender(that.deleteCounter, that.deletePage);
-
                             }
                         },
                         error: function (model, res) {
@@ -423,14 +413,10 @@ define([
                                 that.deleteItemsRender(that.deleteCounter, that.deletePage);
 
                             }
-
                         }
                     });
-
                 });
             }
-
         });
-
         return JobPositionsListView;
     });

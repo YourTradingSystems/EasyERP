@@ -9,10 +9,8 @@
                 }
             });
         },
-
         validate: function(attrs){
             var errors = [];
-
             Validation.checkGroupsNameField(errors, true, attrs.name, "Subject");
             Validation.checkNameField(errors, false, attrs.contactName.first, "Contact first name");
             Validation.checkNameField(errors, false, attrs.contactName.last, "Contact last name");
@@ -26,11 +24,9 @@
             Validation.checkStreetField(errors, false, attrs.address.street, "Street");
             Validation.checkEmailField(errors, false, attrs.email, "Email");
             Validation.checkNotesField(errors, false, attrs.internalNotes, "Notes");
-
             if(errors.length > 0)
                 return errors;
         },
-        
         parse:true,
         parse: function (response) {
             if (!response.data) {
@@ -95,7 +91,6 @@
                 status: 'New'
             }
         },
-
         urlRoot: function () {
             return "/Leads";
         }

@@ -22,10 +22,8 @@ define([
             },
 
             editItem: function () {
-                //create editView in dialog here
                 new EditView({ model: this.formModel });
             },
-
             changeWorkflow: function (e) {
                 var mid = 39;
                 var model;
@@ -50,7 +48,6 @@ define([
                     }
                     id = workflow.get('_id');
                 }
-
                 this.formModel.save({
                     workflow:id
                 }, {
@@ -67,7 +64,6 @@ define([
                 });
 
             },
-
             isEmployee: function (e) {
 				this.model.save({
                     isEmployee: true
@@ -80,7 +76,6 @@ define([
                     }
                 });
             },
-
             deleteItems: function () {
                 var mid = 39;
 

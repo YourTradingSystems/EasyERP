@@ -11,7 +11,7 @@ define([
             
             events: {
                 'click #loginPanel': 'showSelect',
-                'click': 'hideProp',
+                'click': 'hideProp'
             },
             
             initialize: function(options) {
@@ -58,7 +58,6 @@ define([
                 }
             },
             render: function() {
-                console.log('Render Main View');
 				var self = this;
                 dataService.getData('/currentUser', null, function (response, context) {
 					if (response.RelatedEmployee){

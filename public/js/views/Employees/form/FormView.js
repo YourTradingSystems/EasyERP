@@ -70,11 +70,9 @@ define([
                                 attachments.push(item);
                                 $('.attachContainer').prepend(_.template(addAttachTemplate, { data: item, date: date }));
                             });
-                            console.log('Attach file');
                             addFrmAttach[0].reset();
                             status.hide();
                         },
-
                         error: function () {
                             console.log("Attach file error");
                         }
@@ -142,7 +140,6 @@ define([
             render: function () {
                 var formModel = this.formModel.toJSON();
                 common.getWorkflowContractEnd("Applications", null, null, "/Workflows", null, "Contract End", function (workflow) {
-                    console.log(workflow);
                     $('.endContractReasonList').attr('data-id', workflow[0]._id);
                 });
                 this.$el.html(_.template(EmployeesFormTemplate, formModel));

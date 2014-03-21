@@ -8,7 +8,6 @@ define([
             el: '#mainmenu-holder nav ul',
             selectedModule: null,
             initialize: function (options) {
-                console.log("init MenuView");
                 if (!options.collection) throw "No collection specified!";
                 this.collection = options.collection;
 				this.currentRoot = options.currentRoot;
@@ -19,7 +18,7 @@ define([
             },
 
             events: {
-                "click": "clickItem",
+                "click": "clickItem"
 //                "click > li": "mouseOver"
             },
 
@@ -54,7 +53,6 @@ define([
 					}else{
 						this.selectedModule = (this.collection[0]).get('mname');
 					}
-                console.log("Render TopMenuView");
                 var self = this;
                 this.$el.empty();
                 _.each(this.collection, function (model) {

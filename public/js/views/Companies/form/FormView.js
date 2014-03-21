@@ -53,9 +53,6 @@ define([
                         $(".miniPaginationPersons").hide();
                     }
                 });
-
-
-                //                this.personsCollection.bind('reset', _.bind(this.render, this));
             },
             flag: true,
             events: {
@@ -74,7 +71,6 @@ define([
                 "click .miniPagination .prev:not(.not-active)": "prevMiniPage",
                 "click .miniPagination .first:not(.not-active)": "firstMiniPage",
                 "click .miniPagination .last:not(.not-active)": "lastMiniPage",
-
                 "click .miniPaginationPersons .nextPersons:not(.not-active)": "nextMiniPagePersons",
                 "click .miniPaginationPersons .prevPersons:not(.not-active)": "prevMiniPagePersons",
                 "click .miniPaginationPersons .firstPersons:not(.not-active)": "firstMiniPagePersons",
@@ -124,7 +120,6 @@ define([
                 var self = this;
                 var formModel = this.formModel.toJSON();
                 this.populatePersonsForMiniView("/getPersonsForMiniView", formModel._id, this.pageMiniPersons, this.pageCountPersons, false, function (collection) {
-                    console.log(collection);
                     var isLast = self.pageMiniPersons == self.allPagesPersons ? true : false;
                     var perElem = self.$el.find('#persons');
                     perElem.empty();
@@ -165,11 +160,14 @@ define([
                     }).render().el
                 );
 
+				$(window).on("resize",function(){
+					$("#editInput").width($("#editInput").parent().width() - 55);
+
+				});
                 return this;
             },
 
             editItem: function () {
-                //create editView in dialog here
                 new EditView({ model: this.formModel });
             },
 
@@ -180,7 +178,6 @@ define([
                     if ($("#" + trId.attr("id")).width() - 40 < $("#" + trId.attr("id")).find(".no-long").width()) {
                         $("#" + trId.attr("id")).find(".no-long").width($("#" + trId.attr("id")).width() - 40);
                     }
-
                 }
             },
 
@@ -214,7 +211,6 @@ define([
                 $('.quickEdit #cancelSpan').remove();
                 $('.quickEdit #saveSpan').remove();
                 $('.quickEdit').text(this.text).removeClass('quickEdit');
-
                 var parent = $(e.target).parent().parent();
                 $("#" + parent[0].id).addClass('quickEdit');
                 $('#editSpan').remove();
@@ -223,7 +219,6 @@ define([
                 $("#" + parent[0].id).append('<input id="editInput" maxlength="' + maxlength + '" type="text" class="left"/>');
                 $('#editInput').val(this.text);
                 $("#" + parent[0].id).append('<span id="saveSpan"><a href="#">c</a></span>');
-
                 $("#" + parent[0].id).append('<span id="cancelSpan"><a href="#">x</a></span>');
                 $("#" + parent[0].id).find("#editInput").width($("#" + parent[0].id).find("#editInput").width() - 50);
             },
@@ -231,17 +226,14 @@ define([
             saveClick: function (e) {
                 e.preventDefault();
                 var parent = $(e.target).parent().parent();
-                var objIndex = parent[0].id.split('_'); //replace change to split;
+                var objIndex = parent[0].id.split('_');
                 var currentModel = this.formModel;
                 var newModel = {};
 				var oldvalue = {};
-
                 if (objIndex.length > 1) {
 					for (var i in this.formModel.toJSON()[objIndex[0]]){
-						console.log(i);
 						oldvalue[i] = this.formModel.toJSON()[objIndex[0]][i];
 					}
-
                     var param = currentModel.get(objIndex[0]) || {};
                     param[objIndex[1]] = $('#editInput').val().replace('http://', '');
                     newModel[objIndex[0]] = param;
@@ -262,7 +254,6 @@ define([
                         if (response)
                             alert(response.error);
                     }
-
                 });
 				if (!valid){
 					newModel[objIndex[0]] = oldvalue;
@@ -270,19 +261,16 @@ define([
 				}
             },
 
-
             toggle: function () {
                 this.$('#details').animate({
                     height: "toggle"
                 }, 250, function () {
-
                 });
             },
             socialActive: function (e) {
                 e.preventDefault();
                 $(e.target).stop().animate({
                     'background-position-y': '-38px'
-
                 }, 300, function () { });
             },
             socialNotActive: function (e) {
@@ -321,6 +309,5 @@ define([
 
             }
         });
-
         return FormCompaniesView;
     });

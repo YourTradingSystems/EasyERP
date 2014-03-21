@@ -47,7 +47,6 @@ define([
 
            var getPriority = function (id, content, isCreate) {
                dataService.getData("/Priority", {}, function (response) {
-                   console.log(response);
                    content.responseObj[id] = _.map(response.data, function (item) {
                        return { _id: item.priority, name: item.priority };
                    });

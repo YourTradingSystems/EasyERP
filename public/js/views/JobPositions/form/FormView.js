@@ -2,7 +2,6 @@ define([
     'text!templates/JobPositions/form/FormTemplate.html',
     'views/JobPositions/EditView'
 ],
-
     function (FormTemplate, EditView) {
         var FormView = Backbone.View.extend({
             el: '#content-holder',
@@ -17,13 +16,10 @@ define([
             },
             
             editItem: function () {
-                //create editView in dialog here
                 new EditView({ model: this.formModel });
             },
-            
             deleteItems: function () {
                 var mid = 39;
-                   
                 this.formModel.destroy({
                     headers: {
                         mid: mid
@@ -32,9 +28,7 @@ define([
                         Backbone.history.navigate("#easyErp/JobPositions/list", { trigger: true });
                     }
                 });
-
             }
         });
-
         return FormView;
     });

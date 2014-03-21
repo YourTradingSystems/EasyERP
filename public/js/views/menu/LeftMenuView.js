@@ -35,7 +35,6 @@ define([
             },
 
             initialize: function (options) {
-                console.log("init MenuView");
                 if (!options.collection) throw "No collection specified!";
                 this.collection = options.collection;
                 if (options.currentRoot){
@@ -54,7 +53,6 @@ define([
             },
 
             render: function (onMouseOver, selectedId) {
-                console.log("Render LeftMenuView");
                 var $el = $(this.el);
                 $el.html('');
                 var currentModule = null;

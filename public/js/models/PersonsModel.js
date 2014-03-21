@@ -5,7 +5,6 @@ define([
 function (common, Validation) {
     var PersonModel = Backbone.Model.extend({
         idAttribute: "_id",
-
         initialize: function () {
             this.on('invalid', function (model, errors) {
                 if (errors.length > 0) {
@@ -15,7 +14,6 @@ function (common, Validation) {
 			
             });
         },
-
         parse: true,
         parse: function (response) {
             if (!response.data) {
@@ -41,7 +39,6 @@ function (common, Validation) {
                 return response;
             }
         },
-
         validate: function (attrs) {
             var errors = [];
             Validation.checkNameField(errors, true, attrs.name.first, "First name");
@@ -61,7 +58,7 @@ function (common, Validation) {
             if (errors.length > 0)
                 return errors;
         },
- defaults: {
+    defaults: {
             id: null,
             imageSrc: '',
             type: 'Person',
@@ -98,6 +95,5 @@ function (common, Validation) {
             return "/Persons";
         }
     });
-
     return PersonModel;
 });
