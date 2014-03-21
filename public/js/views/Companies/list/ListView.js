@@ -15,9 +15,9 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, contentColl
         listLength: null,
         filter: null,
         newCollection: null,
-        page: null, //if reload page, and in url is valid page
-        contentType: 'Companies',//needs in view.prototype.changeLocationHash
-        viewType: 'list',//needs in view.prototype.changeLocationHash
+        page: null,
+        contentType: 'Companies',
+        viewType: 'list',
 
         initialize: function (options) {
             this.startTime = options.startTime;
@@ -75,10 +75,8 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, contentColl
             $("#top-bar-deleteBtn").hide();
             $('#check_all').prop('checked', false);
             var itemView = new listItemView({ collection: this.collection, page: this.page, itemsNumber: this.collection.namberToShow });
-
             tBody.append(itemView.render());
         },
-
 
         goSort: function (e) {
             this.collection.unbind('reset');
@@ -115,13 +113,10 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, contentColl
             this.getTotalLength(null, this.defaultItemsNumber, this.filter);
         },
 
-
-        //modified for filter Vasya
         alpabeticalRender: function (e) {
             this.startTime = new Date();
             $(e.target).parent().find(".current").removeClass("current");
             $(e.target).addClass("current");
-
             var selectedLetter = $(e.target).text();
             if ($(e.target).text() == "All") {
                 selectedLetter = "";
@@ -144,16 +139,16 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, contentColl
             $(e.target).closest("button").next("ul").toggle();
             return false;
         },
-        //modified for filter Vasya
+
         getTotalLength: function (currentNumber, itemsNumber, filter) {
             dataService.getData('/totalCollectionLength/Companies', {
                 currentNumber: currentNumber,
                 filter: filter,
                 newCollection: this.newCollection
             }, function (response, context) {
-                var page = 1;
+                var page = context.page || 1;
                 context.listLength = response.count || 0;
-                context.pageElementRender(response.count, itemsNumber, page);//prototype in main.js
+                context.pageElementRender(response.count, itemsNumber, page);
             }, this);
         },
 
@@ -161,11 +156,9 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, contentColl
             $('.ui-dialog ').remove();
             var self = this;
             var currentEl = this.$el;
-
             currentEl.html('');
             currentEl.append(_.template(listTemplate));
             currentEl.append(new listItemView({ collection: this.collection, page: this.page, itemsNumber: this.collection.namberToShow }).render());
-
             $('#check_all').click(function () {
                 $(':checkbox').prop('checked', this.checked);
                 if ($("input.checkbox:checked").length > 0)
@@ -201,7 +194,7 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, contentColl
             }
             currentEl.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
         },
-        //modified for filter Vasya
+
         previousPage: function (event) {
             event.preventDefault();
             $("#top-bar-deleteBtn").hide();
@@ -209,17 +202,16 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, contentColl
             this.prevP({
                 sort: this.sort,
                 filter: this.filter,
-                newCollection: this.newCollection,
+                newCollection: this.newCollection
             });
             dataService.getData('/totalCollectionLength/Companies', {
                 filter: this.filter,
                 newCollection: this.newCollection,
-                parrentContentId: this.parrentContentId
             }, function (response, context) {
                 context.listLength = response.count || 0;
             }, this);
         },
-        //modified for filter Vasya
+
         nextPage: function (event) {
             event.preventDefault();
             $("#top-bar-deleteBtn").hide();
@@ -232,13 +224,11 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, contentColl
             dataService.getData('/totalCollectionLength/Companies', {
                 filter: this.filter,
                 newCollection: this.newCollection,
-                parrentContentId: this.parrentContentId
             }, function (response, context) {
                 context.listLength = response.count || 0;
             }, this);
         },
 
-        //first last page in paginations
         firstPage: function (event) {
             event.preventDefault();
             $("#top-bar-deleteBtn").hide();
@@ -250,8 +240,7 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, contentColl
             });
             dataService.getData('/totalCollectionLength/Companies', {
                 sort: this.sort,
-                filter: this.filter,
-                newCollection: this.newCollection
+                filter: this.filter
             }, function (response, context) {
                 context.listLength = response.count || 0;
             }, this);
@@ -267,14 +256,13 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, contentColl
                 newCollection: this.newCollection
             });
             dataService.getData('/totalCollectionLength/Companies', {
-                filter: this.filter,
-                newCollection: this.newCollection
+                sort: this.sort,
+                filter: this.filter
             }, function (response, context) {
                 context.listLength = response.count || 0;
             }, this);
-        },  //end first last page in paginations
+        },
 
-        //modified for filter Vasya
         switchPageCounter: function (event) {
             event.preventDefault();
             this.startTime = new Date();
@@ -292,7 +280,7 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, contentColl
             $('#check_all').prop('checked', false);
             this.changeLocationHash(1, itemsNumber, this.filter);
         },
-        //modified for filter Vasya
+
         showFilteredPage: function (e) {
             this.startTime = new Date();
             this.newCollection = false;
@@ -316,8 +304,7 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, contentColl
             event.preventDefault();
             this.showP(event, { filter: this.filter, newCollection: this.newCollection, sort: this.sort });
         },
-        //modified for filter Vasya
-        //added parmeters page and itemsNumber to listItemView by Andrew
+
         showMoreContent: function (newModels) {
             var holder = this.$el;
             holder.find("#listTable").empty();
@@ -335,15 +322,13 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, contentColl
             holder.find('#timeRecivingDataFromServer').remove();
             holder.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
         },
-        //modified for filter Vasya
+
         showMoreAlphabet: function (newModels) {
             var holder = this.$el;
             var alphaBet = holder.find('#startLetter');
             var created = holder.find('#timeRecivingDataFromServer');
             this.countPerPage = newModels.length;
-
             content.remove();
-
             holder.append(this.template({ collection: newModels.toJSON() }));
             $("#top-bar-deleteBtn").hide();
             $('#check_all').prop('checked', false);
@@ -351,7 +336,6 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, contentColl
             created.text("Created in " + (new Date() - this.startTime) + " ms");
             holder.prepend(alphaBet);
             holder.append(created);
-            this.asyncLoadImgs(newModels);
         },
 
         gotoForm: function (e) {
@@ -361,7 +345,6 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, contentColl
         },
 
         createItem: function () {
-            //create editView in dialog here
             new createView();
         },
 
@@ -380,10 +363,9 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, contentColl
                 }
             }
         },
-        //modified for filter Vasya
+
         deleteItemsRender: function (deleteCounter, deletePage) {
             $('#check_all').prop('checked', false);
-
             dataService.getData('/totalCollectionLength/Companies', {
                 filter: this.filter,
                 newCollection: this.newCollection
@@ -394,11 +376,9 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, contentColl
             this.deleteRender(deleteCounter, deletePage, {
                 filter: this.filter,
                 newCollection: this.newCollection,
-                parrentContentId: this.parrentContentId
             });
 
             var pagenation = this.$el.find('.pagination');
-
             if (this.collection.length === 0) {
                 pagenation.hide();
             } else {
@@ -457,13 +437,11 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, contentColl
                             that.deleteItemsRender(that.deleteCounter, that.deletePage);
 
                         }
-
                     }
                 });
             });
         }
 
     });
-
     return CompaniesListView;
 });

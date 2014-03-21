@@ -50,7 +50,6 @@ define([
 		},
 
         login: function(event){
-            console.log('Login Clicked');
         	event.preventDefault();
 			$("#loginForm").removeClass("notRegister");
 			$("#loginForm").removeClass("notRegister");

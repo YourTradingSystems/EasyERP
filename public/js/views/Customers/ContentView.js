@@ -14,13 +14,7 @@ define([
 function ($, _, Backbone, PersonsCollection, CompaniesCollection, ListTemplate, PersonsItemView, CompaniesItemView, Custom, common) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
-
-        //template: _.template(ListTemplate),
-
         initialize: function (options) {
-            //console.log('Init Customers View');
-            //this.collection = options.collection;
-
             this.personCollection = new PersonsCollection();
             this.personCollection.bind('reset', _.bind(this.render, this));
             this.companiesCollection = new CompaniesCollection();
@@ -34,18 +28,15 @@ function ($, _, Backbone, PersonsCollection, CompaniesCollection, ListTemplate, 
 
         render: function () {
             Custom.setCurrentCL(this.personCollection.length);
-            console.log('Render Person View');
             var viewType = Custom.getCurrentVT();
             switch (viewType) {
                 case "list":
                     {
                         this.$el.html(_.template(ListTemplate));
                         var table = this.$el.find('table > tbody');
-
                         this.companiesCollection.each(function (model) {
                             table.append(new CompaniesItemView({ model: model }).render().el);
                         });
-
                         this.personCollection.each(function (model) {
                             table.append(new PersonsItemView({ model: model }).render().el);
                         });
@@ -54,33 +45,11 @@ function ($, _, Backbone, PersonsCollection, CompaniesCollection, ListTemplate, 
                 case "thumbnails":
                     {
                         this.$el.html("Customers Thumbnail View");
-                        /*this.$el.html('');
-                        var holder = this.$el;
-                        this.collection.each(function(model){
-                            $(holder).append(new ThumbnailsItemView({model:model}).render().el);
-                        });*/
                         break;
                     }
                 case "form":
                     {
                         this.$el.html("Customers Form View");
-                        /*var itemIndex = Custom.getCurrentII() - 1;
-                        if (itemIndex > this.collection.length - 1)
-                        {
-                            itemIndex = this.collection.length - 1;
-                            Custom.setCurrentII(this.collection.length);
-                        }
-                        
-                        if (itemIndex == -1) 
-                        {
-                            this.$el.html();
-                        }
-                        else
-                        {
-                            var currentModel = this.collection.models[itemIndex];
-                            this.$el.html(_.template(FormTemplate, currentModel.toJSON()));
-                        }*/
-
                         break;
                     }
             }
@@ -98,10 +67,8 @@ function ($, _, Backbone, PersonsCollection, CompaniesCollection, ListTemplate, 
         deleteItems: function () {
             var self = this,
         		mid = 39;
-
             $.each($("input:checked"), function (index, checkbox) {
                 var project = self.collection.where({ id: checkbox.value })[0];
-
                 project.destroy({
                     headers: {
                         mid: mid
@@ -109,10 +76,8 @@ function ($, _, Backbone, PersonsCollection, CompaniesCollection, ListTemplate, 
                     wait: true
                 });
             });
-
             this.collection.trigger('reset');
         }
     });
-
     return ContentView;
 });

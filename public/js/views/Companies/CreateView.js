@@ -27,7 +27,6 @@ define([
                 "mouseenter .avatar": "showEdit",
                 "mouseleave .avatar": "hideEdit",
                 "click .details": "toggleDetails",
-
                 'keydown': 'keydownHandler',
                 'click .dialog-tabs a': 'changeTab',
                 "click .newSelectList li:not(.miniStylePagination)": "chooseOption",
@@ -113,46 +112,29 @@ define([
             saveItem: function () {
                 var self = this;
                 var mid = 39;
-
                 var companyModel = new CompanyModel();
-
                 var name = {
                     first: $.trim(this.$el.find("#name").val()),
                     last:''
                 };
-
                 var address = {};
                 this.$el.find(".person-info").find(".address").each(function () {
                     var el = $(this);
                     address[el.attr("name")] = $.trim(el.val());
                 });
-
                 var email = $.trim(this.$el.find("#email").val());
-
                 var phone = $.trim(this.$el.find("#phone").val());
-
                 var mobile = $.trim(this.$el.find("#mobile").val());
-
                 var fax = $.trim(this.$el.find("#fax").val());
-
                 var website = $.trim(this.$el.find("#website").val().replace('http://', ''));
-                
                 var internalNotes = $.trim(this.$el.find("#internalNotes").val());
-
                 var salesPerson = this.$("#employeesDd").data("id");
-
                 var salesTeam = this.$("#departmentDd").data("id");
-
                 var reference = $.trim(this.$el.find("#reference").val());
-
                 var language = $.trim(this.$el.find("#language").text());
-
                 var isCustomer = (this.$el.find("#isCustomer").is(":checked")) ? true : false;
-
                 var isSupplier = (this.$el.find("#isSupplier").is(":checked")) ? true : false;
-
                 var active = (this.$el.find("#active").is(":checked")) ? true : false;
-
                 var usersId=[];
                 var groupsId=[];
                 $(".groupsAndUser tr").each(function(){
@@ -206,7 +188,6 @@ define([
 							self.errorNotification(xhr);
 						}
                     });
-
             },
 
             render: function () {
@@ -227,7 +208,6 @@ define([
                                 self.saveItem();
                             }
                         },
-
 						{
 						    text: "Cancel",
 						    click: function () {
@@ -256,8 +236,6 @@ define([
                 this.delegateEvents(this.events);
                 return this;
             }
-
         });
-
         return CreateView;
     });

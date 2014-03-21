@@ -51,10 +51,7 @@ define(['libs/date.format', 'common'], function (dateformat, common) {
     };
 
     var getCurrentVT = function (option) {
-        console.log('Get Current View Type -------> ' + Backbone.history.fragment);
         var viewType;
-
-
         if (option && (option.contentType != App.contentType)) {
             App.ownContentType = false;
         }

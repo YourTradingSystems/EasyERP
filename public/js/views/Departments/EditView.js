@@ -7,7 +7,6 @@ define([
 	"populate"
 ],
     function (EditTemplate, DepartmentsCollection, AccountsDdCollection, common, Custom, populate) {
-
         var EditView = Backbone.View.extend({
             el: "#content-holder",
             contentType: "Departments",
@@ -71,7 +70,6 @@ define([
                 el.find(".userPagination .prevUserList").remove();
                 el.find(".userPagination .nextGroupList").remove();
                 el.find(".userPagination .prevGroupList").remove();
-
                 var list = el.find("ul");
                 var count = list.find("li").length;
                 var s = "";
@@ -88,7 +86,6 @@ define([
                         s += ((page - 1) * 20 + 1) + "-" + (count) + " of " + count;
                     }
                 }
-
                 if (page < count / 20) {
                     el.find(".userPagination").append("<a class='nextUserList' href='javascript:;'>next »</a>");
                 }
@@ -96,30 +93,22 @@ define([
                 for (var i = (page - 1) * 20; i < 20 * page; i++) {
                     el.find("ul li").eq(i).show();
                 }
-
                 pag.text(s);
             },
 
-
 			addUsers: function (e) {
                 e.preventDefault();
-
                 var div = $(e.target).parents(".left");
                 $('#targetUsers').append($(e.target));
-
                 this.updateAssigneesPagination(div);
-
                 div = $(e.target).parents(".left");
                 this.updateAssigneesPagination(div);
             },
             removeUsers: function (e) {
                 e.preventDefault();
-
                 var div = $(e.target).parents(".left");
                 $('#sourceUsers').append($(e.target));
-
                 this.updateAssigneesPagination(div);
-
                 div = $(e.target).parents(".left");
                 this.updateAssigneesPagination(div);
             },
@@ -137,7 +126,6 @@ define([
             showNewSelect:function(e,prev,next){
                 populate.showSelect(e,prev,next,this);
                 return false;
-                
             },
 
 			chooseOption:function(e){
@@ -145,21 +133,17 @@ define([
 			},
 
             saveItem: function () {
-
                 var self = this;
                 var mid = 39;
                 var departmentName = $.trim($("#departmentName").val());
-                
                 var parentDepartment = this.$("#parentDepartment").data("id")?this.$("#parentDepartment").data("id"):null;
 				if (parentDepartment==""){
 					parentDepartment = null;
 				}
-
                 var departmentManager = this.$("#departmentManager").data("id");
 				if (departmentManager==""){
 					departmentManager = null;
 				}
-
                 var nestingLevel = parseInt(this.$("#parentDepartment").data('level'))+1;
 				if (!nestingLevel){
 					nestingLevel=0;
@@ -171,14 +155,6 @@ define([
                 users = _.map(users, function(elm) {
                     return $(elm).attr('id');
                 });
-                //var _departmentManager = common.toObject(managerId, this.accountDdCollection);
-                //var departmentManager = {};
-                //if (_departmentManager) {
-                //    departmentManager.name = _departmentManager.name.first + " " + _departmentManager.name.last;
-                //    departmentManager.id = _departmentManager._id;
-                //} else {
-                //    departmentManager = currentModel.defaults.departmentManager;
-                //}
 
                 this.currentModel.set({
                     departmentName: departmentName,
@@ -202,7 +178,6 @@ define([
     					self.errorNotification(xhr);
                     }
                 });
-
             },
             hideDialog: function () {
                 $(".create-dialog").remove();
@@ -228,7 +203,6 @@ define([
                 }
             },
             render: function () {
-				console.log(this.currentModel.toJSON());
                 var formString = this.template({
                     model: this.currentModel.toJSON(),
                 });
@@ -255,7 +229,6 @@ define([
                 });
 				populate.get2name("#departmentManager", "/getPersonsForDd",{},this,false,true);
 				populate.getParrentDepartment("#parentDepartment", "/getDepartmentsForEditDd",{id:this.currentModel.toJSON()._id},this, false, true);
-
 				var k=this.currentModel.toJSON().users;
 				var b=$.map(this.currentModel.toJSON().users, function (item) {
                     return $('<li/>').text(item.login).attr("id",item._id);
@@ -264,12 +237,9 @@ define([
 				common.populateUsersForGroups('#sourceUsers','#targetUsers',this.currentModel.toJSON(),1,function(){
 					self.updateAssigneesPagination($("#targetUsers").parent());
 					self.updateAssigneesPagination($("#sourceUsers").parent());
-					
 				});
                 return this;
             }
-
         });
-
         return EditView;
     });

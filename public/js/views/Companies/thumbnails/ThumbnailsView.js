@@ -16,9 +16,9 @@
             listLength: null,
             filter: null,
             newCollection: null,
-            page: null, //if reload page, and in url is valid page
-            contentType: 'Companies',//needs in view.prototype.changeLocationHash
-            viewType: 'thumbnails',//needs in view.prototype.changeLocationHash
+            page: null,
+            contentType: 'Companies',
+            viewType: 'thumbnails',
 
             initialize: function (options) {
                 this.asyncLoadImgs(this.collection);
@@ -49,7 +49,7 @@
                 });
                 common.getImages(ids, "/getCustomersImages");
             },
-            //modified for filter Vasya
+
             getTotalLength: function(currentNumber,filter, newCollection) {
                 dataService.getData('/totalCollectionLength/Companies', { currentNumber: currentNumber, filter:this.filter, newCollection: this.newCollection }, function (response, context) {
                     var showMore = context.$el.find('#showMoreDiv');
@@ -65,7 +65,7 @@
                     }
                 }, this);
             },
-            //modified for filter Vasya
+
             alpabeticalRender: function (e) {
                     this.$el.find('.thumbnailwithavatar').remove();
                     this.startTime = new Date();
@@ -130,7 +130,7 @@
                 event.preventDefault();
                 this.collection.showMore({ filter: this.filter, newCollection: this.newCollection });
             },
-            //modified for filter Vasya
+
             showMoreContent: function (newModels) {
                 var holder = this.$el;
                 var content = holder.find("#thumbnailContent");
@@ -139,19 +139,16 @@
                 this.defaultItemsNumber += newModels.length;
                 this.changeLocationHash(null, (this.defaultItemsNumber < 50) ? 50 : this.defaultItemsNumber, this.filter);
                 this.getTotalLength(this.defaultItemsNumber, this.filter);
-
                 if (showMore.length != 0) {
                     showMore.before(this.template({ collection: this.collection.toJSON() }));
                     $(".filter-check-list").eq(1).remove();
-
                     showMore.after(created);
                 } else {
                     content.html(this.template({ collection: this.collection.toJSON() }));
-
                 }
                 this.asyncLoadImgs(newModels);
             },
-            //modified for filter Vasya
+
             showMoreAlphabet: function (newModels) {
                 var holder = this.$el;
                 var alphaBet = holder.find('#startLetter');
@@ -169,19 +166,16 @@
             },
 
             createItem: function () {
-                //create editView in dialog here
                 new createView();
             },
 
             editItem: function () {
-                //create editView in dialog here
                 new editView({ collection: this.collection });
             },
 
             deleteItems: function () {
                 var mid = 39;
                 var model;
-
                 model = this.collection.get(this.$el.attr("id"));
                 this.$el.fadeToggle(200, function () {
                     model.destroy({
@@ -193,6 +187,5 @@
                 });
             }
         });
-
         return CompaniesThumbnalView;
     });

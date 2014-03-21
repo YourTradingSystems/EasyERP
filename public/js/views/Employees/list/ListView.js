@@ -147,7 +147,7 @@ define([
                     filter: filter,
                     newCollection: this.newCollection
                 }, function (response, context) {
-                    var page = 1;
+                    var page = context.page || 1;
                     context.listLength = response.count || 0;
                     context.pageElementRender(response.count, itemsNumber, page);//prototype in main.js
                 }, this);
@@ -334,9 +334,7 @@ define([
                 var alphaBet = holder.find('#startLetter');
                 var created = holder.find('#timeRecivingDataFromServer');
                 var countPerPage = this.countPerPage = newModels.length;
-
                 content.remove();
-
                 holder.append(this.template({ collection: newModels.toJSON(), page: holder.find("#currentShowPage").val(), itemsNumber: holder.find("span#itemsNumber").text() }));
                 $("#top-bar-deleteBtn").hide();
                 $('#check_all').prop('checked', false);
@@ -344,7 +342,6 @@ define([
                 created.text("Created in " + (new Date() - this.startTime) + " ms");
                 holder.prepend(alphaBet);
                 holder.append(created);
-                this.asyncLoadImgs(newModels);
             },
 
             gotoForm: function (e) {

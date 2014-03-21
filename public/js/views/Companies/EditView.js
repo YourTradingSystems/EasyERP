@@ -9,12 +9,10 @@ define([
 	"populate"
 ],
     function (EditTemplate, CompaniesCollection, EmployeesCollection, PersonsCollection, DepartmentsCollection, AssigneesView, common, populate) {
-
         var EditView = Backbone.View.extend({
             el: "#content-holder",
             contentType: "Companies",
             imageSrc: '',
-
             initialize: function (options) {
                 _.bindAll(this, "render", "saveItem");
                 _.bindAll(this, "render", "deleteItem");
@@ -69,7 +67,6 @@ define([
                 dialog_holder.find(".dialog-tabs-item.active").removeClass("active");
                 dialog_holder.find(".dialog-tabs-item").eq(n).addClass("active");
             },
-
 
             chooseUser:function(e){
                 $(e.target).toggleClass("choosen");
@@ -130,7 +127,6 @@ define([
                     if ($(this).data("type")=="targetGroups"){
                         groupsId.push($(this).data("id"));
                     }
-
                 });
                 var whoCanRW = this.$el.find("[name='whoCanRW']:checked").val();
                 var website = this.$el.find('#website').val();
@@ -173,7 +169,6 @@ define([
                     },
                     whoCanRW: whoCanRW
                 };
-                
 
                 this.currentModel.save(data, {
                     headers: {
@@ -188,7 +183,6 @@ define([
                     error: function (model, xhr) {
 						self.errorNotification(xhr);
                     }
-
                 });
             },
 
@@ -228,14 +222,12 @@ define([
                     resizable: false,
                     dialogClass: "edit-companies-dialog",
                     width: "80%",
-                    //height: 513,
                     title: 'Edit Company',
                     buttons: [
                         {
                             text: "Save",
                             click: function () { self.saveItem(); }
                         },
-
 						{
 							text: "Cancel",
 							click: function () { self.hideDialog(); }
@@ -244,7 +236,6 @@ define([
 							text: "Delete",
 							click: self.deleteItem }
 						],
-                    //closeOnEscape: false,
                     modal: true
                 });
  				var notDiv = this.$el.find('.assignees-container');
@@ -279,6 +270,5 @@ define([
             }
 
         });
-
         return EditView;
     });

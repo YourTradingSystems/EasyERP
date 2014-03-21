@@ -9,12 +9,10 @@ define([
     "populate"
 ],
     function (EditTemplate, JobPositionsCollection, DepartmentsCollection, WorkflowsCollection, AssigneesView, Custom, common, populate) {
-
         var EditView = Backbone.View.extend({
             el: "#content-holder",
             contentType: "JobPositions",
             template: _.template(EditTemplate),
-
             initialize: function (options) {
                 _.bindAll(this, "render", "saveItem");
                 _.bindAll(this, "render", "deleteItem");
@@ -89,22 +87,15 @@ define([
                     location = location.split('/p=')[0] + '/p=1' + '/' + afterPage;
                 }
                 var self = this;
-
                 var mid = 39;
-
                 var name = $.trim($("#name").val());
-
                 var expectedRecruitment =  parseInt($.trim($("#expectedRecruitment").val()));
-
                 var description = $.trim($("#description").val());
-
                 var requirements = $.trim($("#requirements").val());
-
                 var department = this.$("#departmentDd").data("id");
 				if (department==""){
 					department=null;
 				}
-
                 var usersId=[];
                 var groupsId=[];
                 $(".groupsAndUser tr").each(function(){
@@ -114,7 +105,6 @@ define([
                     if ($(this).data("type")=="targetGroups"){
                         groupsId.push($(this).data("id"));
                     }
-
                 });
                 var whoCanRW = this.$el.find("[name='whoCanRW']:checked").val();
                 var workflow = this.$("#workflowsDd").data("id");
@@ -149,7 +139,6 @@ define([
     					self.errorNotification(xhr);
                     }
                 });
-
             },
             hideDialog: function () {
                 $(".edit-dialog").remove();
@@ -185,7 +174,7 @@ define([
                     autoOpen: true,
                     resizable: false,
                     dialogClass: "edit-dialog",
-                    width: "900", //Changed size like on create
+                    width: "900",
                     title: "Edit Job Position",
                     buttons: [
 						{
@@ -195,7 +184,8 @@ define([
 						
 						{
 							text: "Cancel",
-							click: function () { $(this).dialog().remove(); }
+							click: function () { $(this).dialog().remove();
+						}
 						},
 						{
 							text: "Delete",

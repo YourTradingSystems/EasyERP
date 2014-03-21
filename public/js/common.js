@@ -7,8 +7,6 @@
             Backbone.history.navigate(url, { trigger: true });
         };
 
-
-
         var utcDateToLocaleDate = function (utcDateString) {
             utcDateString = (utcDateString) ? dateFormat(utcDateString, "d mmm, yyyy", false) : null;
             return utcDateString;
@@ -654,7 +652,6 @@
                 });
                 workflowNamesDd.append(wfNamesOption);
                 selectList.append(options);
-                //if (callback) callback(selectId);
                 if (callback) callback(response.data);
             });
         }
@@ -853,7 +850,6 @@
             dataService.getData(url, { mid: 39 }, function (response) {
                 var options = [];
                 if (model && model.jobType) {
-                    console.log(model.jobType);
                     options = $.map(response.data, function (item) {
                         return (model.jobType === item.name) ?
                             $('<option/>').val(item._id).text(item.name).attr('selected', 'selected') :
@@ -920,7 +916,6 @@
                         $("#monthList #" + item._id + " img").attr("src", item.imageSrc);
                         $(".avatar.right[data-id='" + item._id + "'] img").attr("src", item.imageSrc);
                         $(".avatar-small.right[data-id='" + item._id + "'] img").attr("src", item.imageSrc);
-                        //if no src hide image
                         if(item.imageSrc == "")
                             $(".avatar-small.right[data-id='" + item._id + "'] img").hide();
                     });
@@ -932,8 +927,6 @@
             dataService.getData(url, { ids: [id] }, function (response) {
                 if (response.data !== undefined) {
 					$(thumbID).find(".avatar").attr("data-id",response.data[0]._id).find("img").attr("src",response.data[0].imageSrc);
-//                    $(".avatar.right[data-id='" + item._id + "'] img").attr("src", item.imageSrc);
-
                 }
                 if (callback) callback(response);
             });

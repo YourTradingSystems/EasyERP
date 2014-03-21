@@ -37,6 +37,5 @@ define([
 				   return this;
 			   }
 		   });
-
 		   return ApplicationsItemView;
 	   });

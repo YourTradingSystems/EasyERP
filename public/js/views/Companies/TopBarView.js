@@ -7,9 +7,8 @@
         var TopBarView = Backbone.View.extend({
             el: '#top-bar',
             contentType: "Companies",
-            actionType: null, //Content, Edit, Create
+            actionType: null,
             template: _.template(ContentTopBarTemplate),
-
             events: {
                 "click a.changeContentView": 'changeContentViewType',
                 "click ul.changeContentIndex a": 'changeItemIndex',
@@ -73,8 +72,5 @@
             }
 
         });
-
-
-
         return TopBarView;
     });

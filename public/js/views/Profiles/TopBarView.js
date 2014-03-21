@@ -12,10 +12,10 @@ define([
             template: _.template(TopBarTemplate),
             
             events:{
-                "click #top-bar-deleteBtn": "deleteEvent",
-                "click #top-bar-saveBtn": "saveEvent",
-                "click #top-bar-nextBtn": "nextEvent",
-                "click #top-bar-discardBtn": "discardEvent",
+            	"click #top-bar-deleteBtn": "deleteEvent",
+            	"click #top-bar-saveBtn": "saveEvent",
+            	"click #top-bar-nextBtn": "nextEvent",
+            	"click #top-bar-discardBtn": "discardEvent",
                 "click #top-bar-editBtn" : "editEvent",
                 "click #top-bar-createBtn" : "createEvent"
             },
@@ -31,28 +31,28 @@ define([
                 this.trigger('nextEvent');
             },
             deleteEvent: function(){
-                var self = this;
+				var self = this;
                 event.preventDefault();
                 var selectedProfileId = $('#profilesList > li.active > a').data('id');
-                if (selectedProfileId=="1387275598000"||selectedProfileId=="1387275504000"){
-                    alert("You cannot delete this profile");
-                    return;
-                }
+				if (selectedProfileId=="1387275598000"||selectedProfileId=="1387275504000"){
+					alert("You cannot delete this profile");
+					return;
+				}
                 dataService.getData('/UserWithProfile', { _id: selectedProfileId }, function(res){
-                    if (res.count==0){
-                        if(confirm('Delete profile?'))
-                            self.trigger('deleteEvent');
-                    }else{
-                        
-                        if(confirm('Delete profile? Users '+ res.data.join(', ') + ' will be assigned to banned profile!')){
-                            self.trigger('deleteEvent');
-                            if (res.isOwnProfile)
-                                window.location="/logout";
+					if (res.count==0){
+						if(confirm('Delete profile?'))
+							self.trigger('deleteEvent');
+					}else{
+						
+						if(confirm('Delete profile? Users '+ res.data.join(', ') + ' will be assigned to banned profile!')){
+							self.trigger('deleteEvent');
+							if (res.isOwnProfile)
+								window.location="/logout";
 
-                        }
-                    }
+						}
+					}
  
-                });
+				});
    
            },
 
@@ -67,6 +67,9 @@ define([
             editEvent: function(event){
                 event.preventDefault();
                 this.trigger('editEvent');
+
+                /*var id = this.getIdFromHash(window.location.hash);
+                Backbone.history.navigate("#home/action-Profiles/Edit/" + id, { trigger: true });*/
             },
             getIdFromHash: function(hash){
                 var hashItems = hash.split('/');

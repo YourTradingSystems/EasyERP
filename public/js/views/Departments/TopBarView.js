@@ -8,7 +8,7 @@ define([
             el:'#top-bar',
             contentType: "Departments",
             headerType: "Groups",
-            actionType: null, //Content, Edit, Create
+            actionType: null,
             template: _.template(ContentTopBarTemplate),
             
             events:{
@@ -52,12 +52,8 @@ define([
             render: function(){
                 $('title').text(this.headerType);
                 var viewType = Custom.getCurrentVT();
-                //var collectionLength = this.collection.length;
-                //var itemIndex = Custom.getCurrentII();
-            	
                 this.$el.html(this.template({ viewType: viewType, contentType: this.contentType, headerType:this.headerType}));
                 Common.displayControlBtnsByActionType('Content', viewType);
-
                 return this;
             },
             
@@ -80,6 +76,5 @@ define([
             	Backbone.history.navigate("home/content-"+this.contentType, {trigger:true});
             }
         });
-
         return TopBarView;
     });

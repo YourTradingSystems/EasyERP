@@ -8,19 +8,16 @@ define([
     "populate"
 ],
     function (CreateTemplate, DepartmentsCollection, WorkflowsCollection, JobPositionsModel, AssigneesView, common, populate) {
-
         var CreateView = Backbone.View.extend({
             el: "#content-holder",
             contentType: "JobPositions",
             template: _.template(CreateTemplate),
-
             initialize: function () {
                 _.bindAll(this, "saveItem", "render");
                 this.model = new JobPositionsModel();
                 this.responseObj = {};
                 this.render();
             },
-
             events: {
                 "change #workflowNames": "changeWorkflows",
                 'keydown': 'keydownHandler',
@@ -82,7 +79,6 @@ define([
             changeWorkflows: function () {
                 var name = this.$("#workflowNames option:selected").val();
                 var value = this.workflowsCollection.findWhere({ name: name }).toJSON().value;
-                //$("#selectWorkflow").html(_.template(selectTemplate, { workflows: this.getWorkflowValue(value) }));
             },
 
             saveItem: function () {
@@ -94,18 +90,13 @@ define([
                     location = location.split('/p=')[0] + '/p=1' + '/' + afterPage;
                 }
                 var self = this;
-
                 var mid = 39;
                 var name = $.trim($("#name").val());
                 var expectedRecruitment = parseInt($.trim($("#expectedRecruitment").val()));
-
                 var description = $.trim($("#description").val());
-
                 var requirements = $.trim($("#requirements").val());
-
                 var workflow = this.$("#workflowsDd").data("id");
                 var department = this.$("#departmentDd").data("id")?this.$("#departmentDd").data("id"):null;
-
                 var usersId=[];
                 var groupsId=[];
                 $(".groupsAndUser tr").each(function(){
@@ -115,7 +106,6 @@ define([
                     if ($(this).data("type")=="targetGroups"){
                         groupsId.push($(this).data("id"));
                     }
-
                 });
                 var whoCanRW = this.$el.find("[name='whoCanRW']:checked").val();
                 this.model.save({
@@ -145,7 +135,6 @@ define([
                     error: function (model, xhr) {
     					self.errorNotification(xhr);
                     }
-
                 });
             },
             hideDialog: function () {
@@ -157,7 +146,6 @@ define([
             render: function () {
 				var self = this;
                 var formString = this.template({});
-
                 this.$el = $(formString).dialog({
 					closeOnEscape: false,
                     autoOpen:true,
@@ -177,7 +165,6 @@ define([
                         }]
 
                 });
-                //for input type number
                 this.$el.find("#expectedRecruitment").spinner({
                     min: 0,
                     max: 9999
@@ -193,8 +180,6 @@ define([
                 this.delegateEvents(this.events);
                 return this;
             }
-
         });
-
         return CreateView;
     });
