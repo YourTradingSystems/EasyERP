@@ -11,8 +11,8 @@ define([
             template: _.template(TopBarTemplate),
             
             events:{
-            	"click a.changeContentView": 'changeContentViewType',
-            	"click ul.changeContentIndex a": 'changeItemIndex',
+                "click a.changeContentView": 'changeContentViewType',
+                "click ul.changeContentIndex a": 'changeItemIndex',
                 "click #top-bar-deleteBtn": "deleteEvent",
                 "click #top-bar-saveBtn": "saveEvent",
                 "click #top-bar-discardBtn": "discardEvent",

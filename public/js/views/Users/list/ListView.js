@@ -3,11 +3,10 @@ define([
     'views/Users/CreateView',
     'views/Users/list/ListItemView',
     'collections/Users/filterCollection',
-    'common',
     'dataService'
 ],
 
-    function (listTemplate, createView, listItemView, contentCollection, common, dataService) {
+    function (listTemplate, createView, listItemView, contentCollection, dataService) {
         var UsersListView = Backbone.View.extend({
             el: '#content-holder',
             defaultItemsNumber: null,
@@ -165,7 +164,7 @@ define([
                     context.listLength = response.count || 0;
                 }, this);
             },
-            //modified for filter Vasya
+
             nextPage: function (event) {
                 $("#top-bar-deleteBtn").hide();
                 $('#check_all').prop('checked', false);

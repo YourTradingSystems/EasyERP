@@ -17,7 +17,7 @@ function (WorkflowsTemplate, kanbanSettingsTemplate, WorkflowsCollection, Kanban
             "dblclick .item": "gotoEditForm",
             "click .item": "selectItem",
 			"click .column.fold":"foldUnfoldKanban",
-            "click .fold-unfold": "foldUnfoldKanban",
+            "click .fold-unfold": "foldUnfoldKanban"
         },
 
         columnTotalLength: null,
@@ -156,7 +156,6 @@ function (WorkflowsTemplate, kanbanSettingsTemplate, WorkflowsCollection, Kanban
         },
 
         selectItem: function (e) {
-			console.log("selected");
             $(e.target).parents(".item").parents("table").find(".active").removeClass("active");
             $(e.target).parents(".item").addClass("active");
         },
@@ -247,7 +246,6 @@ function (WorkflowsTemplate, kanbanSettingsTemplate, WorkflowsCollection, Kanban
 		},
         updateCounter:function(el,inc){
 			var i = inc?1:-1;
-			console.log(i);
 			var counter = el.closest(".column").find(".totalCount");
 			counter.html(parseInt(counter.html())+i);
 		},

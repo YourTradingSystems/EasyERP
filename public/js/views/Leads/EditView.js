@@ -137,7 +137,6 @@ define([
 
                 var active;
                 if ($("#active").is(":checked")) {
-                    console.log("true");
                     active = true;
                 } else {
                     active = false;
@@ -169,19 +168,13 @@ define([
                     company: company,
                     campaign: this.$el.find('#campaignDd').data("id"),
                     source: this.$el.find('#sourceDd').data("id"),
-                    //customer: idCustomer,
                     address: address,
-                    //salesPerson: salesPersonId,
-                    //salesTeam: salesTeamId,
                     contactName: contactName,
                     email: email,
-                    //func: func,
                     phones: phones,
                     fax: fax,
                     priority: priority,
                     internalNotes: internalNotes,
-                    //active: active,
-                    //optout: optout,
                     reffered: reffered,
                     groups: {
 						owner: $("#allUsersSelect").data("id"),
