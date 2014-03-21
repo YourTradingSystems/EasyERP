@@ -157,9 +157,9 @@ define([
                     var page = context.page || 1;
                     var length = context.listLength = response.count || 0;
                     if (itemsNumber * (page - 1) > length) {
-                        context.page = page = Math.round(length / itemsNumber);
+                        context.page = page = Math.ceil(length / itemsNumber);
                         context.fetchSortCollection(context.sort);
-                        context.changeLocationHash(page, context.defaultItemsNumber);
+                        context.changeLocationHash(page, context.defaultItemsNumber, filter);
                     }
                     context.pageElementRender(response.count, itemsNumber, page);//prototype in main.js
                 }, this);
