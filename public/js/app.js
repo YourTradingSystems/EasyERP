@@ -35,7 +35,19 @@ define([
             resizable: false,
             draggable:true,
             autoOpen:true,
-            width:700
+            width:700,
+			appendTo: "#content-holder",
+			create: function( event, ui ) {
+				var win = $( window );
+				var dialog = $(event.target).parent(".ui-dialog");
+				var top = $(document).scrollTop()+(win.height() - dialog.height()-200) / 2;
+				var left = (win.width() - dialog.width()) / 2;
+				dialog.css({
+					position: "absolute",
+					top: top,
+					left: left
+				});
+			} 
         });
         $.datepicker.setDefaults({
             dateFormat: "d M, yy",

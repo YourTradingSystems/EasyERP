@@ -245,12 +245,11 @@ define([
             this.$el.html(this.template({owner:owner}));
 			if (this.model){
 				populate.get("#allUsersSelect", "/UsersForDd", {}, "login", this);
-                common.populateUsers( this.$el.find("#allUsers"), "/UsersForDd",this.model.toJSON(),null,true);
+				common.populateUsersForGroups( this.$el.find('#sourceUsers'), this.$el.find('#targetUsers'), this.model.toJSON(), 1);
                 common.populateDepartmentsList( this.$el.find("#sourceGroups"), this.$el.find("#targetGroups"), "/DepartmentsForDd",this.model.toJSON(),1);
 			}else{
 				populate.get("#allUsersSelect", "/UsersForDd", {}, "login", this, true);
 				common.populateUsersForGroups( this.$el.find('#sourceUsers'), this.$el.find('#targetUsers'), null, 1);
-//				common.populateUsers(this.$el.find("#allUsers"), "/UsersForDd", null, null, true);
 				common.populateDepartmentsList(this.$el.find("#sourceGroups"), this.$el.find("#targetGroups"), "/DepartmentsForDd", null, 1);
 			}
             return this;
