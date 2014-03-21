@@ -42,8 +42,8 @@ function (ListTemplate, CreateView, currentModel, ListItemView, EditView) {
             });
 			return false;
         },
-        deleteItem: function(e){
-			var myModel=this.collection.get($(e.target).closest("li").data("id"))
+        deleteItem: function(e) {
+            var myModel = this.collection.get($(e.target).closest("li").data("id"));
             var mid = 39;
             e.preventDefault();
             var self = this;
