@@ -4,10 +4,8 @@
 ],
     function (ListItemTemplate, common) {
         var ListItemView = Backbone.View.extend({
-
             initialize: function (options) {
                 this.collection = options.collection;
-                //this.render();
             },
 
             events: {
@@ -24,12 +22,7 @@
             template: _.template(ListItemTemplate),
 
             render: function () {
-                ////var that = this;
-                //_.each(this.collection, function (model, index) {
-                //    this.$el.attr("data-index", index);
                 this.$el.html(this.template({ collection: this.collection }));
-                //}, this);
-                
                 return this;
             }
         });

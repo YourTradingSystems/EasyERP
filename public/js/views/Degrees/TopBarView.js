@@ -7,7 +7,7 @@ define([
         var TopBarView = Backbone.View.extend({
             el:'#top-bar',
             contentType: "Degrees",
-            actionType: null, //Content, Edit, Create
+            actionType: null,
             template: _.template(ContentTopBarTemplate),
             
             events:{
@@ -17,11 +17,8 @@ define([
             	"click #top-bar-saveBtn": "saveEvent",
             	"click #top-bar-discardBtn": "discardEvent"
             },
-            
             changeContentViewType: Custom.changeContentViewType,
-            
             changeItemIndex: Custom.changeItemIndex,
-            
             initialize: function(options){
             	this.actionType = options.actionType;
             	if (this.actionType !== "Content")
@@ -36,10 +33,8 @@ define([
                 var viewType = Custom.getCurrentVT();
                 var collectionLength = this.collection.length;
                 var itemIndex = Custom.getCurrentII();
-            	
                 this.$el.html(this.template({ viewType: viewType, contentType: this.contentType, collectionLength: collectionLength, itemIndex: itemIndex }));
                 Common.displayControlBtnsByActionType(this.actionType, viewType);
-                
                 return this;
             },
             
@@ -62,6 +57,5 @@ define([
             	Backbone.history.navigate("home/content-"+this.contentType, {trigger:true});
             }
         });
-
         return TopBarView;
     });

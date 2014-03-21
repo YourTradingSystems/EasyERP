@@ -51,7 +51,6 @@ define([
                 el.find(".userPagination .prevUserList").remove();
                 el.find(".userPagination .nextGroupList").remove();
                 el.find(".userPagination .prevGroupList").remove();
-
                 var list = el.find("ul");
                 var count = list.find("li").length;
                 var s = "";
@@ -76,22 +75,18 @@ define([
                 for (var i = (page - 1) * 20; i < 20 * page; i++) {
                     el.find("ul li").eq(i).show();
                 }
-
                 pag.text(s);
             },
-
 
             nextUserList: function (e, page) {
                 $(e.target).closest(".left").find("ul").attr("data-page", parseInt($(e.target).closest(".left").find("ul").attr("data-page")) + 1);
                 this.updateAssigneesPagination($(e.target).closest(".left"));
-
             },
 
             prevUserList: function (e, page) {
                 $(e.target).closest(".left").find("ul").attr("data-page", parseInt($(e.target).closest(".left").find("ul").attr("data-page")) - 1);
                 this.updateAssigneesPagination($(e.target).closest(".left"));
             },
-
             chooseUser: function (e) {
                 $(e.target).toggleClass("choosen");
             },
@@ -102,30 +97,22 @@ define([
                 $(".dialog-tabs-items").find(".dialog-tabs-item.active").removeClass("active");
                 $(".dialog-tabs-items").find(".dialog-tabs-item").eq(n).addClass("active");
             },
-
             close: function () {
                 this._modelBinder.unbind();
             },
-
             addUsers: function (e) {
                 e.preventDefault();
-
                 var div = $(e.target).parents(".left");
                 $('#targetUsers').append($(e.target));
-
                 this.updateAssigneesPagination(div);
-
                 div = $(e.target).parents(".left");
                 this.updateAssigneesPagination(div);
             },
             removeUsers: function (e) {
                 e.preventDefault();
-
                 var div = $(e.target).parents(".left");
                 $('#sourceUsers').append($(e.target));
-
                 this.updateAssigneesPagination(div);
-
                 div = $(e.target).parents(".left");
                 this.updateAssigneesPagination(div);
             },
@@ -205,12 +192,9 @@ define([
                 });
                 populate.get2name("#departmentManager", "/getPersonsForDd", {}, this, true, true);
                 populate.getParrentDepartment("#parentDepartment", "/getSalesTeam", {}, this, true, true);
-
                 common.populateUsersForGroups('#sourceUsers', '#targetUsers', null, 1);
                 return this;
             }
-
         });
-
         return CreateView;
     });

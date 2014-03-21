@@ -18,7 +18,6 @@ function (ListTemplate, FormTemplate, DepartmentsCollection, Custom, common, Edi
         gotoForm: function (e) {
             App.ownContentType = true;
             var id = $(e.target).parent("tr").data("id");
-            //var itemIndex = $(e.target).closest("tr").data("index") + 1;
             window.location.hash = "#home/content-Departments/form/" + id;
         },
 
@@ -29,7 +28,6 @@ function (ListTemplate, FormTemplate, DepartmentsCollection, Custom, common, Edi
 
         render: function () {
             Custom.setCurrentCL(this.collection.models.length);
-            console.log('Render Departments View');
             var viewType = Custom.getCurrentVT();
             switch (viewType) {
                 case "list":
@@ -50,26 +48,10 @@ function (ListTemplate, FormTemplate, DepartmentsCollection, Custom, common, Edi
 						} else {
 							this.$el.html('<h2>No departments found</h2>');
 						}
-
-						/*
-                        var itemIndex = Custom.getCurrentII() - 1;
-                        if (itemIndex > this.collection.models.length - 1) {
-                            itemIndex = this.collection.models.length - 1;
-                            Custom.setCurrentII(this.collection.models.length);
-                        }
-
-                        if (itemIndex == -1) {
-                            this.$el.html();
-                        } else {
-                            var currentModel = this.collection.models[itemIndex];
-                            this.$el.html(_.template(FormTemplate, currentModel.toJSON()));
-                        }*/
-
                         break;
                     }
             }
             return this;
-
         },
         createItem: function () {
             new CreateView({ collection: this.collection });
@@ -82,7 +64,6 @@ function (ListTemplate, FormTemplate, DepartmentsCollection, Custom, common, Edi
                 $("#top-bar-deleteBtn").hide();
         },
         editItem: function(){
-            //create editView in dialog here
             new EditView({collection:this.collection});
         },
         deleteItems: function () {
@@ -122,6 +103,5 @@ function (ListTemplate, FormTemplate, DepartmentsCollection, Custom, common, Edi
             }
         }
     });
-
     return ContentView;
 });

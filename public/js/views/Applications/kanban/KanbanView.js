@@ -21,7 +21,6 @@
             },
 
             columnTotalLength: null,
-
             initialize: function (options) {
                 this.startTime = options.startTime;
                 this.workflowsCollection = options.workflowCollection;
@@ -37,41 +36,41 @@
 				dataService.postData('/currentUser', { 'kanbanSettings.applications.foldWorkflows': this.foldWorkflows }, function (seccess, error) {});
 			},
 
-		foldUnfoldKanban:function(e,id){
-			var el;
-			if (id){
-				el = $("td.column[data-id='"+id+"']");
-			}else{
-				el=$(e.target).closest("td");
-			}
-			el.toggleClass("fold");
-			if (el.hasClass("fold")){
-				var w = el.find(".columnName .text").width();
-					var k = w/2-21;
-					if (k<0){
-						k=-2-k;
-					}
-					el.find(".columnName .text").css({"left":"-"+k+"px","top":Math.abs(w/2+47)+"px" });
-				this.foldWorkflows.push(el.attr("data-id"));
-			}else{
-				var idx = this.foldWorkflows.indexOf(el.attr("data-id"));
-				if (idx!==-1){
-					this.foldWorkflows.splice(idx,1);
-				}
-			}
-			if(!id)
-				this.updateFoldWorkflow();
-			if (el.closest("table").find(".fold").length==el.closest("table").find(".column").length){
-				el.closest("table").css({"min-width":"inherit"});
-				el.closest("table").css({"width":"auto"});
-			}
-			else{
-				el.closest("table").css({"min-width":"100%"});
-			}
-			el.closest("table").css({"min-height":($(window).height()-110)+"px"});
-            this.$(".column").sortable("enable");
-            this.$(".column.fold").sortable("disable");
-		},
+            foldUnfoldKanban:function(e,id){
+                var el;
+                if (id){
+                    el = $("td.column[data-id='"+id+"']");
+                }else{
+                    el=$(e.target).closest("td");
+                }
+                el.toggleClass("fold");
+                if (el.hasClass("fold")){
+                    var w = el.find(".columnName .text").width();
+                        var k = w/2-21;
+                        if (k<0){
+                            k=-2-k;
+                        }
+                        el.find(".columnName .text").css({"left":"-"+k+"px","top":Math.abs(w/2+47)+"px" });
+                    this.foldWorkflows.push(el.attr("data-id"));
+                }else{
+                    var idx = this.foldWorkflows.indexOf(el.attr("data-id"));
+                    if (idx!==-1){
+                        this.foldWorkflows.splice(idx,1);
+                    }
+                }
+                if(!id)
+                    this.updateFoldWorkflow();
+                if (el.closest("table").find(".fold").length==el.closest("table").find(".column").length){
+                    el.closest("table").css({"min-width":"inherit"});
+                    el.closest("table").css({"width":"auto"});
+                }
+                else{
+                    el.closest("table").css({"min-width":"100%"});
+                }
+                el.closest("table").css({"min-height":($(window).height()-110)+"px"});
+                this.$(".column").sortable("enable");
+                this.$(".column.fold").sortable("disable");
+            },
 			isNumberKey: function(evt){
 				var charCode = (evt.which) ? evt.which : event.keyCode;
 				if (charCode > 31 && (charCode < 48 || charCode > 57))
@@ -120,7 +119,6 @@
                             }
                         }
                     });
-                    // for input type number
                     context.$el.find('#cPerPage').spinner({
                         min: 5,
                         max: 9999
@@ -163,7 +161,6 @@
                 _.each(workflows.toJSON(), function (wfModel) {
                     dataService.getData('/Applications/kanban', { workflowId: wfModel._id }, this.asyncRender, this);
                 }, this);
-
             },
 
             asyncRender: function (response, context) {
@@ -190,12 +187,10 @@
             },
 
             editItem: function () {
-                //create editView in dialog here
                 new EditView({ collection: this.collection });
             },
 
             createItem: function () {
-                //create editView in dialog here
                 new CreateView();
             },
 
@@ -240,7 +235,6 @@
                 _.each(workflows, function (workflow, i) {
                     itemCount = 0;
                     var column = this.$(".column").eq(i);
-                    //var count = " <span>(<span class='counter'>" + itemCount + "</span> / </span>";
                     var total = " <span><span class='totalCount'>" + itemCount + "</span> </span>";
                     column.find(".columnNameDiv h2").append(total);
                 }, this);
@@ -291,6 +285,5 @@
                 return this;
             }
         });
-
         return ApplicationsKanbanView;
     });

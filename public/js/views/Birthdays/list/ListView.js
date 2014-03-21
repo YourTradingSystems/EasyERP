@@ -11,7 +11,6 @@ function (ListTemplate, ListItemView, common) {
             this.employeesCollection = options.collection.toJSON()[0];
             this.render();
         },
-
         render: function () {
             this.$el.html(_.template(ListTemplate));
             var list = this.$el.find('#birthdaysList');
@@ -26,7 +25,6 @@ function (ListTemplate, ListItemView, common) {
 			}));
 			common.getImages(ids, "/getEmployeesImages");
 			this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.startTime)+" ms</div>");
-
         }
     });
     return ContentView;

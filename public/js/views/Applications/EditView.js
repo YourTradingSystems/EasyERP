@@ -22,7 +22,6 @@
 				this.currentModel.urlRoot = "/Applications";
 				this.responseObj = {};
                 this.workflowsCollection = new WorkflowsCollection({ id: 'Applications' });
-//				this.workflowsCollection.bind("reset",this.render, this);
 				this.render();
 
             },
@@ -91,7 +90,7 @@
 				e.preventDefault();
             	this.currentModel.save({
             	    isEmployee: true,
-            	    hired: true // for recalculate Birtdays only
+            	    hired: true
                 }, {
                     headers: {
                         mid: 39
@@ -178,15 +177,9 @@
                 var viewType = custom.getCurrentVT();
                 var relatedUser = this.$el.find("#relatedUsersDd option:selected").val();
                 relatedUser = relatedUser ? relatedUser : null;
-
                 var department = this.$el.find("#departmentDd").data("id");
                 department = department ? department : null;
-
                 var nextAction = $.trim(this.$el.find("#nextAction").val());
-                /*var nextAction = "";
-                if (nextActionSt) {
-                    nextAction = new Date(Date.parse(nextActionSt)).toISOString();
-                }*/
                 var jobPositionId = this.$el.find("#jobPositionDd").data("id") ? this.$el.find("#jobPositionDd").data("id") : null;
                 var usersId = [];
                 var groupsId = [];
@@ -202,7 +195,6 @@
                 var whoCanRW = this.$el.find("[name='whoCanRW']:checked").val();
                 var workflow = this.$el.find("#workflowsDd").data("id") ? this.$el.find("#workflowsDd").data("id") : null;
                 var data = {
-                    //subject: this.$el.find("#subject").val(),
                     imageSrc: this.imageSrc,
                     name: {
                         first: this.$el.find("#first").val(),
@@ -222,8 +214,7 @@
                     department: department,
                     jobPosition: jobPositionId,
                     expectedSalary: $.trim(this.$el.find("#expectedSalary").val()),
-                    //proposedSalary: $.trim(this.$el.find("#proposedSalary").val()),
-                    proposedSalary: parseInt($.trim(this.$el.find("#proposedSalary").val()), 10),     //Masalovych bag 812
+                    proposedSalary: parseInt($.trim(this.$el.find("#proposedSalary").val()), 10),
                     tags: $.trim(this.$el.find("#tags").val()).split(','),
                     otherInfo: this.$el.find("#otherInfo").val(),
                     groups: {
@@ -263,7 +254,6 @@
 									Backbone.history.fragment = "";
                                         Backbone.history.navigate(window.location.hash.replace("#", ""), { trigger: true });
 								}
-
                             }
                             break;
                         case 'kanban':
@@ -297,7 +287,6 @@
                                     counter.html(parseInt(counter.html()) - 1);
 
                                 }
-
                                 $(".column[data-id='" + data.workflow + "']").find(".columnNameDiv").after(kanban_holder);
 
                             }
@@ -308,7 +297,6 @@
     					self.errorNotification(xhr);
                     }
                 });
-
             },
             deleteItem: function (event) {
                 var mid = 39;
@@ -332,14 +320,12 @@
 							case 'kanban':
 								{
 									$("#" + model._id).remove();
-									//count kanban
 									var wId = model.workflow._id;
                                         var newTotal = ($("td[data-id='" + wId + "'] .totalCount").html() - 1);
 									$("td[data-id='" + wId + "'] .totalCount").html(newTotal);
 								}
 							}
 							self.hideDialog();
-
                         },
                         error: function (model, xhr) {
     						self.errorNotification(xhr);
@@ -353,9 +339,7 @@
             showNewSelect: function (e, prev, next) {
                 populate.showSelect(e, prev, next, this);
                 return false;
-                
             },
-
 
             chooseOption: function (e) {
                 $(e.target).parents("dd").find(".current-selected").text($(e.target).text()).attr("data-id", $(e.target).attr("id"));
@@ -436,7 +420,6 @@
                     }
                 return this;
             }
-
         });
         return EditView;
     });

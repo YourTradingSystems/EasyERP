@@ -52,9 +52,6 @@ define([
             render: function(){
                 $('title').text(this.contentHeader);
                 var viewType = Custom.getCurrentVT();
-                //var collectionLength = this.collection.length;
-                //var itemIndex = Custom.getCurrentII();
-            	
                 this.$el.html(this.template({ viewType: viewType, contentType: this.contentType,contentHeader:this.contentHeader}));
                 Common.displayControlBtnsByActionType('Content', viewType);
 
@@ -80,6 +77,5 @@ define([
             	Backbone.history.navigate("home/content-"+this.contentType, {trigger:true});
             }
         });
-
         return TopBarView;
     });
