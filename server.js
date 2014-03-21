@@ -1,4 +1,3 @@
-// JavaScript source code
 var http = require('http'),
     url = require('url'),
     fs = require("fs");
@@ -59,7 +58,6 @@ var config = {
     host: mainDb.host,
     port: mainDb.port,
     reapInterval: 500000
-    //mongoose_connection: mongoose.connections[0]
 };
 
 var allowCrossDomain = function (req, res, next) {
@@ -69,24 +67,10 @@ var allowCrossDomain = function (req, res, next) {
         'localhost:8088',
         '192.168.88.13:8088'
     ];
-    //if (allowedHost.indexOf(req.headers.host) !== -1) {
     var browser = req.headers['user-agent'];
     if (/Trident/.test(browser))
         res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
-    ////res.setHeader('Content-Type', 'text/html');
-    ////res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
-    //res.header('Access-Control-Allow-Credentials', true);
-    //res.header('Access-Control-Allow-Origin', req.headers.origin);
-    //res.header('Access-Control-Allow-Origin', req.headers.origin);
-    //res.header("Access-Control-Allow-Origin", "*");
-    //res.header("Allow Cross Site Origin", "*");
-    //res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-    //res.header("Access-Control-Request-Headers", "*");
-    //res.header('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, X-HTTP-Method-Override, uid, hash, mid');
     next();
-    // } else {
-    //res.send(401);
-    // }
 };
 app.configure(function () {
     app.set('view engine', 'jade');
@@ -103,7 +87,6 @@ app.configure(function () {
             maxAge: 10000 * 60 * 1000 //1 minute
         },
         store: new MemoryStore(config)
-        //store: new MemoryStore()
     }));
     app.use(app.router);
 });
@@ -188,7 +171,6 @@ app.get('/download/:path', function (req, res) {
 
 function uploadFileArray(req, res, callback) {
     var files = [];
-	console.log(req.files);
     if (req.files && !req.files.attachfile.length) {
         req.files.attachfile = [req.files.attachfile];
     }
@@ -260,14 +242,12 @@ function uploadFileArray(req, res, callback) {
                     file._id = mongoose.Types.ObjectId();
                     file.name = item.name;
 					file.shortPas = encodeURIComponent(shortPas);
-                    //convert file size add Vasya
                     if (item.size>=1024) {
                         file.size = (Math.round(item.size / 1024 / 2024 * 1000) / 1000)+'&nbsp;Mb';
                     }
                     else{
                         file.size = (Math.round(item.size / 1024 * 1000)/1000)+'&nbsp;Kb';
                     }
-                    //end convert
                     file.uploadDate = new Date();
                     file.uploaderName = req.session.uName;
                     files.push(file);
@@ -475,7 +455,6 @@ app.post('/uploadTasksFiles', function (req, res, next) {
         }
     });
 });
-// upload files Opportunities (add Vasya);
 app.post('/uploadOpportunitiesFiles', function (req, res, next) {
     var os = require("os");
     var osType = (os.type().split('_')[0]);
@@ -566,6 +545,14 @@ app.post('/currentUser', function (req, res) {
     requestHandler.updateCurrentUser(req, res, data);
 });
 
+app.patch('/currentUser/:_id', function (req, res) {
+    var data = {};
+        if (req.body.oldpass && req.body.pass) {
+            data.changePass = true;
+        }
+    requestHandler.updateCurrentUser(req, res, data);
+});
+
 app.get('/UsersForDd', function (req, res) {
     requestHandler.getUsersForDd(req, res);
 });
@@ -623,7 +610,7 @@ app.delete('/Profiles/:_id', function (req, res) {
 });
 
 //-----------------END----Users--and Profiles-----------------------------------------------
-/////////////////////////////////////////////////////////////////////////////////////////
+
 
 //-----------------------------getTotalLength---------------------------------------------
 app.get('/totalCollectionLength/:contentType', function (req, res, next) {
@@ -677,7 +664,6 @@ app.get('/getPersonsForMiniView', function (req, res) {
 //--------------------------Customers----------------------------------------------------------     
 
 app.get('/Customer', function (req, res) {
-    console.log('---------SERVER----Customer-------------------------------');
     var data = {};
     for (var i in req.query) {
         data[i] = req.query[i];
@@ -906,7 +892,6 @@ app.post('/Workflows', function (req, res) {
 });
 
 app.put('/Workflows/:_id', function (req, res) {
-    console.log('Request for update Workflow');
     var data = {};
     var _id = req.param('_id');
     data.status = req.body.status;
@@ -915,7 +900,6 @@ app.put('/Workflows/:_id', function (req, res) {
 });
 
 app.patch('/Workflows/:_id', function (req, res) {
-    console.log('Request for update Workflow');
     var data = {};
     var _id = req.param('_id');
     for (var i in req.body) {
@@ -1123,14 +1107,11 @@ app.put('/Employees/:_id', function (req, res) {
     var data = {};
     var id = req.body._id;
     data.employee = req.body;
-    //requestHandler.updateEmployees(req, res, id, data);
-    console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!----UPDATE-EMPLOYEE---!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
 });
 
 app.patch('/Employees/:_id', function (req, res) {
     var id = req.param('_id');
     requestHandler.employeesUpdateOnlySelectedFields(req, res, id, req.body);
-    console.log(req.body);
 });
 
 app.delete('/Employees/:_id', function (req, res) {
@@ -1192,13 +1173,11 @@ app.put('/Applications/:_id', function (req, res) {
     var id = req.body._id;
     data.employee = req.body;
     requestHandler.updateApplication(req, res, id, data);
-    console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!----UPDATE-APP---!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
 });
 
 app.patch('/Applications/:_id', function (req, res) {
     var id = req.param('_id');
     requestHandler.aplicationUpdateOnlySelectedFields(req, res, id, req.body);
-    console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!----PATCH-APP---!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
 });
 
 app.delete('/Applications/:_id', function (req, res) {
@@ -1350,6 +1329,5 @@ app.get('/:id', function (req, res) {
 });
 app.listen(8088);
 
-//console.log(app.routes);
 
 console.log("server start");

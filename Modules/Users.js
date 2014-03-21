@@ -283,10 +283,7 @@ var Users = function (logWriter, mongoose, models, department) {
     function updateUser(req, _id, data, res, options) {
         try {
             if (options && options.changePass) {
-                delete data.login;
-                delete data.profile;
-                delete data.email;
-                delete data.imageSrc;
+
                 var shaSum = crypto.createHash('sha256');
                 shaSum.update(data.pass);
                 data.pass = shaSum.digest('hex');

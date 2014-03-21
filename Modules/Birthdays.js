@@ -27,25 +27,14 @@
             return (years < 0) ? 0 : years;
         };
         var separateWeklyAndMonthly = function (arrayOfEmployees) {
-            //Current week
-        	var dateOnly = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-            //var daysToAdd = (dateOnly.getDay() != 0) ? 7 - dateOnly.getDay() : 0;
+            var dateOnly = new Date(now.getFullYear(), now.getMonth(), now.getDate());
             var dayNumber = dateOnly.getDay();
             var LeftOffset = dayNumber - 1;
             var RightOffset = 7 - dayNumber;; 
             var FirstDateWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate() - LeftOffset).valueOf();
             var LastDateWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate() + RightOffset).valueOf();
-            //Next week
             var FirstDateNxtWeek =  new Date(now.getFullYear(), now.getMonth(), now.getDate() + RightOffset +1 ).valueOf();
             var LastDateNxtWeek =  new Date(now.getFullYear(), now.getMonth(), now.getDate() + RightOffset * 2+1 ).valueOf();
-            //console.log(LastDateNxtWeek)
-            /* var forecast = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-            forecast.setDate(now.getDate() + daysToAdd); 
-            var nowForecast = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-            nowForecast.setDate(31);
-           
-            valueOfToday = dateOnly.valueOf();
-            valueOfNext = forecastNext.valueOf();*/
 
             var currentEmployees = {};
             function getDaysToBirthday(birthday) {
@@ -53,11 +42,9 @@
                 var days;
                 var firstDayOfYear = new Date(today.getFullYear() + 1, 0, 1);
                 var lastDayOfYear = new Date(today.getFullYear(), 11, 31);
-                //var birthdayDate = birthday.getDate();
                 if (birthday.getMonth() >= today.getMonth()) {
                     birthday.setFullYear(today.getFullYear());
                     days = Math.round((birthday - today) / 1000 / 60 / 60 / 24);
-
                 } else {
                     days = Math.round((lastDayOfYear - today) / 1000 / 60 / 60 / 24);
                     days += Math.round((birthday.setFullYear(today.getFullYear() + 1) - firstDayOfYear) / 1000 / 60 / 60 / 24);
@@ -75,7 +62,6 @@
             currentEmployees.nextweek = currentEmployees.monthly.filter(function (employee) {
                 if (employee.dateBirth) {
                     birthday = new Date(employee.dateBirth);
-                    //birthday.setFullYear(dateOnly.getFullYear());
                     birthday.setHours(0);
                     var valueOfBirthday = birthday.valueOf();
                     if (valueOfBirthday >= FirstDateNxtWeek) {
@@ -89,7 +75,6 @@
             currentEmployees.weekly = currentEmployees.monthly.filter(function (employee) {
                 if (employee.dateBirth) {
                     birthday = new Date(employee.dateBirth);
-                    //birthday.setFullYear(dateOnly.getFullYear());
                     birthday.setHours(0);
                     var valueOfBirthday = birthday.valueOf();
                     if (valueOfBirthday >= FirstDateWeek) {
@@ -124,8 +109,6 @@
             });
             return currentEmployees;
         };
-        
-        //new query 
         
         var now = new Date();
         var day = 0;
@@ -269,7 +252,6 @@
     };
 
     recalculate = function (req) {
-        console.log('Recalculate Birthdays Start Success at ' + new Date());
         getEmployeesInDateRange(req, set);
     };
 

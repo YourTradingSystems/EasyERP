@@ -39,7 +39,6 @@ var Employee = function (logWriter, mongoose, event, department, models) {
         otherId: { type: String, default: '' },
         homeAddress: {
             street: { type: String, default: '' },
-            //street2: { type: String, default: '' },
             city: { type: String, default: '' },
             state: { type: String, default: '' },
             zip: { type: String, default: '' },
@@ -183,6 +182,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                                 response.send(res);
                             } else {
                                 console.log(err);
+                                logWriter.log("Employees.js getTotalCount " + err);
                                 response.send(500, { error: 'Server Eroor' });
                             }
                         }
@@ -190,6 +190,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
 
                 } else {
                     console.log(err);
+                    logWriter.log("Employees.js getTotalCount " + err);
                     response.send(500, { error: 'Server Eroor' });
                 }
             });
@@ -205,7 +206,6 @@ var Employee = function (logWriter, mongoose, event, department, models) {
         if (today < birthday) {
             years--;
         }
-        console.log(years);
         return (years < 0) ? 0 : years;
     };
 
@@ -416,8 +416,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
     };//End create 
 
     function get(req, response) {
-        var res = {}
-        var description = "";
+        var res = {};
         res['data'] = [];
         var query = models.get(req.session.lastDb - 1, "Employees", employeeSchema).find();
         query.where('isEmployee', true);
@@ -426,7 +425,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
         query.exec(function (err, result) {
             if (err) {
                 console.log(err);
-                logWriter.log('Employees.js get Employee.find' + description);
+                logWriter.log('Employees.js get Employee.find ' + err);
                 response.send(500, { error: "Can't find JobPosition" });
             } else {
                 res['data'] = result;
@@ -510,10 +509,12 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                                 res.send(data);
                             } else {
                                 console.log(err);
+                                logWriter.log("Employees.js getCollectionLengthByWorkflows " + err);
                             }
                         });
                 } else {
                     console.log(err);
+                    logWriter.log("Employees.js getCollectionLengthByWorkflows " + err);
                 }
             });
     }
@@ -649,7 +650,6 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                                                     data.filter.workflow = data.filter.workflow.map(function (item) {
                                                         return item === "null" ? null : item;
                                                     });
-                                                    console.log(data.filter.workflow);
                                                     query.where('workflow').in(data.filter.workflow);
                                                 } else if (data && (!data.newCollection || data.newCollection === 'false')) {
                                                     query.where('workflow').in([]);
@@ -682,22 +682,22 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                                     limit(data.count).
                                     exec(function (error, _res) {
                                         if (!error) {
-                                            console.log('data count ----- ' + data.count);
-                                            console.log('data page ----- ' + data.page);
-                                            console.log('response length ------  ' + _res.length);
                                             res['data'] = _res;
                                             response.send(res);
                                         } else {
                                             console.log(error);
+                                            logWriter.log("employees.js getFilter " + error);
                                         }
                                     });
                             } else {
                                 console.log(err);
+                                logWriter.log("employees.js getFilter " + err);
                             }
                         }
                     );
                 } else {
                     console.log(err);
+                    logWriter.log("employees.js getFilter " + err);
                 }
             });
 
@@ -765,10 +765,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
     };
 
     function getApplicationsForKanban(req, data, response) {
-        if (data.options) {
-            var page = (data.options.page) ? data.options.page : null;
-            var count = (data.options.count) ? data.options.count : null;
-        }
+
         var res = {};
         var startTime = new Date();
         res['data'] = [];
@@ -834,7 +831,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                         },
                         function (err, responseOpportunities) {
                             if (!err) {
-                                var query = models.get(req.session.lastDb - 1, "Employees", employeeSchema).
+                                models.get(req.session.lastDb - 1, "Employees", employeeSchema).
                                     where('_id').in(responseOpportunities).
                                     select("_id name proposedSalary jobPosition nextAction workflow editedBy.date sequence").
                                     populate('jobPosition', 'name').
@@ -850,16 +847,17 @@ var Employee = function (logWriter, mongoose, event, department, models) {
 
                                             response.send(res);
                                         } else {
-                                            logWriter.log("Opportunitie.js getApplicationsForKanban opportunitie.find" + err);
+                                            logWriter.log("Employees.js getApplicationsForKanban opportunitie.find" + err);
                                             response.send(500, { error: "Can't find Applications" });
                                         }
                                     });
                             } else {
-                                logWriter.log("Opportunitie.js getApplicationsForKanban task.find " + err);
+                                logWriter.log("Employees.js getApplicationsForKanban task.find " + err);
                                 response.send(500, { error: "Can't group Applications" });
                             }
                         });
                 } else {
+                    logWriter.log("Employees.js getApplicationsForKanban task.find " + err);
                     console.log(err);
                 }
             });
@@ -881,7 +879,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
             populate('editedBy.user').
             populate('groups.users').
             populate('groups.group').
-            populate('groups.owner','_id login');
+            populate('groups.owner', '_id login');
 
         query.exec(function (err, findedEmployee) {
             if (err) {
@@ -946,6 +944,8 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                 });
             }
         } else {
+            if (updateObject.dateBirth)
+                updateObject['age'] = getAge(updateObject.dateBirth);
             models.get(req.session.lastDb - 1, 'Employees', employeeSchema).findByIdAndUpdate(_id, { $set: updateObject }, function (err, result) {
                 if (!err) {
                     if (updateObject.dateBirth || updateObject.contractEnd || updateObject.hired) {
