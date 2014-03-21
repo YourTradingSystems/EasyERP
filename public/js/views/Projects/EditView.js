@@ -155,7 +155,6 @@ define([
                     headers: {
                         mid: mid
                     },
-                    //wait: true,
                     success: function (model) {
                         $('.edit-project-dialog').remove();
                         $(".add-group-dialog").remove();

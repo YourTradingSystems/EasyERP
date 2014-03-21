@@ -112,9 +112,6 @@
                     var priority = currentSelected.text();
                     model.save({
                         priority: priority
-                        //sequence: -1,
-                        //sequenceStart: model.toJSON().sequence,
-                        //workflowStart: model.toJSON().workflow._id
                     },
                     {
                         headers: {
@@ -130,9 +127,6 @@
                     model = collection.get(id);
                     model.save({
                         type: type
-                        //sequence: -1,
-                        //sequenceStart: model.toJSON().sequence,
-                        //workflowStart: model.toJSON().workflow._id
                     },
                     {
                         headers: {
@@ -196,7 +190,6 @@
                             }
                         }
                     });
-                    // for input type number
                     context.$el.find('#cPerPage').spinner({
                         min: 5,
                         max: 9999
@@ -328,10 +321,7 @@
                 _.each(workflows, function (workflow, i) {
                     itemCount = 0;
                     var column = this.$(".column").eq(i);
-                    //var count = " <span>(<span class='counter'>" + itemCount + "</span> / </span>";
                     var total = " <span><span class='totalCount'>" + itemCount + "</span> </span>";
-                    //var remaining = " <span><span class='remaining'>" + itemCount + "</span> </span>";
-                    //column.find(".columnNameDiv h2").append(count).append(total).append(remaining);
                     column.find(".columnNameDiv h2").append(total);
                 }, this);
                 populate.getPriority("#priority", this);

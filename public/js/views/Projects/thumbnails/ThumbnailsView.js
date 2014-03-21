@@ -15,7 +15,6 @@ function (thumbnailsItemTemplate, stagesTamplate, editView, createView, dataServ
         countPerPage: 0,
         template: _.template(thumbnailsItemTemplate),
         newCollection: true,
-        //wfStatus: [],
         filter: null,
         defaultItemsNumber: null,
         contentType: 'Projects',//needs in view.prototype.changeLocationHash
@@ -145,7 +144,6 @@ function (thumbnailsItemTemplate, stagesTamplate, editView, createView, dataServ
             this.collection.showMore({ count: this.defaultItemsNumber, page: 1, filter: this.filter });
             this.getTotalLength(this.defaultItemsNumber, this.filter);
         },
-        //modified for filter Vasya
         getTotalLength: function (currentNumber, filter, newCollection) {
             dataService.getData('/totalCollectionLength/Projects', { currentNumber: currentNumber, filter: this.filter, newCollection: this.newCollection }, function (response, context) {
                 var showMore = context.$el.find('#showMoreDiv');
@@ -240,7 +238,6 @@ function (thumbnailsItemTemplate, stagesTamplate, editView, createView, dataServ
             event.preventDefault();
             this.collection.showMore({ filter: this.filter, newCollection: this.newCollection });
         },
-        //modified for filter Vasya
         showMoreContent: function (newModels) {
             var holder = this.$el;
             var showMore = holder.find('#showMoreDiv');

@@ -116,7 +116,7 @@ define([
                            cancel: {
                                text: "Cancel",
                                class: "btn",
-                               click: self.hideDialgo
+                               click: self.hideDialog
                            }
 
                        }
