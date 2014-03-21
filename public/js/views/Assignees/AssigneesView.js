@@ -243,13 +243,17 @@ define([
 			}
             this.$el.html(this.template({owner:owner}));
 			if (this.model){
-				populate.get("#allUsersSelect", "/UsersForDd", {}, "login", this);
 				common.populateUsersForGroups( this.$el.find('#sourceUsers'), this.$el.find('#targetUsers'), this.model.toJSON(), 1);
                 common.populateDepartmentsList( this.$el.find("#sourceGroups"), this.$el.find("#targetGroups"), "/DepartmentsForDd",this.model.toJSON(),1);
 			}else{
-				populate.get("#allUsersSelect", "/UsersForDd", {}, "login", this, true);
 				common.populateUsersForGroups( this.$el.find('#sourceUsers'), this.$el.find('#targetUsers'), null, 1);
 				common.populateDepartmentsList(this.$el.find("#sourceGroups"), this.$el.find("#targetGroups"), "/DepartmentsForDd", null, 1);
+			}
+			if (owner!==""){
+				populate.get("#allUsersSelect", "/UsersForDd", {}, "login", this);
+
+			}else{
+				populate.get("#allUsersSelect", "/UsersForDd", {}, "login", this, true);
 			}
             return this;
         }
