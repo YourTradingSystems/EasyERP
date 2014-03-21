@@ -34,7 +34,7 @@ define([
                 "click .newSelectList li:not(.miniStylePagination)": "chooseOption",
                 "click .newSelectList li.miniStylePagination": "notHide",
                 "click .newSelectList li.miniStylePagination .next:not(.disabled)": "nextSelect",
-                "click .newSelectList li.miniStylePagination .prev:not(.disabled)": "prevSelect",
+                "click .newSelectList li.miniStylePagination .prev:not(.disabled)": "prevSelect"
 
             },
             openDialog: function (e) {
@@ -335,7 +335,7 @@ define([
  				var notDiv = this.$el.find('.assignees-container');
                 notDiv.append(
                     new AssigneesView({
-                        model: this.currentModel,
+                        model: this.currentModel
                     }).render().el
                 );
 				populate.getPriority("#priorityDd",this);
