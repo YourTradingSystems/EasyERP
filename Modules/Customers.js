@@ -168,14 +168,14 @@
                                     res['count'] = result.length;
                                     response.send(res);
                                 } else {
-                                    console.log(err);
+                                    logWriter.log("Customers.js getTotalCount " + err);
                                     response.send(500, { error: 'Server Eroor' });
                                 }
                             }
                         );
 
                     } else {
-                        console.log(err);
+                        logWriter.log("Customers.js getTotalCount " + err);
                         response.send(500, { error: 'Server Eroor' });
                     }
                 });
@@ -325,7 +325,6 @@
                         }
                         _customer.save(function (err, result) {
                             if (err) {
-                                console.log(err);
                                 logWriter.log("Person.js create savetoBd _customer.save " + err);
                                 res.send(500, { error: 'Person.save BD error' });
                             } else {
@@ -336,18 +335,16 @@
 
                     }
                     catch (error) {
-                        console.log(error);
                         logWriter.log("Person.js create savetoBd" + error);
                         res.send(500, { error: 'Person.save  error' });
                     }
                 }
             }
             catch (Exception) {
-                console.log(Exception);
                 logWriter.log("Person.js  " + Exception);
                 res.send(500, { error: 'Person.save  error' });
             }
-        },//End create
+        },
 
         getForDd: function (req, response) {
             var res = {};
@@ -357,7 +354,6 @@
             query.exec(function (err, customers) {
                 if (err) {
                     response.send(500, { error: "Can't find customer" });
-                    console.log(err);
                     logWriter.log("customer.js geForDd customer.find " + err);
                 } else {
                     res['data'] = customers;
@@ -366,30 +362,7 @@
             });
         },
 
-        getPersons: function (req, response) {
-            var res = {};
-            res['data'] = [];
-            var query = models.get(req.session.lastDb - 1, "Customers", customerSchema).find({ type: 'Person' });
-            query.populate('company', '_id name').
-                  populate('department', '_id departmentName').
-                  populate('createdBy.user').
-                  populate('editedBy.user');
-
-            query.sort({ "name.first": 1 });
-            query.exec(function (err, result) {
-                if (err) {
-                    console.log(err);
-                    logWriter.log("customer.js get customer.find " + err);
-                    response.send(500, { error: "Can't find customer" });
-                } else {
-                    res['data'] = result;
-                    response.send(res);
-                }
-            });
-        },
-
         getFilterPersonsForMiniView: function (req, response, data) {
-            console.log('------------get filter Persons-------------------');
             var res = {};
             var optionsObject = {};
             res['data'] = [];
@@ -398,7 +371,7 @@
                 optionsObject['name.last'] = new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*');
             } else {
                 optionsObject['type'] = 'Person';
-            };
+            }
             models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema).aggregate(
                 {
                     $match: {
@@ -466,7 +439,7 @@
                                                 res['listLength'] = _res;
                                                 response.send(res);
                                             } else {
-                                                console.log(error);
+                                                logWriter.log("Customers.js getFilterPersonsForMiniView " + error);
                                             }
                                         })
                                     } else {
@@ -482,18 +455,18 @@
                                                     res['data'] = _res;
                                                     response.send(res);
                                                 } else {
-                                                    console.log(error);
+                                                    logWriter.log("Customers.js getFilterPersonsForMiniView " + error);
                                                 }
                                             });
                                     }
                                 } else {
-                                    console.log(err);
+                                    logWriter.log("Customers.js getFilterPersonsForMiniView " + err);
                                 }
                             }
                         );
 
                     } else {
-                        console.log(err);
+                        logWriter.log("Customers.js getFilterPersonsForMiniView " + err);
                     }
                 });
         },
@@ -510,7 +483,6 @@
 
             query.exec(function (err, result) {
                 if (err) {
-                    console.log(err);
                     logWriter.log("customer.js get customer.find " + err);
                     response.send(500, { error: "Can't find customer" });
                 } else {
@@ -520,7 +492,6 @@
         },
 
         getCompanyById: function (req, id, response) {
-            console.log(id);
             var query = models.get(req.session.lastDb - 1, "Customers", customerSchema).findById(id);
             query.populate('department', '_id departmentName').
             	  populate('salesPurchases.salesPerson', '_id name').
@@ -533,7 +504,6 @@
 
             query.exec(function (err, result) {
                 if (err) {
-                    console.log(err);
                     logWriter.log("customer.js get customer.find " + err);
                     response.send(500, { error: "Can't find customer" });
                 } else {
@@ -553,11 +523,10 @@
                               populate('groups.users').
                               populate('groups.group');
             */
-            query.select("_id name.first")
+            query.select("_id name.first");
             query.sort({ "name.first": 1 });
             query.exec(function (err, result) {
                 if (err) {
-                    console.log(err);
                     logWriter.log("customer.js get customer.find " + err);
                     response.send(500, { error: "Can't find customer" });
                 } else {
@@ -706,7 +675,6 @@
             for (var i in req.query) {
                 data[i] = req.query[i];
             }
-            console.log('getFilterCustomers');
             var viewType = data.viewType;
             var contentType = data.contentType;
             var res = {};
@@ -870,195 +838,19 @@
                                                 res['data'] = _res;
                                                 response.send(res);
                                             } else {
-                                                console.log(error);
+                                                logWriter.log("Customers.js getFilterCustomers " + error);
                                             }
                                         });
                                 } else {
-                                    console.log(err);
+                                    logWriter.log("Customers.js getFilterCustomers " + err);
                                 }
                             }
                         );
                     } else {
-                        console.log(err);
+                        logWriter.log("Customers.js getFilterCustomers " + err);
                     }
                 });
 
-        },
-
-        getOwnCompanies: function (req, data, response) {
-
-            var res = {}
-            res['data'] = [];
-            var i = 0;
-
-            var qeryEveryOne = function (arrayOfId, n, workflowsId) {
-                if (data.letter) {
-                    var query = models.get(req.session.lastDb - 1, "Customers", customerSchema).find({ $and: [{ type: 'Company' }, { isOwn: true }], 'name.last': new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*') });
-                } else {
-                    var query = models.get(req.session.lastDb - 1, "Customers", customerSchema).find({ $and: [{ type: 'Company' }, { isOwn: true }] });
-                }
-
-                if (workflowsId && workflowsId.length > 0)
-                    query.where('workflow').in(workflowsId);
-
-                query.where('_id').in(arrayOfId).
-                    populate('salesPurchases.salesPerson', '_id name').
-                    populate('salesPurchases.salesTeam', '_id departmentName').
-                    populate('createdBy.user').
-                    populate('editedBy.user').
-                    exec(function (error, _res) {
-                        if (!error) {
-                            i++;
-                            res['data'] = res['data'].concat(_res);
-                            if (i == n) getOwnCompanies(res['data'], 0);
-                        }
-                    });
-            };
-
-            var qeryOwner = function (arrayOfId, n, workflowsId) {
-                if (data.letter) {
-                    var query = models.get(req.session.lastDb - 1, "Customers", customerSchema).find({ $and: [{ type: 'Company' }, { isOwn: true }], 'name.last': new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*') });
-                } else {
-                    var query = models.get(req.session.lastDb - 1, "Customers", customerSchema).find({ $and: [{ type: 'Company' }, { isOwn: true }] });
-                }
-                if (workflowsId && workflowsId.length > 0)
-                    query.where('workflow').in(workflowsId);
-
-                query.where('_id').in(arrayOfId).
-                    where({ 'groups.owner': data.uId }).
-                    populate('salesPurchases.salesPerson', '_id name').
-                    populate('salesPurchases.salesTeam', '_id departmentName').
-                    populate('createdBy.user').
-                    populate('editedBy.user').
-                    exec(function (error, _res) {
-                        if (!error) {
-                            i++;
-                            console.log(i);
-                            console.log(n);
-                            res['data'] = res['data'].concat(_res);
-                            console.log(res['data']);
-                            if (i == n) getOwnCompanies(res['data'], 0);;
-                        } else {
-                            console.log(error);
-                        }
-                    });
-            };
-
-            var qeryByGroup = function (arrayOfId, n) {
-                if (data.letter) {
-                    var query = models.get(req.session.lastDb - 1, "Customers", customerSchema).find({ $and: [{ type: 'Company' }, { isOwn: true }], 'name.last': new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*') });
-                } else {
-                    var query = models.get(req.session.lastDb - 1, "Customers", customerSchema).find({ $and: [{ type: 'Company' }, { isOwn: true }] });
-                }
-                if (workflowsId && workflowsId.length > 0)
-                    query.where('workflow').in(workflowsId);
-
-                query.where({ 'groups.users': data.uId }).
-                    populate('salesPurchases.salesPerson', '_id name').
-                    populate('salesPurchases.salesTeam', '_id departmentName').
-                    populate('createdBy.user').
-                    populate('editedBy.user').
-
-                    exec(function (error, _res1) {
-                        if (!error) {
-                            models.get(req.session.lastDb - 1, 'Department', department.DepartmentSchema).find({ users: data.uId }, { _id: 1 },
-                                function (err, deps) {
-                                    console.log(deps);
-                                    if (!err) {
-                                        if (data.letter) {
-                                            var query = models.get(req.session.lastDb - 1, "Customers", customerSchema).find({ $and: [{ type: 'Company' }, { isOwn: true }], 'name.last': new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*') });
-                                        } else {
-                                            var query = models.get(req.session.lastDb - 1, "Customers", customerSchema).find({ $and: [{ type: 'Company' }, { isOwn: true }] });
-                                        }
-                                        query.where('_id').in(arrayOfId).
-                                            where('groups.group').in(deps).
-                                            populate('salesPurchases.salesPerson', '_id name').
-                                            populate('salesPurchases.salesTeam', '_id departmentName').
-                                            populate('createdBy.user').
-                                            populate('editedBy.user').
-                                            exec(function (error, _res) {
-                                                if (!error) {
-                                                    i++;
-                                                    console.log(i);
-                                                    console.log(n);
-                                                    res['data'] = res['data'].concat(_res1);
-                                                    res['data'] = res['data'].concat(_res);
-                                                    console.log(res['data']);
-                                                    if (i == n) getOwnCompanies(res['data'], 0);;
-                                                } else {
-                                                    console.log(error);
-                                                }
-                                            });
-                                    }
-                                });
-                        } else {
-                            console.log(error);
-                        }
-                    });
-            };
-            var workflowsId = data ? data.status : null;
-            models.get(req.session.lastDb - 1, "Customers", customerSchema).aggregate(
-                {
-                    $group: {
-                        _id: "$whoCanRW",
-                        ID: { $push: "$_id" },
-                        groupId: { $push: "$groups.group" }
-                    }
-                },
-                function (err, result) {
-                    if (!err) {
-                        if (result.length != 0) {
-                            result.forEach(function (_project) {
-                                switch (_project._id) {
-                                    case "everyOne":
-                                        {
-                                            qeryEveryOne(_project.ID, result.length, workflowsId);
-                                        }
-                                        break;
-                                    case "owner":
-                                        {
-                                            qeryOwner(_project.ID, result.length, workflowsId);
-                                        }
-                                        break;
-                                    case "group":
-                                        {
-                                            qeryByGroup(_project.ID, result.length, workflowsId);
-                                        }
-                                        break;
-                                }
-                            });
-                        } else {
-                            response.send(res);
-                        }
-                    } else {
-                        console.log(err);
-                    }
-                }
-            );
-
-            var getOwnCompanies = function (ownCompanies, count) {
-                var ownCompaniesSendArray = [];
-                var startIndex, endIndex;
-
-                if ((data.page - 1) * data.count > ownCompanies.length) {
-                    startIndex = ownCompanies.length;
-                } else {
-                    startIndex = (data.page - 1) * data.count;
-                }
-
-                if (data.page * data.count > ownCompanies.length) {
-                    endIndex = ownCompanies.length;
-                } else {
-                    endIndex = data.page * data.count;
-                }
-
-                for (var k = startIndex; k < endIndex; k++) {
-                    ownCompaniesSendArray.push(ownCompanies[k]);
-                }
-                res['listLength'] = ownCompanies.length;
-                res['data'] = ownCompaniesSendArray;
-                response.send(res);
-            }
         },
 
         getCustomers: function (req, response, data) {
@@ -1070,7 +862,6 @@
             query.sort({ "name.first": 1 });
             query.exec(function (err, customers) {
                 if (err) {
-                    console.log(err);
                     logWriter.log("customer.js getCustomersForDd customer.find " + err);
                     response.send(500, { error: "Can't find Customer" });
                 } else {
@@ -1104,18 +895,14 @@
 				}
 				models.get(req.session.lastDb - 1, "Customers", customerSchema).findByIdAndUpdate({ _id: _id }, data, function (err, customers) {
 					if (err) {
-						console.log(err);
 						logWriter.log("Customer.js update customer.update " + err);
 						res.send(500, { error: "Can't update customer" });
 					} else {
-						console.log(customers);
 						res.send(200, customers);
 					}
 				});
-
             }
             catch (Exception) {
-                console.log(Exception);
                 logWriter.log("Customer.js update " + Exception);
                 res.send(500, { error: 'customer updated error' });
             }
@@ -1137,7 +924,6 @@
 			 
 			models.get(req.session.lastDb - 1, 'Customers', customerSchema).findByIdAndUpdate({ _id: _id }, { $set: data }, function (err, result) {
 				if (err) {
-					console.log(err);
 					logWriter.log("Customer.js update customer.update " + err);
 					res.send(500, { error: "Can't update Customer" });
 				} else {
@@ -1185,7 +971,6 @@
         remove: function (req, _id, res) {
             models.get(req.session.lastDb - 1, "Customers", customerSchema).remove({ _id: _id }, function (err, customer) {
                 if (err) {
-                    console.log(err);
                     logWriter.log("Project.js remove project.remove " + err);
                     res.send(500, { error: "Can't remove customer" });
                 } else {

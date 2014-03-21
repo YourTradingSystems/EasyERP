@@ -13,7 +13,6 @@
         var query = models.get(req.session.lastDb - 1, 'sources', SourceSchema).find({});
         query.exec(function (err, sources) {
             if (err) {
-                console.log(err);
                 logWriter.log("Sources.js getForDd find " + err);
                 response.send(500, { error: "Can't find Sources" });
             } else {
