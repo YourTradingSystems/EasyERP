@@ -1,16 +1,13 @@
 ﻿define([
    "models/Priority"
 ],
-    function (PriorityModel) {
+function (PriorityModel) {
         var taskPriorityCollection = Backbone.Collection.extend({
             model: PriorityModel,
-
             url: function () {
                 return "/Priority";
             },
-
             initialize: function () {
-                
                 var mid = 39;
 
                 this.fetch({
@@ -23,22 +20,10 @@
                     error: this.fetchError
                 });
             },
-            
             parse: true,
-
             parse: function (response) {
-                
                 return response.data;
             },
-
-            fetchSuccess: function (collection, response) {
-                console.log("Persons fetchSuccess");
-            },
-            fetchError: function (error) {
-
-            }
-
         });
-
         return taskPriorityCollection;
-    });
+});

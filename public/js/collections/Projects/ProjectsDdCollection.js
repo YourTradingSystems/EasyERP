@@ -2,7 +2,6 @@
     var ProjectModelDd = Backbone.Model.extend({
         idAttribute: "_id"
     });
-
     var ProjectsDdCollection = Backbone.Collection.extend({
         model: ProjectModelDd,
         url: function () {
@@ -19,20 +18,10 @@
                 error: this.fetchError
             });
         },
-
         parse: true,
-
         parse: function (response) {
             return response.data;
         },
-
-        fetchSuccess: function (collection, response) {
-        },
-        fetchError: function (error) {
-        }
-
-
     });
-
     return ProjectsDdCollection;
 });

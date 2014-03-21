@@ -2,7 +2,7 @@
     'models/UsersModel',
     'common'
 ],
-    function (UserModel, common) {
+function (UserModel, common) {
         var UsersCollection = Backbone.Collection.extend({
             model: UserModel,
             url: "/Users/",
@@ -10,23 +10,18 @@
             namberToShow: null,
             viewType: null,
             contentType: null,
-
             initialize: function (options) {
 				this.startTime = new Date();
-
                 var that = this;
-
                 this.namberToShow = options.count;
                 this.page = options.page || 1;
                 if (options && options.viewType) {
                     this.url += options.viewType;
-                   // delete options.viewType;
                 }
                 this.fetch({
                     data: options,
                     reset: true,
                     success: function () {
-                        console.log("Users fetchSuccess");
                         that.page ++;
                     },
                     error: function (models, xhr) {
@@ -37,9 +32,7 @@
 
             showMore: function (options) {
                 var that = this;
-
                 var filterObject = options || {};
-
                 filterObject['page'] = (options && options.page) ? options.page: this.page;
                 filterObject['count'] = (options && options.count) ? options.count: this.namberToShow;
                 this.fetch({
@@ -61,15 +54,11 @@
                     _.map(response.data, function (user) {
                     	if (user.lastAccess)
                     	    user.lastAccess = common.utcDateToLocaleDateTime(user.lastAccess);
-
                         return user;
                     });
                 }
                 return response.data;
             }
-
-
         });
-
         return UsersCollection;
-    });
+});

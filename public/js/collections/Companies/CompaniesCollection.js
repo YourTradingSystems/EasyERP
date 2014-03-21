@@ -10,9 +10,7 @@ define([
             },
 
             initialize: function () {
-                console.log("Companies Collection Init");
                 var mid = 39;
-
                 this.fetch({
                     data: $.param({
                         mid: mid
@@ -35,16 +33,6 @@ define([
             parse: function (response) {
                 return response.data;
             },
-
-            fetchSuccess: function (collection, response) {
-                console.log("Companies fetchSuccess");
-            },
-            fetchError: function (error) {
-
-            }
-
-
         });
-
         return CompaniesCollection;
     });

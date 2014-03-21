@@ -22,13 +22,11 @@
                     data: null,
                     reset: true,
                     success: function() {
-                        console.log("Departments fetchSuccess");
                         that.page += 1;
                     },
                     error: this.fetchError
                 });
             },
-            
             showMore: function (options) {
                 var that = this;
                 
@@ -52,7 +50,6 @@
                     }
                 });
             },
-
             parse: true,
             parse: function (response) {
                 if (response.data) {
@@ -63,9 +60,6 @@
                 }
                 return response.data;
             }
-
-            
         });
-
         return departmentsCollection;
-    });
+});

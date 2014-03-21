@@ -7,10 +7,8 @@ define([
             url: function () {
                 return "/Employees";
             },
-
             initialize: function () {
                 var mid = 39;
-
                 this.fetch({
                     data: $.param({
                         mid: mid
@@ -32,10 +30,6 @@ define([
             parse: function (response) {
                 return response.data;
             },
-            fetchSuccess: function(){
-                console.log("Employees fetchSuccess");
-            }
         });
-
         return EmployeesCollection;
     });

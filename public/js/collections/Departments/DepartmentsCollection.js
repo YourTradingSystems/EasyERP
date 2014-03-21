@@ -7,10 +7,7 @@
             url: function () {
                 return "/Departments";
             },
-
             initialize: function () {
-                console.log("Departments Collection Init");
-
                 var mid = 39;
 
                 this.fetch({
@@ -23,22 +20,10 @@
                     error: this.fetchError
                 });
             },
-
             parse: true,
-
             parse: function (response) {
                 return response.data;
             },
-
-            fetchSuccess: function (collection, response) {
-                console.log("Departments fetchSuccess");
-            },
-            fetchError: function (error) {
-
-            }
-
-
         });
-
         return departmentsCollection;
     });

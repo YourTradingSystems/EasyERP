@@ -2,17 +2,12 @@ define([
     'models/TasksModel',
     'common'
 ],
-    function (TaskModel, common) {
+function (TaskModel, common) {
         var TasksCollection = Backbone.Collection.extend({
             model: TaskModel,
-            //url: function () {
-            //    return "/Tasks";
-            //},
-
             initialize: function () {
 
             },
-
             parse: true,
             parse: function (response) {
                 if (response.data) {
@@ -42,13 +37,6 @@ define([
                 }
                 return response.data;
             },
-
-            fetchSuccess: function () {
-                console.log("Tasks fetchSuccess");
-            },
-            fetchError: function (error) {
-            }
         });
-
         return TasksCollection;
-    });
+});

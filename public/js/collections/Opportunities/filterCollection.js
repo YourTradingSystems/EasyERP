@@ -2,14 +2,13 @@
     'models/OpportunitiesModel',
     'common'
 ],
-    function (OpportunityModel, common) {
+function (OpportunityModel, common) {
         var OpportunitiesCollection = Backbone.Collection.extend({
             model: OpportunityModel,
             url: "/Opportunities/",
             page: null,
             namberToShow: null,
             contentType: null,
-
             initialize: function (options) {
 				this.startTime = new Date();
                 this.contentType = options.contentType;
@@ -21,9 +20,7 @@
                 var that = this;
                 if (options && options.viewType) {
                     this.url += options.viewType;
-                    //delete options.viewType;
                 }
-
                 this.fetch({
                     data: options,
                     reset: true,
@@ -38,7 +35,6 @@
 
             showMore: function (options) {
                 var that = this;
-
                 var filterObject = {};
                 if (options) {
                     for (var i in options) {
@@ -67,12 +63,10 @@
                     }
                 });
             },
-
             parse: true,
             parse: function (response) {
                 return response.data;
             }
         });
-
         return OpportunitiesCollection;
-    });
+});

@@ -10,11 +10,7 @@ define(function () {
                 url = "/Workflows";
             return url;
         },
-
-        //type: "project",
-
         initialize: function () {
-            console.log("Workflow Collection Init");
             var mid = 39;
 
             this.fetch({
@@ -34,15 +30,6 @@ define(function () {
         parse: function (response) {
             return response.data;
         },
-
-        fetchSuccess: function (collection, response) {
-            console.log("Workflows fetchSuccess");
-        },
-        fetchError: function (error) {
-
-        }
-
     });
-
     return WorkflowsCollection;
 });

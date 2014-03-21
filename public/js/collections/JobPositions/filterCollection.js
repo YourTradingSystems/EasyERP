@@ -2,7 +2,7 @@
     'models/JobPositionsModel',
     'common'
 ],
-    function (JobPositionsModel, common) {
+function (JobPositionsModel, common) {
         var JobPositionsCollection = Backbone.Collection.extend({
             model: JobPositionsModel,
             url: "/JobPositions/",
@@ -10,7 +10,6 @@
             namberToShow: null,
             viewType: null,
             contentType: null,
-
             initialize: function (options) {
 				this.startTime = new Date();
                 this.namberToShow = options.count;
@@ -18,7 +17,6 @@
                 var that = this;
                 if (options && options.viewType) {
                     this.url += options.viewType;
-                   // delete options.viewType;
                 }
                 if (options && options.count) {
                     this.namberToShow = options.count;
@@ -35,7 +33,6 @@
                     }
                 });
             },
-
             showMore: function (options) {
                 var that = this;
                 var filterObject = options || {};
@@ -53,7 +50,6 @@
                     }
                 });
             },
-
             parse: true,
             parse: function (response) {
                 if (response.data) {
@@ -67,9 +63,6 @@
                 }
                 return response.data;
             }
-
-            
         });
-
         return JobPositionsCollection;
-    });
+});

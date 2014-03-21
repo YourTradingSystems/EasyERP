@@ -8,16 +8,12 @@ define(function () {
         url: function () {
             return "/getModules"
         },
-
         setCurrentModule: function (moduleName) {
             this.currentModule = moduleName;
             this.trigger('change:currentModule', this.currentModule, this);
         },
-
         currentModule: "HR",
-
         initialize: function () {
-
             this.fetch({
                 type: 'GET',
                 reset: true,
@@ -33,10 +29,6 @@ define(function () {
         parse: function (response) {
             return response;
         },
-
-        //fetchSuccess: function (collection, response) {
-        //    collection.relationships();
-        //},
 
         fetchError: function (collection, response) {
             throw new Error("Not collection received from fetch");
@@ -77,7 +69,7 @@ define(function () {
             modules = _.sortBy(modules, function (model) {
                 return model.get("sequence");
             });
-            return modules
+            return modules;
         },
 
         parent: function (model) {

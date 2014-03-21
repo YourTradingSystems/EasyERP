@@ -5,13 +5,8 @@ define([
     function (OpportunityModel, common) {
         var OpportunitiesCollection = Backbone.Collection.extend({
             model: OpportunityModel,
-
-            initialize: function (options) {
-                console.log("Opportunities Collection Init");
-            },
-
+            initialize: function () {},
             parse: true,
-
             parse: function (response) {
                 if (response && response.data) {
                     _.map(response.data, function (opportunity) {
@@ -19,19 +14,9 @@ define([
                             opportunity.nextAction.date = (opportunity.nextAction) ? common.utcDateToLocaleDate(opportunity.nextAction.date) : '';
                         return opportunity;
                     });
-                   
                 }
                 return response.data;
             },
-
-            fetchSuccess: function (collection, response) {
-                console.log("Async fetch-------------------------");
-            },
-
-            fetchError: function (error) {
-            }
-
         });
-
         return OpportunitiesCollection;
     });
