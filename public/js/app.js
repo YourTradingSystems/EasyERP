@@ -36,7 +36,6 @@ define([
             draggable:true,
             autoOpen:true,
             width:700,
-			appendTo: "#content-holder",
 			create: function( event, ui ) {
 				var win = $( window );
 				var dialog = $(event.target).parent(".ui-dialog");

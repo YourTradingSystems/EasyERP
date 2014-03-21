@@ -241,7 +241,6 @@ define([
 			if (this.model&&this.model.toJSON().groups&&this.model.toJSON().groups.owner ){
 				owner = this.model.toJSON().groups.owner;
 			}
-//			console.log(owner);
             this.$el.html(this.template({owner:owner}));
 			if (this.model){
 				populate.get("#allUsersSelect", "/UsersForDd", {}, "login", this);
