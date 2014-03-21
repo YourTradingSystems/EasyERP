@@ -109,6 +109,8 @@ define([
 					alert("You cannot edit this Profile!");
 					return;
 				}
+				$('#profilesList li.active a').hide();
+				$('#profilesList li.active').append("<div class='editProfileContainer'><input type='text' class='editProfileName' maxlength='12' value='"+$('#profilesList > li.active > a').text().replace(" Profile","")+"'/></div>");
 
                 $('#top-bar-saveBtn').show();
                 $('#top-bar-editBtn').hide();
@@ -122,7 +124,11 @@ define([
                 //Hide Save Button and disable inputs
                 $('#top-bar-saveBtn').hide();
                 $("#modulesAccessTable tr input").prop("disabled",true);
-
+				if ($('#profilesList li.active .editProfileContainer').length>0){
+					$('#profilesList li.active .editProfileContainer').remove();
+					$('#profilesList li.active a').show();
+					
+				}
                 e.preventDefault();
 				$("#modulesAccessTable").hide();
 				var currentLi = $(e.target).closest("li");
@@ -198,7 +204,8 @@ define([
                     jsonProfile.profileAccess[writeAccess[i].index].access.editWrite = writeAccess[i].checked;
                     jsonProfile.profileAccess[deleteAccess[i].index].access.del = deleteAccess[i].checked;
                 }
-
+				jsonProfile.profileName = $('#profilesList li.active .editProfileContainer input').val();
+				console.log(jsonProfile);
                 profile.save(jsonProfile,
                     {
                         headers: {
@@ -215,6 +222,12 @@ define([
                                 $(tableRows[i]).find('.delete').prop('disabled', true);
                             }
                             $("#modulesAccessTable").show();
+							if ($('#profilesList li.active .editProfileContainer').length>0){
+								$('#profilesList li.active a').text($('#profilesList li.active .editProfileContainer input').val()+" Profile");
+								$('#profilesList li.active .editProfileContainer').remove();
+								$('#profilesList li.active a').show();
+								
+							}
 							
                         },
                     error: function (model, xhr) {

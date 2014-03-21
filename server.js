@@ -994,6 +994,10 @@ app.get('/getCompaniesAlphabet', function (req, res) {
 });
 
 //------------------JobPositions---------------------------------------------------
+app.get('/nationality', function (req, res) {
+    requestHandler.getNationality(req, res);
+});
+
 app.get('/jobType', function (req, res) {
     requestHandler.getJobType(req, res);
 });
@@ -1059,13 +1063,11 @@ app.post('/Departments', function (req, res) {
 });
 
 app.get('/Departments/:viewType', function (req, res) {
-	console.log("dijshlo");
     var data = {};
     for (var i in req.query) {
         data[i] = req.query[i];
     }
     var viewType = req.params.viewType;
-	console.log(viewType);
     switch (viewType) {
         case "form": requestHandler.getDepartmentById(req, res, data);
             break;

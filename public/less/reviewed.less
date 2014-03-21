@@ -1393,6 +1393,7 @@ input::-ms-clear {
 			min-height:100px;
 
 			.columnNameDiv{
+				top:0px;
 				position:absolute;
 				background-color:white;
 				width:40px;
@@ -1673,7 +1674,7 @@ input::-ms-clear {
   background: @background;
   color: @color;
   z-index: 1000;
-  left:auto !important;
+//  left:auto !important;
   margin:0 auto;
   .border-radius(0px);
   
@@ -2351,8 +2352,16 @@ input::-ms-clear {
       a {
         text-decoration: underline;
       }
-    }
 
+    }
+	.editProfileContainer{
+		margin-left:10px;
+		margin-right:12px;
+		.editProfileName{
+			width:100%;
+			padding-left:5px;
+		}
+	}
     &.active {
       border: @thin-border #ddd;
       border-right: none;
@@ -2623,7 +2632,6 @@ h3 {
 body {
   font-family: @body-font;
   font-size: 12px;
-  height: 100%;
 }
 
 dl {
@@ -2904,6 +2912,7 @@ dl {
   .fullsize;
   width:auto;
   min-width:1000px;
+  height:inherit;
   position:relative;
   clear:both;
 

@@ -17,6 +17,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         sources = require("./Modules/Sources.js")(logWriter, mongoose, models),
         languages = require("./Modules/Languages.js")(logWriter, mongoose, models),
         jobType = require("./Modules/JobType.js")(logWriter, mongoose, models),
+    	nationality = require("./Modules/Nationality.js")(logWriter, mongoose, models),
         birthdays = require("./Modules/Birthdays.js")(logWriter, mongoose, employee, models, event);
 
     //binding for remove Workflow
@@ -1136,6 +1137,13 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             res.send(401);
         }
     }
+    function getNationality(req, res) {
+        if (req.session && req.session.loggedIn && req.session.lastDb) {
+            nationality.getForDd(req, res);
+        } else {
+            res.send(401);
+        }
+    }
 
     function getJobPositionForDd(req, res) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
@@ -2027,6 +2035,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         getSources: getSources,
         getLanguages: getLanguages,
         getJobType: getJobType,
+		getNationality: getNationality,
         customerTotalCollectionLength: customerTotalCollectionLength
 
     }

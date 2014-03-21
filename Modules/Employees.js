@@ -224,26 +224,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                 res.send(400, { error: 'Employees.create Incorrect Incoming Data' });
                 return;
             } else {
-                var query = {
-                    $and: [{ 'name.first': data.name.first },
-                        { 'name.last': data.name.last }]
-                };
-                models.get(req.session.lastDb - 1, "Employees", employeeSchema).find(query, function (error, doc) {
-                    if (error) {
-                        console.log(error);
-                        logWriter.log('Employees.js. create Employee.find' + error);
-                        res.send(500, { error: 'Employees.create find error' });
-                    }
-                    if (doc.length > 0) {
-
-                        if (doc[0].name.first == data.name.first && doc[0].name.last == data.name.last) {
-                            //change conditions (never triggered)
-                            res.send(400, { error: 'An Employees with the same Name already exists' });
-                        }
-                    } else if (doc.length === 0) {
-                        savetoDb(data);
-                    }
-                });
+                savetoDb(data);
             }
 
             function savetoDb(data) {
@@ -407,6 +388,9 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                 if (data.jobType) {
                     _employee.jobType = data.jobType;
                 }
+                if (data.nationality) {
+                    _employee.nationality = data.nationality;
+                }
                 ///////////////////////////////////////////////////
                 event.emit('updateSequence', models.get(req.session.lastDb - 1, "Employees", employeeSchema), "sequence", 0, 0, _employee.workflow, _employee.workflow, true, false, function (sequence) {
                     _employee.sequence = sequence;
@@ -550,7 +534,6 @@ var Employee = function (logWriter, mongoose, event, department, models) {
     };
 
     function getFilter(req, response) {
-
         var data = {};
         for (var i in req.query) {
             data[i] = req.query[i];
@@ -699,6 +682,9 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                                     limit(data.count).
                                     exec(function (error, _res) {
                                         if (!error) {
+                                            console.log('data count ----- ' + data.count);
+                                            console.log('data page ----- ' + data.page);
+                                            console.log('response length ------  ' + _res.length);
                                             res['data'] = _res;
                                             response.send(res);
                                         } else {

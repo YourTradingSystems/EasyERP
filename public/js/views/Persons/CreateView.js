@@ -192,6 +192,7 @@ define([
                     dialogClass: "edit-dialog",
                     title: "Edit Person",
                     width: "900px",
+					position:{within:$("#wrapper")},
                     buttons: [
                         {
                             id: "create-person-dialog",

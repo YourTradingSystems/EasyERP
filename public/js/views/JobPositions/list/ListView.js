@@ -32,6 +32,7 @@ define([
                 this.page = options.collection.page;
                 this.render();
                 this.getTotalLength(null, this.defaultItemsNumber, this.filter);
+                this.contentCollection = contentCollection;
             },
 
             events: {
@@ -371,16 +372,13 @@ define([
                 }, function (response, context) {
                     context.listLength = response.count || 0;
                 }, this);
+
                 this.deleteRender(deleteCounter, deletePage, {
                     filter: this.filter,
                     newCollection: this.newCollection,
                     parrentContentId: this.parrentContentId
                 });
-                if (deleteCounter !== this.collectionLength) {
-                    var holder = this.$el;
-                    var created = holder.find('#timeRecivingDataFromServer');
-                    created.before(new listItemView({ collection: this.collection, page: holder.find("#currentShowPage").val(), itemsNumber: holder.find("span#itemsNumber").text() }).render());//added two parameters page and items number
-                }
+
                 var pagenation = this.$el.find('.pagination');
                 if (this.collection.length === 0) {
                     pagenation.hide();
@@ -389,9 +387,9 @@ define([
                 }
             },
             deleteItems: function () {
-                var that = this,
-                    mid = 39,
-                    model;
+                var that = this;
+                var mid = 39;
+                var model;
                 var localCounter = 0;
                 var count = $("#listTable input:checked").length;
                 this.collectionLength = this.collection.length;
@@ -405,8 +403,8 @@ define([
                         success: function () {
                             that.listLength--;
                             localCounter++;
-
-                            if (index == count - 1) {
+                            count--;
+                            if (count === 0) {
                                 that.deleteCounter = localCounter;
                                 that.deletePage = $("#currentShowPage").val();
                                 that.deleteItemsRender(that.deleteCounter, that.deletePage);
@@ -418,8 +416,8 @@ define([
                                 alert("You do not have permission to perform this action");
                             }
                             that.listLength--;
-                            localCounter++;
-                            if (index == count - 1) {
+                            count--;
+                            if (count === 0) {
                                 that.deleteCounter = localCounter;
                                 that.deletePage = $("#currentShowPage").val();
                                 that.deleteItemsRender(that.deleteCounter, that.deletePage);
