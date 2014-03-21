@@ -14,7 +14,7 @@
 			   render: function() {
 				   var self= this;
 				   this.$el.append(_.template(OpportunitiesListTemplate, { opportunitiesCollection: this.collection.toJSON(), startNumber: this.startNumber }));
-			   },
+			   }
 		   });
 
 		   return OpportunitiesListItemView;

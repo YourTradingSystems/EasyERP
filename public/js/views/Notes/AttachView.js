@@ -103,7 +103,6 @@ define([
 
                     success: function (data) {
 						if (self.isCreate){
-                            console.log('Attach file');
                             status.hide();
                             self.hideDialog();
 							Backbone.history.fragment = '';

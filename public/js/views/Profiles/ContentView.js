@@ -1,11 +1,9 @@
 define([
     "text!templates/Profiles/ProfileListTemplate.html",
     "views/Profiles/ModulesAccessView",
-    "views/Profiles/CreateView",
-    'dataService',
-    'common'
+    "views/Profiles/CreateView"
 ],
-    function (ProfileListTemplate, ModulesAccessView, CreateView, dataService, common) {
+    function (ProfileListTemplate, ModulesAccessView, CreateView) {
         var ContentView = Backbone.View.extend({
             el: '#content-holder',
             contentType: "Profiles",
@@ -37,7 +35,6 @@ define([
 					}
 					cur = cur.prev();
 					cur.find("td").eq(n).find("input").prop("checked",true);
-//					console.log(td.prev().get(0).tagName);
 					while(td&&td.prev()&&td.prev().get(0)&&td.prev().get(0).tagName == "TD"){
 						td.prev().find("input").prop("checked",true);
 						td = td.prev();
@@ -205,7 +202,6 @@ define([
                     jsonProfile.profileAccess[deleteAccess[i].index].access.del = deleteAccess[i].checked;
                 }
 				jsonProfile.profileName = $('#profilesList li.active .editProfileContainer input').val();
-				console.log(jsonProfile);
                 profile.save(jsonProfile,
                     {
                         headers: {
