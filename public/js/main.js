@@ -552,7 +552,7 @@ require(['app'], function (app) {
             var newFetchModels = new this.contentCollection({
                 viewType: 'list',
                 sort: this.sort,
-                page: this.page,
+                page: deletePage,
                 count: this.defaultItemsNumber,
                 filter: this.filter,
                 parrentContentId: this.parrentContentId,
@@ -566,8 +566,8 @@ require(['app'], function (app) {
             });
             
             $("#grid-start").text((deletePage - 1) * itemsNumber + 1);
-            if (itemsNumber === this.collectionLength)
-                $("#grid-end").text(itemsNumber);
+            if (itemsNumber === this.collectionLength && (deletePage * this.collectionLength <= this.listLength))
+                $("#grid-end").text(deletePage * itemsNumber);
             else
                 $("#grid-end").text((deletePage - 1) * itemsNumber + this.collectionLength - deleteCounter);
             $("#grid-count").text(this.listLength);
@@ -575,7 +575,7 @@ require(['app'], function (app) {
 
             $("#pageList").empty();
             pageNumber = Math.ceil(this.listLength / itemsNumber);
-            var currentPage = $("#currentShowPage").val()
+            var currentPage = $("#currentShowPage").val();
 
             //number page show (Vasya)
             var itemsOnPage = 7;
