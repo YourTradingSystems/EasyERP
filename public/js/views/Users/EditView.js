@@ -1,11 +1,9 @@
 ﻿define([
     "text!templates/Users/EditTemplate.html",
-    "custom",
     "common",
-    "dataService",
     "populate"
 ],
-    function (EditTemplate, Custom, common, dataService, populate) {
+    function (EditTemplate, common, populate) {
         var EditView = Backbone.View.extend({
             el: "#content-holder",
             contentType: "Users",
@@ -149,7 +147,6 @@
                     }
                 });
                 populate.get("#profilesDd", "ProfilesForDd", {}, "profileName", this);
-                //                common.populateProfilesDd("#profilesDd", "/ProfilesForDd", this.currentModel.toJSON());
                 common.canvasDraw({ model: this.model.toJSON() }, this);
                 return this;
             }
