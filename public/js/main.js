@@ -80,7 +80,7 @@ require(['app'], function (app) {
         }
     };
     Backbone.View.prototype.pageElementRender = function (totalCount, itemsNumber, currentPage) {
-        //var itemsNumber = this.defaultItemsNumber;
+        var itemsNumber = this.defaultItemsNumber;
         $("#itemsNumber").text(itemsNumber);
         var start = $("#grid-start");
         var end = $("#grid-end");
