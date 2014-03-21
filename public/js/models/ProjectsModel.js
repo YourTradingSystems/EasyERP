@@ -1,8 +1,7 @@
 define(['Validation', 'common'],
-    function (Validation, common) {
+function (Validation, common) {
         var ProjectModel = Backbone.Model.extend({
             idAttribute: "_id",
-
             initialize: function () {
                 this.on('invalid', function (model, errors) {
                     if (errors.length > 0) {
@@ -11,7 +10,6 @@ define(['Validation', 'common'],
                     }
                 });
             },
-
             validate: function (attrs) {
                 var errors = [];
 
@@ -58,14 +56,12 @@ define(['Validation', 'common'],
                         response.EndDate = common.utcDateToLocaleDate(response.EndDate);
                     if (response.TargetEndDate)
                         response.TargetEndDate = common.utcDateToLocaleDate(response.TargetEndDate);
-                    //response.deadline = common.utcDateToLocaleDate(response.deadline);
                     if (response.notes) {
                         _.map(response.notes, function (note) {
                             note.date = common.utcDateToLocaleDate(note.date);
                             return note;
                         });
                     }
-
                     if (response.attachments) {
                         _.map(response.attachments, function (attachment) {
                             attachment.uploadDate = common.utcDateToLocaleDate(attachment.uploadDate);
@@ -75,11 +71,9 @@ define(['Validation', 'common'],
                     return response;
                 }
             },
-
             urlRoot: function () {
                 return "/Projects";
             }
         });
-
         return ProjectModel;
-    });
+});

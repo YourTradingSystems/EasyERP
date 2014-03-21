@@ -36,10 +36,8 @@ function (common, Validation){
                 return response;
             }
         },
-
         validate: function(attrs){
             var errors = [];
-
             Validation.checkGroupsNameField(errors, true, attrs.name.first, "Company");
             Validation.checkPhoneField(errors, false, attrs.phones.phone, "Phone");
             Validation.checkPhoneField(errors, false, attrs.phones.mobile, "Mobile");
@@ -49,7 +47,6 @@ function (common, Validation){
             Validation.checkZipField(errors, false, attrs.address.zip, "Zip");
             Validation.checkStreetField(errors, false, attrs.address.street, "Street");
             Validation.checkEmailField(errors, false, attrs.email, "Email");
-
             if(errors.length > 0)
                 return errors;
 
@@ -96,11 +93,9 @@ function (common, Validation){
             attachments:[],
             notes:[]
         },
-
         urlRoot: function () {
             return "/Companies";
         }
     });
-
     return CompanyModel;
 });

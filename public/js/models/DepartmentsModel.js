@@ -9,26 +9,20 @@
                 }
             });
         },
-
         validate: function(attrs){
             var errors = [];
-
             Validation.checkGroupsNameField(errors, true, attrs.departmentName, "Department name");
-
             if(errors.length > 0)
                 return errors;
         },
-
         defaults: {
             departmentName: '',
             parentDepartment:"", 
             departmentManager: ""
         },
-
         urlRoot: function () {
             return "/Departments";
         }
     });
-
     return DepartmentsModel;
 });

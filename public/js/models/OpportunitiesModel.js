@@ -13,9 +13,7 @@ function (common, Validation) {
                 }
             });
         },
-
         parse: true,
-
         parse: function (response) {
         	 if (!response.data) {
         	   if (response.creationDate)
@@ -35,14 +33,13 @@ function (common, Validation) {
         	   
         	   if (response.editedBy)
 					response.editedBy.date = common.utcDateToLocaleDateTime(response.editedBy.date);
-               
+
         	   if (response.notes) {
                     _.map(response.notes, function (note) {
                         note.date = common.utcDateToLocaleDate(note.date);
                         return note;
                     });
                 }
-
                 if (response.attachments) {
                     _.map(response.attachments, function (attachment) {
                         attachment.uploadDate = common.utcDateToLocaleDate(attachment.uploadDate);
@@ -52,14 +49,11 @@ function (common, Validation) {
             }
             return response;
         },
-
         validate: function (attrs) {
             var errors = [];
-
             Validation.checkGroupsNameField(errors, true, attrs.name, "Subject");
             if (attrs.expectedClosing && attrs.nextAction)
                 Validation.checkFirstDateIsGreater(errors, attrs.expectedClosing, "expected closing date", attrs.nextAction.date, "Next action date");
-            //Country State City Validations like in Persons
             Validation.checkCountryCityStateField(errors, false, attrs.address.country, "Country");
             Validation.checkCountryCityStateField(errors, false, attrs.address.state, "State");
             Validation.checkCountryCityStateField(errors, false, attrs.address.city, "City");
@@ -67,7 +61,6 @@ function (common, Validation) {
             if (errors.length > 0)
                 return errors;
         },
-
         defaults: {
             isOpportunitie: true,
             name: '',
@@ -118,11 +111,9 @@ function (common, Validation) {
             reffered: '',
             workflow: ''
         },
-
         urlRoot: function () {
             return "/Opportunities";
         }
     });
-
     return OpportunityModel;
 });
