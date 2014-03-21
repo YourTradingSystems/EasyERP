@@ -1,7 +1,5 @@
 var Degrees = function (logWriter, mongoose) {
-    var ObjectId = mongoose.Schema.Types.ObjectId;
-    var newObjectId = mongoose.Types.ObjectId;
-    var degreesSchema = mongoose.Schema({
+   var degreesSchema = mongoose.Schema({
         _id: { type: String, default: '' },
         name: { type: String, default: '' }
     }, { collection: 'Degrees' });

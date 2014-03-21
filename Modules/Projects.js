@@ -564,7 +564,7 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                                         )
                                         query.exec(function (error, _res) {
                                             if (!error) {
-                                                res = {}
+                                                res = {};
                                                 res['data'] = _res;
                                                 res['workflow'] = resWorkflow;
                                                 response.send(res);
@@ -974,7 +974,7 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
             populate('groups.owner', '_id name').
             populate('groups.users', '_id login').
             populate('groups.group', '_id departmentName').
-            populate('groups.owner','_id login');
+            populate('groups.owner', '_id login');
         query.exec(function (err, project) {
             if (err) {
                 logWriter.log("Project.js getProjectById project.find " + err);
@@ -1237,7 +1237,7 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                 $set: {
                     workflow: data.workflow
                 }
-            }
+            };
         }
         if (data.notes && data.notes.length != 0 && !remove) {
             var obj = data.notes[data.notes.length - 1];
@@ -1282,10 +1282,11 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                     var osType = (os.type().split('_')[0]);
                     var path;
                     var dir;
+                    var newDirname;
                     switch (osType) {
                         case "Windows":
                             {
-                                var newDirname = __dirname.replace("\\Modules", "");
+                                newDirname = __dirname.replace("\\Modules", "");
                                 while (newDirname.indexOf("\\") !== -1) {
                                     newDirname = newDirname.replace("\\", "\/");
                                 }
@@ -1295,7 +1296,7 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                             break;
                         case "Linux":
                             {
-                                var newDirname = __dirname.replace("/Modules", "");
+                                newDirname = __dirname.replace("/Modules", "");
                                 while (newDirname.indexOf("\\") !== -1) {
                                     newDirname = newDirname.replace("\\", "\/");
                                 }
@@ -1352,7 +1353,6 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
             data.customer = data.customer._id;
         }
         if (data.project) {
-            console.log(data.project);
             event.emit('updateContent', req, res, data.project, 'update', _id, data);
         } else if (data.workflow) {
             sequenceUpdate();
@@ -1370,10 +1370,7 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                     });
                 });
             } else {
-                console.log("sequence");
                 event.emit('updateSequence', models.get(req.session.lastDb - 1, 'Tasks', TasksSchema), "sequence", data.sequenceStart, data.sequence, data.workflowStart, data.workflow, false, false, function (sequence) {
-                    console.log("sequence");
-                    console.log(sequence);
                     delete data.sequenceStart;
                     delete data.workflowStart;
                     data.sequence = sequence;
@@ -1390,10 +1387,11 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                         var osType = (os.type().split('_')[0]);
                         var path;
                         var dir;
+                        var newDirname;
                         switch (osType) {
                             case "Windows":
                                 {
-                                    var newDirname = __dirname.replace("\\Modules", "");
+                                    newDirname = __dirname.replace("\\Modules", "");
                                     while (newDirname.indexOf("\\") !== -1) {
                                         newDirname = newDirname.replace("\\", "\/");
                                     }
@@ -1403,7 +1401,7 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                                 break;
                             case "Linux":
                                 {
-                                    var newDirname = __dirname.replace("/Modules", "");
+                                    newDirname = __dirname.replace("/Modules", "");
                                     while (newDirname.indexOf("\\") !== -1) {
                                         newDirname = newDirname.replace("\\", "\/");
                                     }
@@ -1453,7 +1451,7 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                 logWriter.log("Project.js removeTasksByPorjectID task.find " + err);
             } else {
                 for (var i in taskss) {
-                    models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).remove({ _id: taskss[i]._id }, function (errr, result) {
+                    models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).remove({ _id: taskss[i]._id }, function (errr) {
                         if (errr) {
                             console.log(errr);
                             logWriter.log("Project.js removeTasksByPorjectID tasks.remove " + err);
@@ -1481,7 +1479,6 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                         res.send(500, { error: 'Task find error' });
                     } else {
                         var n = (_tasks[0]) ? ++_tasks[0].taskCount : 1;
-                        console.log(n);
                         saveTaskToBd(data, n);
                     }
                 });
@@ -1522,10 +1519,8 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                         _task.workflow = data.workflow;
                     }
                     if (data.uId) {
-                        var now = new Date();
                         _task.createdBy.user = data.uId;
                         _task.createdBy.date = data.now;
-                        //uId for edited by field on creation
                         _task.editedBy.date = data.now;
                         _task.editedBy.user = data.uId;
                     }
@@ -1648,7 +1643,7 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
     };
 
     function getTaskById(req, data, response) {
-        var query = models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).findById(data.id, function (err, res) { });
+        var query = models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).findById(data.id);
         query.populate('project', '_id projectShortDesc projectName').
             populate(' assignedTo', '_id name imageSrc').
             populate('createdBy.user').
@@ -1734,30 +1729,30 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                         function (err, projectsId) {
                             if (!err) {
                                 models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).
-                                  where('project').in(projectsId.objectID()).
-                                  where('workflow', newObjectId(data.workflowId)).
-                                  select("_id assignedTo workflow editedBy.date project taskCount summary type remaining priority sequence").
-                                  populate('assignedTo', 'name').
-                                  populate('project', 'projectShortDesc').
-                                  populate('workflow', '_id').
-                                  sort({ 'sequence': -1 }).
-                                  limit(req.session.kanbanSettings.tasks.countPerPage).
-                                  exec(function (err, result) {
-                                      if (!err) {
-                                          var localRemaining = 0;
-                                          result.forEach(function (value, index) {
-                                              localRemaining = localRemaining + value.remaining;
-                                          });
-                                          res['remaining'] = localRemaining;
-                                          res['data'] = result;
-                                          res['time'] = (new Date() - startTime);
-                                          res['fold'] = (req.session.kanbanSettings.tasks.foldWorkflows && req.session.kanbanSettings.tasks.foldWorkflows.indexOf(data.workflowId.toString()) !== -1)
-                                          response.send(res);
-                                      } else {
-                                          logWriter.log("Projects.js getTasksForKanban task.find" + err);
-                                          response.send(500, { error: "Can't find Tasks" });
-                                      }
-                                  })
+                                    where('project').in(projectsId.objectID()).
+                                    where('workflow', newObjectId(data.workflowId)).
+                                    select("_id assignedTo workflow editedBy.date project taskCount summary type remaining priority sequence").
+                                    populate('assignedTo', 'name').
+                                    populate('project', 'projectShortDesc').
+                                    populate('workflow', '_id').
+                                    sort({ 'sequence': -1 }).
+                                    limit(req.session.kanbanSettings.tasks.countPerPage).
+                                    exec(function (err, result) {
+                                        if (!err) {
+                                            var localRemaining = 0;
+                                            result.forEach(function (value) {
+                                                localRemaining = localRemaining + value.remaining;
+                                            });
+                                            res['remaining'] = localRemaining;
+                                            res['data'] = result;
+                                            res['time'] = (new Date() - startTime);
+                                            res['fold'] = (req.session.kanbanSettings.tasks.foldWorkflows && req.session.kanbanSettings.tasks.foldWorkflows.indexOf(data.workflowId.toString()) !== -1);
+                                            response.send(res);
+                                        } else {
+                                            logWriter.log("Projects.js getTasksForKanban task.find" + err);
+                                            response.send(500, { error: "Can't find Tasks" });
+                                        }
+                                    });
                             } else {
                                 logWriter.log("Projects.js getTasksForKanban task.find " + err);
                                 response.send(500, { error: "Can't group Tasks" });
@@ -1862,7 +1857,7 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                                             logWriter.log("Projects.js Getist task.find" + err);
                                             response.send(500, { error: "Can't find Tasks" });
                                         }
-                                    })
+                                    });
                             } else {
                                 logWriter.log("Projects.js getTasksForList task.find " + err);
                                 response.send(500, { error: "Can't find Projects" });
