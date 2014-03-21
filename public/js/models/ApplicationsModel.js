@@ -12,7 +12,6 @@ function (common, Validation) {
                 }
             });
         },
-        
         parse: true,
         parse: function (response) {
             if (!response.data) {
@@ -37,20 +36,17 @@ function (common, Validation) {
             }
             return response;
         },
-
         validate: function(attrs){
             var errors = [];
-
             Validation.checkNameField(errors, true, attrs.name.first, "First name");
             Validation.checkNameField(errors, true, attrs.name.last, "Last name");
             Validation.checkEmailField(errors, false, attrs.personalEmail, "Email");
 			if (attrs.department)
-            //Validation.checkNameField(errors, true, attrs.department._id || attrs.department, "Department");
+            Validation.checkGroupsNameField(errors, true, attrs.department._id || attrs.department, "Department");
             Validation.checkPhoneField(errors, false, attrs.workPhones.phone, "Phone");
             Validation.checkPhoneField(errors, false, attrs.workPhones.mobile, "Mobile");
             Validation.checkMoneyField(errors, false, attrs.expectedSalary, "Expected salary");
             Validation.checkMoneyField(errors, false, attrs.proposedSalary, "Proposed salary");
-
             if(errors.length > 0)
                 return errors;
         },
@@ -68,7 +64,6 @@ function (common, Validation) {
                 mobile: '',
                 phone: ''
             },
-
             relatedUser: null,
             department: {
                 id: '',
@@ -90,11 +85,9 @@ function (common, Validation) {
                 status: 'New'
             }
         },
-
         urlRoot: function () {
             return "/Applications";
         }
     });
-
     return ApplicationModel;
 });

@@ -7,11 +7,8 @@ define(function ($, _, Backbone) {
                     return "/createCompany";
                 }
             },
-
             initialize: function(){
-
             }
         });
-
         return CustomerModel;
     });

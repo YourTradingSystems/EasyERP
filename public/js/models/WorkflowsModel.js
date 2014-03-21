@@ -13,14 +13,12 @@ function (common, Validation){
                 }
             });
         },
-            parse: true,
-            parse: function (response) {
-				return response;
-			},
+        parse: true,
+        parse: function (response) {
+			return response;
+		},
         validate: function(attrs,options){
             var errors = [];
-
-          //  Validation.checkLoginField(errors, true, attrs.value[0].name);
 
             if (attrs.value && !attrs.name){
                 Validation.checkGroupsNameField(errors, true, attrs.value[0].name,"Name");
@@ -28,16 +26,12 @@ function (common, Validation){
             else {
                 Validation.checkGroupsNameField(errors, true, attrs.name,"Name");
             }
-
             if(errors.length > 0)
                 return errors;
-
         },
-
         urlRoot: function () {
             return "/Workflows";
         }
     });
-
     return WorkflowsModel;
 });

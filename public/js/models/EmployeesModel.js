@@ -11,7 +11,6 @@
                 }
             });
         },
-        
         parse: true,
         parse: function (response) {
             if (!response.data) {
@@ -30,7 +29,6 @@
             }
             return response;
         },
-        
         validate: function(attrs){
             var errors = [];
             Validation.checkGroupsNameField(errors, true, attrs.dateBirth, "Date of Birth");
@@ -38,8 +36,8 @@
             Validation.checkNameField(errors, true, attrs.name.last, "Last name");
             Validation.checkPhoneField(errors, false, attrs.workPhones.phone, "Phone");
             Validation.checkPhoneField(errors, false, attrs.workPhones.mobile, "Mobile");
-            Validation.checkEmailField(errors, false, attrs.workEmail,"Email");//Email Validation Added
-            Validation.checkEmailField(errors, false, attrs.personalEmail,"Email");//Email Validation Added
+            Validation.checkEmailField(errors, false, attrs.workEmail,"Work Email");
+            Validation.checkEmailField(errors, false, attrs.personalEmail,"Personal Email");
             Validation.checkCountryCityStateField(errors, false, attrs.workAddress.country, "Country");
             Validation.checkCountryCityStateField(errors, false, attrs.workAddress.state, "State");
             Validation.checkCountryCityStateField(errors, false, attrs.workAddress.city, "City");
@@ -49,8 +47,6 @@
             Validation.checkCountryCityStateField(errors, false, attrs.homeAddress.state, "State");
             Validation.checkZipField(errors, false, attrs.homeAddress.zip, "Zip");
             Validation.checkStreetField(errors, false, attrs.homeAddress.street, "Street");
-
-
             if(errors.length > 0)
                 return errors;
         },
@@ -83,7 +79,6 @@
             visibility: 'Public',
             department: '',
             jobPosition: '',
-
             nationality: '',
             identNo: '',
             passportNo: '',
@@ -103,11 +98,9 @@
             dateBirth: null,
             active: true
         },
-
         urlRoot: function () {
             return "/Employees";
         }
     });
-
     return EmployeeModel;
 });

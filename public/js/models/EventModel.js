@@ -11,6 +11,5 @@ define(function () {
         },
         urlRoot: "/Events"
     });
-
-        return EventModel;
+    return EventModel;
 });
