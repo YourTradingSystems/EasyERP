@@ -898,9 +898,10 @@ app.get('/projectWorkflows', function (req, res) {
 app.post('/Workflows', function (req, res) {
     var data = {};
     data.mid = req.headers.mid;
-    data.value = req.body.value;
+    for (var i in req.body) {
+        data[i] = req.body[i];
+    }
     data._id = req.body.wId;
-    data.wName = req.body.name;
     requestHandler.createWorkflow(req, res, data);
 });
 
@@ -910,7 +911,6 @@ app.put('/Workflows/:_id', function (req, res) {
     var _id = req.param('_id');
     data.status = req.body.status;
     data.name = req.body.name;
-    data.wName = req.body.wName;
     requestHandler.updateWorkflow(req, res, _id, data);
 });
 
