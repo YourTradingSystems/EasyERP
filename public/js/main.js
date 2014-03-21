@@ -469,12 +469,11 @@ require(['app'], function (app) {
     };
 
     Backbone.View.prototype.deleteRender = function (deleteCounter, deletePage, dataObject) {
-        console.log('deleteRender: deleteCounter=' + deleteCounter + '  this.collectionLength=' + this.collectionLength);
         this.startTime = new Date();
         $("#top-bar-deleteBtn").hide();
         var itemsNumber = parseInt($("#itemsNumber").text());
         var pageNumber;
-        if (deleteCounter == this.collectionLength) {
+        if (deleteCounter === this.collectionLength) {
             pageNumber = Math.ceil(this.listLength / itemsNumber);
             if (deletePage > 1) {
                 deletePage = deletePage - 1;
@@ -512,7 +511,7 @@ require(['app'], function (app) {
                 $("#pageList").empty();
 
                 for (var i = 1; i <= pageNumber; i++) {
-                    $("#pageList").append('<li class="showPage">' + i + '</li>')
+                    $("#pageList").append('<li class="showPage">' + i + '</li>');
                 }
                 $("#lastPage").text(pageNumber);
 
@@ -545,21 +544,38 @@ require(['app'], function (app) {
                     page: deletePage
                 };
                 if (dataObject) _.extend(serchObject, dataObject);
-                console.log('triger showMore');
                 this.collection.showMore(serchObject);
                 this.changeLocationHash(deletePage, itemsNumber);
             }
             $('#check_all').prop('checked', false);
         } else {
-            $("#listTable").empty();
+            var newFetchModels = new this.contentCollection({
+                viewType: 'list',
+                sort: this.sort,
+                page: deletePage,
+                count: this.defaultItemsNumber,
+                filter: this.filter,
+                parrentContentId: this.parrentContentId,
+                contentType: this.contentType,
+                newCollection: this.newCollection
+            });
+            var that = this;
+            newFetchModels.bind('reset', function () {
+                that.collection.add(newFetchModels.models, { merge: true });
+                that.showMoreContent(that.collection);//added two parameters page and items number
+            });
+            
             $("#grid-start").text((deletePage - 1) * itemsNumber + 1);
-            $("#grid-end").text((deletePage - 1) * itemsNumber + this.collectionLength - deleteCounter);
+            if (itemsNumber === this.collectionLength && (deletePage * this.collectionLength <= this.listLength))
+                $("#grid-end").text(deletePage * itemsNumber);
+            else
+                $("#grid-end").text((deletePage - 1) * itemsNumber + this.collectionLength - deleteCounter);
             $("#grid-count").text(this.listLength);
             $("#currentShowPage").val(deletePage);
 
             $("#pageList").empty();
             pageNumber = Math.ceil(this.listLength / itemsNumber);
-            var currentPage = $("#currentShowPage").val()
+            var currentPage = $("#currentShowPage").val();
 
             //number page show (Vasya)
             var itemsOnPage = 7;
@@ -612,8 +628,9 @@ require(['app'], function (app) {
                 $("#firstShowPage").prop("disabled", true);
                 $("#lastShowPage").prop("disabled", true);
             }
-            $('#timeRecivingDataFromServer').remove();
-            this.$el.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
+            
+            //$('#timeRecivingDataFromServer').remove();
+            //this.$el.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
         }
     };
 

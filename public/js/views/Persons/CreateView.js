@@ -150,7 +150,7 @@ define([
                         active: $('#isActiveInput').is('checked')
                     },
                     groups: {
-                        owner: $("#allUsers").val(),
+                        owner: $("#allUsersSelect").data("id"),
                         users: usersId,
                         group: groupsId
                     },
@@ -192,6 +192,7 @@ define([
                     dialogClass: "edit-dialog",
                     title: "Edit Person",
                     width: "900px",
+					position:{within:$("#wrapper")},
                     buttons: [
                         {
                             id: "create-person-dialog",

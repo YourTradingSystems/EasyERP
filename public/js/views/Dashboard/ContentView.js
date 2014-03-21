@@ -1,9 +1,10 @@
 define([
     "text!templates/Dashboard/DashboardTemplate.html",
 	"d3",
-	"common"
+	"common",
+    "dataService"
 ],
-       function (DashboardTemplate, d3, common) {
+       function (DashboardTemplate, d3, common, dataService) {
 		   var ContentView = Backbone.View.extend({
 			   contentType: "Dashboard",
 			   actionType: "Content",
@@ -17,6 +18,7 @@ define([
                    this.dateRangeSource = 30;
                    this.dateItem = "D";
 				   this.numberToDate = {};
+				   this.source = null;
                    this.render();
                },
                events: {
@@ -91,7 +93,14 @@ define([
 				   this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.startTime)+" ms</div>");
 				   $(window).unbind("resize").resize(function(){
 					   self.renderPopulate();
-					   self.renderPopulateSource();
+					   if (!self.source){
+						   dataService.getData("/sources", null, function (response) {
+							   self.source = response;
+							   self.renderPopulateSource(self);
+						   });
+					   }else{
+						   self.renderPopulateSource();
+					   }
 			   if ($(window).width()<1370){
 						   $(".legend-box").css("margin-top","10px");
 					   }else{
@@ -99,11 +108,30 @@ define([
 					   }
 				   });
                },
-               renderPopulateSource: function () {
-				   
+               renderPopulateSource: function (that) {
                    var self = this;
-                   common.getLeadsForChart(true, this.dateRangeSource, this.dateItem, function (data) {
+				   if (that){
+					   self = that;
+				   }
+                   $(".chart").empty();
+                   common.getLeadsForChart(true, self.dateRangeSource, self.dateItem, function (data) {
 					   $("#timeBuildingDataFromServer").text("Server response in " + self.buildTime + " ms");
+					   self.source.data.forEach(function(item){
+						   var b = false;
+
+						   for (var i = 0; i < data.length; i++) {
+							   if (data[i].source==item.name){
+								   b = true;
+								   break;
+							   }
+						   }
+
+							   if (!b){
+
+								   data.push({source:item.name, count:0,  isOpp:true});
+								   data.push({source:item.name, count:0,  isOpp:false});
+							   }
+					   });
 					   
                        var margin = { top: 20, right: 160, bottom: 30, left: 160 },
 					   width = $("#wrapper").width() - margin.left - margin.right,
@@ -133,8 +161,8 @@ define([
 						   .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
                        y.domain(data.map(function (d) { return d.source; }));
-                       x.domain([0, d3.max(data, function (d) { return d.count; })]);
-                       x2.domain([0, d3.max(data, function (d) { return d.count; })]);
+                       x.domain([0, d3.max(data, function (d) { return d.count; })+10]);
+                       x2.domain([0, d3.max(data, function (d) { return d.count; })+10]);
 
                        chart.append("g")
 						   .attr("class", "x axis")
@@ -144,6 +172,8 @@ define([
                        chart.append("g")
 						   .attr("class", "y axis")
 						   .call(yAxis);
+
+
                        data1 = _.filter(data, function (item) {
                            return item.isOpp;
                        });
@@ -153,11 +183,11 @@ define([
                        for (var i = 0; i < data1.length; i++) {
                            for (var j = 0; j < data2.length; j++) {
                                if (data1[i].source == data2[j].source) {
-                                   data1[i].value += data2[j].value;
                                    break;
                                }
                            }
                        }
+
                        chart.selectAll(".bar2")
 						   .data(data2)
 						   .enter().append("rect")
@@ -406,22 +436,59 @@ define([
 							   .attr("style", "text-anchor:end;")
 							   .attr("y", "2")
 					   }
-					   if (self.dateRange=="365"){
-						   chart.append("g")
-							   .attr("class", "x axis")
-							   .attr("transform", "translate(0," + height + ")")
-							   .call(xAxis)
-							   .selectAll("text")
-							   .attr("transform","rotate(-90)")
-							   .attr("x", function(d,i){
-								   if (i%5!=0){
-									   return 1000;
-								   }
-								   return -10;
-							   })
-							   .attr("y", "2")
-							   .attr("style", "text-anchor:end;")
-					   }
+						   if (self.dateRange=="365"){
+							   if (width>1350){
+								   chart.append("g")
+									   .attr("class", "x axis")
+									   .attr("transform", "translate(0," + height + ")")
+									   .call(xAxis)
+									   .selectAll("text")
+									   .attr("transform","rotate(-90)")
+									   .attr("x", function(d,i){
+										   if (i%5!=0){
+											   return 1000;
+										   }
+										   return -10;
+									   })
+									   .attr("y", "2")
+									   .attr("style", "text-anchor:end;")
+								   
+							   }
+							   if (width>1200&&width<1350){
+								   chart.append("g")
+									   .attr("class", "x axis")
+									   .attr("transform", "translate(0," + height + ")")
+									   .call(xAxis)
+									   .selectAll("text")
+									   .attr("transform","rotate(-60)")
+									   .attr("x", function(d,i){
+										   if (i%7!=0){
+											   return 1000;
+										   }
+										   return -10;
+									   })
+									   .attr("y", "2")
+									   .attr("style", "text-anchor:end;")
+								   
+							   }
+							   if (width<1200){
+								   chart.append("g")
+									   .attr("class", "x axis")
+									   .attr("transform", "translate(0," + height + ")")
+									   .call(xAxis)
+									   .selectAll("text")
+									   .attr("transform","rotate(-60)")
+									   .attr("x", function(d,i){
+										   if (i%20!=0){
+											   return 1000;
+										   }
+										   return -10;
+									   })
+									   .attr("y", "2")
+									   .attr("style", "text-anchor:end;")
+								   
+							   }
+						   }
 					   }
 
                        chart.append("g")

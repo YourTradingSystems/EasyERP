@@ -184,7 +184,7 @@ define([
 
                 });
                 var whoCanRW = this.$el.find("[name='whoCanRW']:checked").val();
-
+				var nationality =  $("#nationality").data("id");
                 var data = {
                     name: {
                         first: $.trim(this.$el.find("#first").val()),
@@ -209,6 +209,7 @@ define([
                         mobile: $.trim(this.$el.find("#mobile").val())
                     },
                     officeLocation: $.trim(this.$el.find("#officeLocation").val()),
+                    bankAccountNo : $.trim($("#bankAccountNo").val()),
                     relatedUser: relatedUser,
                     department: department,
                     jobPosition: jobPosition,
@@ -222,8 +223,9 @@ define([
                     active: active,
                     source: sourceId,
                     imageSrc: this.imageSrc,
+					nationality:nationality,
                     groups: {
-                        owner: $("#allUsers").val(),
+						owner: $("#allUsersSelect").data("id"),
                         users: usersId,
                         group: groupsId
                     },
@@ -319,6 +321,7 @@ define([
                     $('.endContractReasonList').attr('data-id', workflow[0]._id);
                 });
 				populate.get("#jobTypeDd", "/jobType", {}, "name", this);
+				populate.get("#nationality", "/nationality", {}, "_id", this);
                 populate.get2name("#projectManagerDD", "/getPersonsForDd", {}, this);
 				populate.get("#jobPositionDd", "/JobPositionForDd", {}, "name", this, false, true);
 				populate.get("#relatedUsersDd", "/UsersForDd", {}, "login", this, false, true);
@@ -331,7 +334,7 @@ define([
                     changeMonth : true,
                     changeYear : true,
                     yearRange: '-100y:c+nn',
-                    maxDate: '-1d'
+                    maxDate: '-18y'
                     //onChangeMonthYear: function (year, month) {
                     //    var target = $(this);
                     //    var day = target.val().split('/')[0];

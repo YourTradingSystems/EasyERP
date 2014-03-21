@@ -210,7 +210,8 @@ var JobPosition = function (logWriter, mongoose, employee, department, models) {
 			populate('createdBy.user').
             populate('editedBy.user').
             populate('groups.users').
-            populate('groups.group');
+            populate('groups.group').
+            populate('groups.owner','_id login');
 
         query.exec(function (err, response) {
             if (err) {
@@ -381,7 +382,7 @@ var JobPosition = function (logWriter, mongoose, employee, department, models) {
                                     populate('createdBy.user', 'login').
                                     populate('editedBy.user', 'login').
                                     populate('department', 'departmentName').
-									populate('workflow', 'name _id').
+									populate('workflow', 'name _id status').
                                     skip((data.page - 1) * data.count).
                                     limit(data.count).
                                     exec(function (error, _res) {

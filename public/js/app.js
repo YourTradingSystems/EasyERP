@@ -4,11 +4,11 @@ define([
    'communication',
    'custom'
 ], function (Router, Communication, Custom) {
-    var initialize = function(){
+    var initialize = function () {
         var appRouter = new Router();
     	Communication.checkLogin(Custom.runApplication);
     };
-    var applyDefaults = function(){
+    var applyDefaults = function () {
         $.datepicker.setDefaults({
             //dateFormat:"dd/mm/yy"
             firstDay: 1
@@ -23,19 +23,30 @@ define([
         }
         //add startsWith function to strings
         if (typeof String.prototype.startsWith != 'function') {
-            String.prototype.startsWith = function (str){
-				if (str=="All") return true;
-				if (str=="0-9")	return !isNaN(parseInt(this[0]));
+            String.prototype.startsWith = function (str) {
+                if (str == "All") return true;
+                if (str == "0-9") return !isNaN(parseInt(this[0]));
                 return this.indexOf(str) == 0;
             };
         }
 
         $.extend($.ui.dialog.prototype.options, {
-            modal:true,
+            modal: true,
             resizable: false,
             draggable:true,
             autoOpen:true,
-            width:700
+            width:700,
+			create: function( event, ui ) {
+				var win = $( window );
+				var dialog = $(event.target).parent(".ui-dialog");
+				var top = $(document).scrollTop()+(win.height() - dialog.height()-200) / 2;
+				var left = (win.width() - dialog.width()) / 2;
+				dialog.css({
+					position: "absolute",
+					top: top,
+					left: left
+				});
+			} 
         });
         $.datepicker.setDefaults({
             dateFormat: "d M, yy",
@@ -76,6 +87,6 @@ define([
 
     return {
         initialize: initialize,
-        applyDefaults:applyDefaults
+        applyDefaults: applyDefaults
     }
 });

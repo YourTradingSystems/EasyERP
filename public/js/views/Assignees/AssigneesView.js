@@ -1,12 +1,14 @@
 define([
     'text!templates/Assignees/AssigneesTemplate.html',
-    'common'
+    'common',
+    "populate"
 
-], function (assigneesTemplate, common) {
+], function (assigneesTemplate, common, populate) {
     var AssigneesView = Backbone.View.extend({
 
         initialize: function(options) {
 			this.model = options.model;
+            this.responseObj = {};
         },
         events: {
             'click .addUser': 'addUser',
@@ -14,9 +16,33 @@ define([
             'click .unassign': 'unassign',
             "click .prevUserList": "prevUserList",
             "click .nextUserList": "nextUserList",
+            "click .current-selected": "showNewSelect",
+            "click .newSelectList li:not(.miniStylePagination)": "chooseOption",
+            "click .newSelectList li.miniStylePagination": "notHide",
+            "click .newSelectList li.miniStylePagination .next:not(.disabled)": "nextSelect",
+            "click .newSelectList li.miniStylePagination .prev:not(.disabled)": "prevSelect"
         },
 
         template: _.template(assigneesTemplate),
+
+        showNewSelect: function (e, prev, next) {
+            populate.showSelect(e, prev, next, this);
+            return false;
+        },
+        chooseOption: function (e) {
+            $(e.target).parents("dd").find(".current-selected").text($(e.target).text()).attr("data-id", $(e.target).attr("id"));
+            $(".newSelectList").hide();
+        },
+        nextSelect: function (e) {
+            this.showNewSelect(e, false, true);
+        },
+        prevSelect: function (e) {
+            this.showNewSelect(e, true, false);
+        },
+        hideNewSelect: function () {
+            $(".newSelectList").hide();
+        },
+
 		unassign: function (e) {
             var holder = $(e.target);
             var id = holder.closest("tr").data("id");
@@ -211,14 +237,18 @@ define([
             });
         },
         render: function () {
-            this.$el.html(this.template({}));
+			var owner = "";
+			if (this.model&&this.model.toJSON().groups&&this.model.toJSON().groups.owner ){
+				owner = this.model.toJSON().groups.owner;
+			}
+            this.$el.html(this.template({owner:owner}));
 			if (this.model){
-				common.populateUsersForGroups( this.$el.find('#sourceUsers'), this.$el.find('#targetUsers'),this.model.toJSON(),1);
-                common.populateUsers( this.$el.find("#allUsers"), "/UsersForDd",this.model.toJSON(),null,true);
+				populate.get("#allUsersSelect", "/UsersForDd", {}, "login", this);
+				common.populateUsersForGroups( this.$el.find('#sourceUsers'), this.$el.find('#targetUsers'), this.model.toJSON(), 1);
                 common.populateDepartmentsList( this.$el.find("#sourceGroups"), this.$el.find("#targetGroups"), "/DepartmentsForDd",this.model.toJSON(),1);
 			}else{
+				populate.get("#allUsersSelect", "/UsersForDd", {}, "login", this, true);
 				common.populateUsersForGroups( this.$el.find('#sourceUsers'), this.$el.find('#targetUsers'), null, 1);
-				common.populateUsers(this.$el.find("#allUsers"), "/UsersForDd", null, null, true);
 				common.populateDepartmentsList(this.$el.find("#sourceGroups"), this.$el.find("#targetGroups"), "/DepartmentsForDd", null, 1);
 			}
             return this;

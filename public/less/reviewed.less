@@ -1267,6 +1267,7 @@ input::-ms-clear {
 			.text-overflow;
 			margin-right:45px;
 			display: block;
+			line-height:20px;
 		}
         span {
           font-weight: normal;
@@ -1392,6 +1393,7 @@ input::-ms-clear {
 			min-height:100px;
 
 			.columnNameDiv{
+				top:0px;
 				position:absolute;
 				background-color:white;
 				width:40px;
@@ -1672,7 +1674,7 @@ input::-ms-clear {
   background: @background;
   color: @color;
   z-index: 1000;
-  left:auto: !important;
+//  left:auto !important;
   margin:0 auto;
   .border-radius(0px);
   
@@ -2350,8 +2352,16 @@ input::-ms-clear {
       a {
         text-decoration: underline;
       }
-    }
 
+    }
+	.editProfileContainer{
+		margin-left:10px;
+		margin-right:12px;
+		.editProfileName{
+			width:100%;
+			padding-left:5px;
+		}
+	}
     &.active {
       border: @thin-border #ddd;
       border-right: none;
@@ -2440,32 +2450,26 @@ input::-ms-clear {
 }
 
 .input-file {
-  position: relative;
-  overflow: hidden;
-  display: block;
-  float: left;
-  width: 60px;
-  margin-right: 10px;
-  text-align: center;
-  //    padding: 2p===x 4px;
-  border: @thin-border #ccc;
-  line-height: 20px;
-  height: 20px;
-  cursor: pointer;
+    position: relative;
+    overflow: hidden;
+      float: left;
+      width: 60px;
+      margin-right: 10px;
+      text-align: center;
+      border: @thin-border #ccc;
+      line-height: 20px;
+      height: 20px;
+      cursor: pointer;
 
-  input {
-    position: absolute;
-    top: 0;
-    left: 0px;
-    width: 60px;
-    height: 20px;
-    opacity: 0;
-    font-size: 20px;
-    cursor: pointer;
-    padding: 0px;
-    margin: 0px;
-    border: none;
-  }
+          input {
+            position: absolute;
+            top: 0;
+            right: 0;
+            font-size: 200px;
+            opacity: 0;
+            filter: alpha(opacity=0);
+            cursor: pointer;
+          }
 }
 
 input, textarea, select {
@@ -2628,7 +2632,6 @@ h3 {
 body {
   font-family: @body-font;
   font-size: 12px;
-  height: 100%;
 }
 
 dl {
@@ -2909,6 +2912,7 @@ dl {
   .fullsize;
   width:auto;
   min-width:1000px;
+  height:inherit;
   position:relative;
 
   #content-holder {
@@ -4565,6 +4569,18 @@ h3.dashboard {
 		resize: none;
 	}
   }
+.assignees-info {
+  .dl-auto(200px, 20%);
+  input {
+    max-width: 180px !important;
+  }
+  select {
+    max-width: 190px !important;
+  }
+  .current-selected{
+	  line-height:27px !important;
+  }
+}
 
 }
 
@@ -4669,11 +4685,11 @@ input::-webkit-inner-spin-button {
 		float:left;
 	}
 }
-.edit-person-dialog{
+/*.edit-person-dialog{
 	.form-holder form{
 		margin-top:-340px;
 	}
 	.ui-dialog-buttonpane{
 		margin-top: -140px !important;
 	}
-}
+}*/

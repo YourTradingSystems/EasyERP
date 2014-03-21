@@ -37,6 +37,7 @@ define([
                 this.page = options.collection.page;
                 this.render();
                 this.getTotalLength(null, this.defaultItemsNumber, this.filter);
+                this.contentCollection = contentCollection;
             },
 
             events: {
@@ -166,7 +167,7 @@ define([
                     newCollection: this.newCollection,
                     parrentContentId: this.parrentContentId
                 }, function (response, context) {
-                    var page =  1;
+                    var page = 1;
                     context.listLength = response.count || 0;
                     context.pageElementRender(response.count, itemsNumber, page);//prototype in main.js
                 }, this);
@@ -370,7 +371,7 @@ define([
                     else
                         $("#top-bar-deleteBtn").hide();
                 });
-                
+
                 common.populateWorkflowsList("Projects", ".filter-check-list", "", "/Workflows", null, function (stages) {
                     var stage = (self.filter) ? self.filter.workflow || [] : [];
                     if (self.filter && stage) {
@@ -463,11 +464,7 @@ define([
                     filter: this.filter,
                     newCollection: this.newCollection
                 });
-                if (deleteCounter !== this.collectionLength) {
-                    var holder = this.$el;
-                    var created = holder.find('#timeRecivingDataFromServer');
-                    created.before(new listItemView({ collection: this.collection, page: holder.find("#currentShowPage").val(), itemsNumber: holder.find("span#itemsNumber").text() }).render());
-                }
+
                 var pagenation = this.$el.find('.pagination');
                 if (this.collection.length === 0) {
                     pagenation.hide();
@@ -477,9 +474,9 @@ define([
             },
 
             deleteItems: function () {
-                var that = this,
-                    mid = 39,
-                    model;
+                var that = this;
+                var mid = 39;
+                var model;
                 var localCounter = 0;
                 this.collectionLength = this.collection.length;
                 var count = $("#listTable input:checked").length;
@@ -493,8 +490,8 @@ define([
                         success: function () {
                             that.listLength--;
                             localCounter++;
-
-                            if (index == count - 1) {
+                            count--;
+                            if (count === 0) {
                                 that.defaultItemsNumber = $("#itemsNumber").text();
                                 that.deleteCounter = localCounter;
                                 that.deletePage = $("#currentShowPage").val();
@@ -507,8 +504,8 @@ define([
                                 alert("You do not have permission to perform this action");
                             }
                             that.listLength--;
-                            localCounter++;
-                            if (index == count - 1) {
+                            count--;
+                            if (count === 0) {
                                 that.defaultItemsNumber = $("#itemsNumber").text();
                                 that.deleteCounter = localCounter;
                                 that.deletePage = $("#currentShowPage").val();

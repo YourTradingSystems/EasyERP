@@ -19,6 +19,7 @@ define([
 		
         addAttach: function (event) {
 			if (this.isCreate){
+
 				var s = this.$el.find(".inputAttach:last").val().split("\\")[ this.$el.find(".inputAttach:last").val().split('\\').length - 1];
                 this.$el.find(".attachContainer").append('<li class="attachFile">' +
                                              '<span class="blue">' + s + '</span>' +
@@ -40,6 +41,8 @@ define([
             var currentModel = this.model;
             var currentModelId = currentModel["id"];
             var addFrmAttach = this.$el.find("#addAttachments");
+			if (!self)self = this;
+			var that = this;
 			if (this.isCreate){
 				currentModel = model;
 				currentModelId = currentModel["id"];
@@ -71,10 +74,11 @@ define([
 			}
 
             addFrmAttach.submit(function (e) {
+                $(".input-file-button").off("click");
                 var bar =  self.$el.find('.bar');
                 var status =  self.$el.find('.status');
 
-                var formURL = "http://" + window.location.host + ((self.url)?self.url:"/uploadFiles");
+                var formURL = "http://" + window.location.host + ((self.url)?that.url:"/uploadFiles");
                 e.preventDefault();
                 addFrmAttach.ajaxSubmit({
                     url: formURL,

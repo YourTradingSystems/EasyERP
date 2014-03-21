@@ -34,31 +34,45 @@ define([
             },
 
             selectCustomer: function (id) {
-                dataService.getData('/Customer', {
-                    id: id
-                }, function (response, context) {
-                    var customer = response.data[0];
-                    if (customer.type == 'Person') {
-                        context.$el.find('#first').val(customer.name.first);
-                        context.$el.find('#last').val(customer.name.last);
+				if (id!=""){
+					dataService.getData('/Customer', {
+						id: id
+					}, function (response, context) {
+						var customer = response.data[0];
+						if (customer.type == 'Person') {
+							context.$el.find('#first').val(customer.name.first);
+							context.$el.find('#last').val(customer.name.last);
 
-                        context.$el.find('#company').val('');
-                    } else {
-                        context.$el.find('#company').val(customer.name.first);
+							context.$el.find('#company').val('');
+						} else {
+							context.$el.find('#company').val(customer.name.first);
 
-                        context.$el.find('#first').val('');
-                        context.$el.find('#last').val('');
+							context.$el.find('#first').val('');
+							context.$el.find('#last').val('');
 
-                    }
-                    context.$el.find('#email').val(customer.email);
-                    context.$el.find('#phone').val(customer.phones.phone);
-                    context.$el.find('#mobile').val(customer.phones.mobile);
-                    context.$el.find('#street').val(customer.address.street);
-                    context.$el.find('#city').val(customer.address.city);
-                    context.$el.find('#state').val(customer.address.state);
-                    context.$el.find('#zip').val(customer.address.zip);
-                    context.$el.find('#country').val(customer.address.country);
-                }, this);
+						}
+						context.$el.find('#email').val(customer.email);
+						context.$el.find('#phone').val(customer.phones.phone);
+						context.$el.find('#mobile').val(customer.phones.mobile);
+						context.$el.find('#street').val(customer.address.street);
+						context.$el.find('#city').val(customer.address.city);
+						context.$el.find('#state').val(customer.address.state);
+						context.$el.find('#zip').val(customer.address.zip);
+						context.$el.find('#country').val(customer.address.country);
+					}, this);
+				}else{
+					this.$el.find('#email').val('');
+					this.$el.find('#phone').val('');
+					this.$el.find('#mobile').val('');
+					this.$el.find('#street').val('');
+					this.$el.find('#city').val('');
+					this.$el.find('#state').val('');
+					this.$el.find('#zip').val('');
+					this.$el.find('#country').val('');
+                    this.$el.find('#company').val('');
+                    this.$el.find('#first').val('');
+                    this.$el.find('#last').val('');
+				}
 
             },
 
@@ -119,6 +133,13 @@ define([
             },
 
             saveItem: function () {
+                var afterPage = '';                                                                 //Masalovych bag 803
+                var location = window.location.hash;                                                //Masalovych bag 803
+                var pageSplited = location.split('/p=')[1];                                         //Masalovych bag 803
+                if (pageSplited) {                                                                  //Masalovych bag 803
+                    afterPage = pageSplited.split('/')[1];                                          //Masalovych bag 803
+                    location = location.split('/p=')[0] + '/p=1' + '/' + afterPage;                 //Masalovych bag 803
+                }                                                                                   //Masalovych bag 803
                 var self = this;
                 var $company = this.$("#company");
                 var mid = 39;
@@ -193,7 +214,7 @@ define([
                         reffered: reffered,
                         workflow: workflow,
                         groups: {
-                            owner: $("#allUsers").val(),
+							owner: $("#allUsersSelect").data("id"),
                             users: usersId,
                             group: groupsId
                         },
@@ -203,10 +224,11 @@ define([
                         headers: {
                             mid: mid
                         },
-
                         success: function () {
                             self.hideDialog();
-                            Backbone.history.navigate("easyErp/Leads", { trigger: true });
+                            Backbone.history.fragment = "";                                  //Masalovych bag 803
+                            Backbone.history.navigate(location, { trigger: true });          //Masalovych bag 803
+                          // Backbone.history.navigate("easyErp/Users", { trigger: true });
                         },
 						error: function (model, xhr) {
 							self.errorNotification(xhr);

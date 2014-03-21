@@ -162,6 +162,7 @@ define([
                     first: $.trim(this.$el.find("#first").val()),
                     last: $.trim(this.$el.find("#last").val())
                 };
+				$("#createBtnDialog").attr("disabled","disabled");
                 var workAddress = {};
                 $("dd").find(".workAddress").each(function () {
                     var el = $(this);
@@ -190,8 +191,9 @@ define([
                 var manager = $("#projectManagerDD").data("id");
                 var coach = $("#coachDd").data("id");
                 var identNo = $.trim($("#identNo").val());
-
+				var nationality =  $("#nationality").data("id");
                 var passportNo = $.trim($("#passportNo").val());
+                var bankAccountNo = $.trim($("#bankAccountNo").val());
                 var otherId = $.trim($("#otherId").val());
                 var homeAddress = {};
                 $("dd").find(".homeAddress").each(function () {
@@ -215,7 +217,7 @@ define([
 
                 });
                 var whoCanRW = this.$el.find("[name='whoCanRW']:checked").val();
-                employeeModel.save({
+                var valid = employeeModel.save({
                     name: name,
                     gender: gender ? gender : "",
                     jobType: jobType ? jobType : "",
@@ -230,6 +232,7 @@ define([
                     relatedUser: relatedUser ? relatedUser : "",
                     department: department,
                     jobPosition: jobPosition? jobPosition : "",
+                    bankAccountNo:bankAccountNo,
                     manager: manager ? manager : "",
                     coach: coach ? coach : "",
                     identNo: identNo,
@@ -239,8 +242,9 @@ define([
                     dateBirth: dateBirthSt,
                     active: active,
                     source:sourceId,
+					nationality:nationality,
                     groups: {
-                        owner: $("#allUsers").val(),
+						owner: $("#allUsersSelect").data("id"),
                         users: usersId,
                         group: groupsId
                     },
@@ -258,6 +262,9 @@ define([
     					self.errorNotification(xhr);
                     }
                 });
+				if (!valid){
+						$("#createBtnDialog").removeAttr("disabled");
+				}
             },
 
             render: function () {
@@ -269,8 +276,9 @@ define([
                     title: "Create Employee",
                     buttons:{
                         save:{
-                            text: "Save",
+                            text: "Create",
                             class: "btn",
+							id:"createBtnDialog",
                             click: self.saveItem
                         },
                         cancel:{
@@ -297,6 +305,7 @@ define([
                 );
 
 				populate.get("#jobTypeDd", "/jobType", {}, "name", this, true);
+				populate.get("#nationality", "/nationality", {}, "_id", this, true);
                 populate.get2name("#projectManagerDD", "/getPersonsForDd", {}, this, true);
 				populate.get("#jobPositionDd", "/JobPositionForDd", {}, "name", this, true, true);
 				populate.get("#relatedUsersDd", "/UsersForDd", {}, "login", this, true, true);

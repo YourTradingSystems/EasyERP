@@ -14,6 +14,7 @@ define([
             defaultItemsNumber: null,
             listLength: null,
             filter: null,
+            sort: null,
             newCollection: null,
             page: null, //if reload page, and in url is valid page
             contentType: 'Employees',//needs in view.prototype.changeLocationHash
@@ -32,6 +33,7 @@ define([
                 this.page = options.collection.page;
                 this.render();
                 this.getTotalLength(null, this.defaultItemsNumber, this.filter);
+                this.contentCollection = contentCollection;
             },
 
             events: {
@@ -55,7 +57,7 @@ define([
                 var currentEl = this.$el;
                 var tBody = currentEl.find('#listTable');
                 tBody.empty();
-                var itemView = new listItemView({ collection: this.collection,page: currentEl.find("#currentShowPage").val(), itemsNumber: currentEl.find("span#itemsNumber").text() });
+                var itemView = new listItemView({ collection: this.collection, page: currentEl.find("#currentShowPage").val(), itemsNumber: currentEl.find("span#itemsNumber").text() });
                 $("#top-bar-deleteBtn").hide();
                 $('#check_all').prop('checked', false);
                 tBody.append(itemView.render());
@@ -75,7 +77,7 @@ define([
                 this.filter['letter'] = selectedLetter;
                 var itemsNumber = $("#itemsNumber").text();
                 this.changeLocationHash(1, itemsNumber, this.filter);
-                this.collection.showMore({ count: itemsNumber, page: 1, filter: this.filter});
+                this.collection.showMore({ count: itemsNumber, page: 1, filter: this.filter });
                 this.getTotalLength(null, itemsNumber, this.filter);
             },
 
@@ -93,21 +95,21 @@ define([
                     sortClass = "sortDn";
                 }
                 switch (sortClass) {
-                        case "sortDn":
-                            {
-								target$.parent().find("th").removeClass('sortDn').removeClass('sortUp');
-                                target$.removeClass('sortDn').addClass('sortUp');
-                                sortConst = 1;
-                            }
-                            break;
-                        case "sortUp":
-                            {
-								target$.parent().find("th").removeClass('sortDn').removeClass('sortUp');
-                                target$.removeClass('sortUp').addClass('sortDn');
-                                sortConst = -1;
-                            }
-                            break;
-                    }
+                    case "sortDn":
+                        {
+                            target$.parent().find("th").removeClass('sortDn').removeClass('sortUp');
+                            target$.removeClass('sortDn').addClass('sortUp');
+                            sortConst = 1;
+                        }
+                        break;
+                    case "sortUp":
+                        {
+                            target$.parent().find("th").removeClass('sortDn').removeClass('sortUp');
+                            target$.removeClass('sortUp').addClass('sortDn');
+                            sortConst = -1;
+                        }
+                        break;
+                }
                 sortObject[sortBy] = sortConst;
                 this.fetchSortCollection(sortObject);
                 this.changeLocationHash(1, this.defaultItemsNumber);
@@ -139,16 +141,16 @@ define([
                 return false;
             },
             //modified for filter Vasya
-            getTotalLength: function (currentNumber, itemsNumber,filter) {
-                    dataService.getData('/totalCollectionLength/Employees', {
-                        currentNumber: currentNumber,
-                        filter: filter,
-                        newCollection: this.newCollection,
-                    }, function (response, context) {
-                        var page = 1;
-                        context.listLength = response.count || 0;
-                        context.pageElementRender(response.count, itemsNumber, page);//prototype in main.js
-                    }, this);
+            getTotalLength: function (currentNumber, itemsNumber, filter) {
+                dataService.getData('/totalCollectionLength/Employees', {
+                    currentNumber: currentNumber,
+                    filter: filter,
+                    newCollection: this.newCollection,
+                }, function (response, context) {
+                    var page = 1;
+                    context.listLength = response.count || 0;
+                    context.pageElementRender(response.count, itemsNumber, page);//prototype in main.js
+                }, this);
             },
 
             render: function () {
@@ -158,7 +160,7 @@ define([
 
                 currentEl.html('');
                 currentEl.append(_.template(listTemplate));
-                currentEl.append(new listItemView({ collection: this.collection,page: this.page, itemsNumber: this.collection.namberToShow }).render());
+                currentEl.append(new listItemView({ collection: this.collection, page: this.page, itemsNumber: this.collection.namberToShow }).render());
 
                 $('#check_all').click(function () {
                     $(':checkbox').prop('checked', this.checked);
@@ -177,9 +179,9 @@ define([
                     $("#startLetter").remove();
                     self.alphabeticArray = arr;
                     currentEl.prepend(_.template(aphabeticTemplate, { alphabeticArray: self.alphabeticArray, selectedLetter: (self.selectedLetter == "" ? "All" : self.selectedLetter), allAlphabeticArray: self.allAlphabeticArray }));
-                 var currentLetter = (self.filter) ? self.filter.letter : null
+                    var currentLetter = (self.filter) ? self.filter.letter : null;
                     if (currentLetter) {
-                        $('#startLetter a').each(function() {
+                        $('#startLetter a').each(function () {
                             var target = $(this);
                             if (target.text() == currentLetter) {
                                 target.addClass("current");
@@ -196,14 +198,14 @@ define([
                 currentEl.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
             },
             //modified for filter Vasya
-        previousPage: function (event) {
+            previousPage: function (event) {
                 event.preventDefault();
                 $("#top-bar-deleteBtn").hide();
                 $('#check_all').prop('checked', false);
                 this.prevP({
                     sort: this.sort,
                     filter: this.filter,
-                    newCollection: this.newCollection,
+                    newCollection: this.newCollection
                 });
                 dataService.getData('/totalCollectionLength/Employees', {
                     filter: this.filter,
@@ -213,8 +215,8 @@ define([
                     context.listLength = response.count || 0;
                 }, this);
             },
-        //modified for filter Vasya
-        nextPage: function (event) {
+            //modified for filter Vasya
+            nextPage: function (event) {
                 event.preventDefault();
                 $("#top-bar-deleteBtn").hide();
                 $('#check_all').prop('checked', false);
@@ -230,7 +232,7 @@ define([
                 }, function (response, context) {
                     context.listLength = response.count || 0;
                 }, this);
-        },
+            },
 
             //first last page in paginations
             firstPage: function (event) {
@@ -269,44 +271,44 @@ define([
             },  //end first last page in paginations
             //modified for filter Vasya
             switchPageCounter: function (event) {
-                    event.preventDefault();
-                    this.startTime = new Date();
-                    var itemsNumber = event.target.textContent;
-                    this.defaultItemsNumber = itemsNumber;
-                    this.getTotalLength(null, itemsNumber, this.filter);
-                    this.collection.showMore({
-                        count: itemsNumber,
-                        page: 1,
-                        filter: this.filter,
-                        newCollection: this.newCollection,
-                    });
-                    this.page = 1;
-                    $("#top-bar-deleteBtn").hide();
-                    $('#check_all').prop('checked', false);
-                    this.changeLocationHash(1, itemsNumber, this.filter);
+                event.preventDefault();
+                this.startTime = new Date();
+                var itemsNumber = event.target.textContent;
+                this.defaultItemsNumber = itemsNumber;
+                this.getTotalLength(null, itemsNumber, this.filter);
+                this.collection.showMore({
+                    count: itemsNumber,
+                    page: 1,
+                    filter: this.filter,
+                    newCollection: this.newCollection,
+                });
+                this.page = 1;
+                $("#top-bar-deleteBtn").hide();
+                $('#check_all').prop('checked', false);
+                this.changeLocationHash(1, itemsNumber, this.filter);
             },
             //modified for filter Vasya
             showFilteredPage: function (e) {
-                    this.startTime = new Date();
-                    this.newCollection = false;
+                this.startTime = new Date();
+                this.newCollection = false;
 
-                    var selectedLetter = $(e.target).text();
-                    if ($(e.target).text() == "All") {
-                        selectedLetter = "";
-                    }
-                    this.filter = this.filter || {};
-                    this.filter['letter'] = selectedLetter;
-                    var itemsNumber = $("#itemsNumber").text();
+                var selectedLetter = $(e.target).text();
+                if ($(e.target).text() == "All") {
+                    selectedLetter = "";
+                }
+                this.filter = this.filter || {};
+                this.filter['letter'] = selectedLetter;
+                var itemsNumber = $("#itemsNumber").text();
 
-                    $("#top-bar-deleteBtn").hide();
-                    $('#check_all').prop('checked', false);
-                    this.changeLocationHash(1, itemsNumber, this.filter);
-                    this.collection.showMore({ count: itemsNumber, page: 1, filter: this.filter});
-                    this.getTotalLength(null, itemsNumber, this.filter);
-                },
+                $("#top-bar-deleteBtn").hide();
+                $('#check_all').prop('checked', false);
+                this.changeLocationHash(1, itemsNumber, this.filter);
+                this.collection.showMore({ count: itemsNumber, page: 1, filter: this.filter });
+                this.getTotalLength(null, itemsNumber, this.filter);
+            },
             showPage: function (event) {
-                    event.preventDefault();
-                    this.showP(event,{filter: this.filter, newCollection: this.newCollection,sort: this.sort});
+                event.preventDefault();
+                this.showP(event, { filter: this.filter, newCollection: this.newCollection, sort: this.sort });
             },
             //modified for filter Vasya
             showMoreContent: function (newModels) {
@@ -361,9 +363,9 @@ define([
                     var checkLength = $("input.checkbox:checked").length;
                     if ($("input.checkbox:checked").length > 0) {
                         $("#top-bar-deleteBtn").show();
-                            if (checkLength == this.collection.length) {
-                                    $('#check_all').prop('checked', true);
-                            }
+                        if (checkLength == this.collection.length) {
+                            $('#check_all').prop('checked', true);
+                        }
                     }
                     else {
                         $("#top-bar-deleteBtn").hide();
@@ -379,30 +381,27 @@ define([
                 }, function (response, context) {
                     context.listLength = response.count || 0;
                 }, this);
+                
                 this.deleteRender(deleteCounter, deletePage, {
                     filter: this.filter,
                     newCollection: this.newCollection,
                     parrentContentId: this.parrentContentId
                 });
-                if (deleteCounter !== this.collectionLength) {
-                    var holder = this.$el;
-                    var created = holder.find('#timeRecivingDataFromServer');
-                    created.before(new listItemView({ collection: this.collection, page: holder.find("#currentShowPage").val(), itemsNumber: holder.find("span#itemsNumber").text()}).render());//added two parameters page and items number
-                }
+                
                 var pagenation = this.$el.find('.pagination');
                 if (this.collection.length === 0) {
-                        pagenation.hide();
+                    pagenation.hide();
                 } else {
-                        pagenation.show();
+                    pagenation.show();
                 }
             },
 
             deleteItems: function () {
-                var that = this,
-                    mid = 39,
-                    model;
+                var that = this;
+                var mid = 39;
+                var model;
                 var localCounter = 0;
-				var count = $("#listTable input:checked").length;
+                var count = $("#listTable input:checked").length;
                 this.collectionLength = this.collection.length;
                 $.each($("#listTable input:checked"), function (index, checkbox) {
                     model = that.collection.get(checkbox.value);
@@ -410,32 +409,32 @@ define([
                         headers: {
                             mid: mid
                         },
-						wait:true,
-						success:function(){
-							that.listLength--;
-							localCounter++;
+                        wait: true,
+                        success: function () {
+                            that.listLength--;
+                            localCounter++;
+                            count--;
+                            if (count === 0) {
+                                that.deleteCounter = localCounter;
+                                that.deletePage = $("#currentShowPage").val();
+                                that.deleteItemsRender(that.deleteCounter, that.deletePage);
 
-							if (index==count-1){
-								that.deleteCounter =localCounter;
-								that.deletePage = $("#currentShowPage").val();
-								that.deleteItemsRender(that.deleteCounter, that.deletePage);
+                            }
+                        },
+                        error: function (model, res) {
+                            if (res.status === 403 && index === 0) {
+                                alert("You do not have permission to perform this action");
+                            }
+                            that.listLength--;
+                            count--;
+                            if (count === 0) {
+                                that.deleteCounter = localCounter;
+                                that.deletePage = $("#currentShowPage").val();
+                                that.deleteItemsRender(that.deleteCounter, that.deletePage);
 
-							}
-						},
-						error: function (model, res) {
-							if(res.status===403&&index===0){
-								alert("You do not have permission to perform this action");
-							}
-							that.listLength--;
-							localCounter++;
-							if (index==count-1){
-								that.deleteCounter =localCounter;
-								that.deletePage = $("#currentShowPage").val();
-								that.deleteItemsRender(that.deleteCounter, that.deletePage);
+                            }
 
-							}
-
-						}
+                        }
                     });
 
                 });

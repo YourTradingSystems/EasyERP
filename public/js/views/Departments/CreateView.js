@@ -18,32 +18,32 @@ define([
                 _.bindAll(this, "saveItem", "render");
                 this.departmentsCollection = new DepartmentsCollection();
                 this.model = new DepartmentsModel();
-				this.responseObj = {};
+                this.responseObj = {};
                 this.render();
             },
-			events:{
+            events: {
                 'click .dialog-tabs a': 'changeTab',
-			    'click #sourceUsers li':'addUsers',
-			    'click #targetUsers li':'removeUsers',
+                'click #sourceUsers li': 'addUsers',
+                'click #targetUsers li': 'removeUsers',
                 "click .current-selected": "showNewSelect",
                 "click": "hideNewSelect",
-				"click .prevUserList":"prevUserList",
-				"click .nextUserList":"nextUserList",
+                "click .prevUserList": "prevUserList",
+                "click .nextUserList": "nextUserList",
                 "click .newSelectList li:not(.miniStylePagination)": "chooseOption",
                 "click .newSelectList li.miniStylePagination": "notHide",
                 "click .newSelectList li.miniStylePagination .next:not(.disabled)": "nextSelect",
                 "click .newSelectList li.miniStylePagination .prev:not(.disabled)": "prevSelect",
-			},
+            },
             notHide: function (e) {
-				return false;
+                return false;
             },
 
-			nextSelect:function(e){
-				this.showNewSelect(e,false,true);
-			},
-			prevSelect:function(e){
-				this.showNewSelect(e,true,false);
-			},
+            nextSelect: function (e) {
+                this.showNewSelect(e, false, true);
+            },
+            prevSelect: function (e) {
+                this.showNewSelect(e, true, false);
+            },
 
             updateAssigneesPagination: function (el) {
                 var pag = el.find(".userPagination .text");
@@ -92,16 +92,16 @@ define([
                 this.updateAssigneesPagination($(e.target).closest(".left"));
             },
 
-			chooseUser:function(e){
-				$(e.target).toggleClass("choosen");
-			},
-			changeTab:function(e){
-				$(e.target).closest(".dialog-tabs").find("a.active").removeClass("active");
-				$(e.target).addClass("active");
-				var n= $(e.target).parents(".dialog-tabs").find("li").index($(e.target).parent());
-				$(".dialog-tabs-items").find(".dialog-tabs-item.active").removeClass("active");
-				$(".dialog-tabs-items").find(".dialog-tabs-item").eq(n).addClass("active");
-			},
+            chooseUser: function (e) {
+                $(e.target).toggleClass("choosen");
+            },
+            changeTab: function (e) {
+                $(e.target).closest(".dialog-tabs").find("a.active").removeClass("active");
+                $(e.target).addClass("active");
+                var n = $(e.target).parents(".dialog-tabs").find("li").index($(e.target).parent());
+                $(".dialog-tabs-items").find(".dialog-tabs-item.active").removeClass("active");
+                $(".dialog-tabs-items").find(".dialog-tabs-item").eq(n).addClass("active");
+            },
 
             close: function () {
                 this._modelBinder.unbind();
@@ -134,14 +134,14 @@ define([
                 var self = this;
                 var mid = 39;
                 var departmentName = $.trim($("#departmentName").val());
-                var parentDepartment = this.$("#parentDepartment").data("id")?this.$("#parentDepartment").data("id"):null;
+                var parentDepartment = this.$("#parentDepartment").data("id") ? this.$("#parentDepartment").data("id") : null;
                 var nestingLevel = this.$("#parentDepartment").data('level');
                 var departmentManager = this.$("#departmentManager").data("id");
                 var users = this.$el.find("#targetUsers li");
-				var res = _.filter(this.responseObj["#parentDepartment"],function(item){
-					return item.parentDepartment===parentDepartment;
-				});
-                users = _.map(users, function(elm) {
+                var res = _.filter(this.responseObj["#parentDepartment"], function (item) {
+                    return item.parentDepartment === parentDepartment;
+                });
+                users = _.map(users, function (elm) {
                     return $(elm).attr('id');
                 });
                 this.model.save({
@@ -150,7 +150,7 @@ define([
                     departmentManager: departmentManager,
                     nestingLevel: ++nestingLevel,
                     users: users,
-					sequence:res.length
+                    sequence: res.length
                 },
                 {
                     headers: {
@@ -161,36 +161,36 @@ define([
                         Backbone.history.navigate("easyErp/Departments", { trigger: true });
                     },
                     error: function (model, xhr) {
-    					self.errorNotification(xhr);
+                        self.errorNotification(xhr);
                     }
                 });
             },
             hideDialog: function () {
                 $(".create-dialog").remove();
             },
-			hideNewSelect:function(e){
-				$(".newSelectList").hide();
-			},
-			showNewSelect:function(e,prev,next){
-                populate.showSelect(e,prev,next,this);
+            hideNewSelect: function (e) {
+                $(".newSelectList").hide();
+            },
+            showNewSelect: function (e, prev, next) {
+                populate.showSelect(e, prev, next, this);
                 return false;
             },
 
-			chooseOption:function(e){
-                $(e.target).parents("dd").find(".current-selected").text($(e.target).text()).attr("data-id",$(e.target).attr("id")).attr("data-level",$(e.target).data("level"));
-			},
+            chooseOption: function (e) {
+                $(e.target).parents("dd").find(".current-selected").text($(e.target).text()).attr("data-id", $(e.target).attr("id")).attr("data-level", $(e.target).data("level"));
+            },
 
             render: function () {
-				var self = this;
+                var self = this;
                 var formString = this.template({});
 
-                   this.$el = $(formString).dialog({
-					closeOnEscape: false,
-                    autoOpen:true,
-                    resizable:true,
-					dialogClass:"edit-dialog",
-					title: "Edit department",
-					width:"950px",
+                this.$el = $(formString).dialog({
+                    closeOnEscape: false,
+                    autoOpen: true,
+                    resizable: true,
+                    dialogClass: "edit-dialog",
+                    title: "Edit department",
+                    width: "950px",
                     buttons: [
                         {
                             text: "Create",
@@ -198,15 +198,15 @@ define([
                         },
 
 						{
-							text: "Cancel",
-							click: function () { $(this).dialog().remove(); }
+						    text: "Cancel",
+						    click: function () { $(this).dialog().remove(); }
 						}]
 
                 });
-				populate.get2name("#departmentManager", "/getPersonsForDd",{},this,true,true);
-				populate.getParrentDepartment("#parentDepartment", "/getSalesTeam",{},this,true,true);
+                populate.get2name("#departmentManager", "/getPersonsForDd", {}, this, true, true);
+                populate.getParrentDepartment("#parentDepartment", "/getSalesTeam", {}, this, true, true);
 
-				common.populateUsersForGroups('#sourceUsers','#targetUsers',null,1);
+                common.populateUsersForGroups('#sourceUsers', '#targetUsers', null, 1);
                 return this;
             }
 

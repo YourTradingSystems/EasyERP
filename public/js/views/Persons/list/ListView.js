@@ -170,7 +170,7 @@ function (listTemplate, createView, listItemView, aphabeticTemplate,contentColle
                 $("#startLetter").remove();
                 self.alphabeticArray = arr;
                 currentEl.prepend(_.template(aphabeticTemplate, { alphabeticArray: self.alphabeticArray, selectedLetter: (self.selectedLetter == "" ? "All" : self.selectedLetter), allAlphabeticArray: self.allAlphabeticArray }));
-                 var currentLetter = (self.filter) ? self.filter.letter : null
+                var currentLetter = (self.filter) ? self.filter.letter : null;
                     if (currentLetter) {
                         $('#startLetter a').each(function() {
                             var target = $(this);
@@ -399,6 +399,7 @@ function (listTemplate, createView, listItemView, aphabeticTemplate,contentColle
                 }
         },
         deleteItems: function () {
+            var currentEl = this.$el;
             var that = this,
                      mid = 39,
                      model;
@@ -417,6 +418,21 @@ function (listTemplate, createView, listItemView, aphabeticTemplate,contentColle
 							localCounter++;
 
 							if (index==count-1){
+								common.buildAphabeticArray(that.collection, function (arr) {
+
+									$("#startLetter").remove();
+									that.alphabeticArray = arr;
+									currentEl.prepend(_.template(aphabeticTemplate, { alphabeticArray: that.alphabeticArray, selectedLetter: (that.selectedLetter == "" ? "All" : that.selectedLetter), allAlphabeticArray: that.allAlphabeticArray }));
+									var currentLetter = (that.filter) ? that.filter.letter : null
+									if (currentLetter) {
+										$('#startLetter a').each(function() {
+											var target = $(this);
+											if (target.text() == currentLetter) {
+												target.addClass("current");
+											}
+										});
+									}
+								});
 								that.deleteCounter =localCounter;
 								that.deletePage = $("#currentShowPage").val();
 								that.deleteItemsRender(that.deleteCounter, that.deletePage);

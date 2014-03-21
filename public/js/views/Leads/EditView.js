@@ -184,7 +184,7 @@ define([
                     //optout: optout,
                     reffered: reffered,
                     groups: {
-                        owner: $("#allUsers").val(),
+						owner: $("#allUsersSelect").data("id"),
                         users: usersId,
                         group: groupsId
                     },
@@ -263,31 +263,45 @@ define([
 			},
 
             selectCustomer: function (id) {
-                dataService.getData('/Customer', {
-                    id: id
-                }, function (response, context) {
-                    var customer = response.data[0];
-                    if (customer.type == 'Person') {
-                        context.$el.find('#first').val(customer.name.first);
-                        context.$el.find('#last').val(customer.name.last);
+				if (id!=""){
+					dataService.getData('/Customer', {
+						id: id
+					}, function (response, context) {
+						var customer = response.data[0];
+						if (customer.type == 'Person') {
+							context.$el.find('#first').val(customer.name.first);
+							context.$el.find('#last').val(customer.name.last);
 
-                        context.$el.find('#company').val('');
-                    } else {
-                        context.$el.find('#company').val(customer.name.first);
+							context.$el.find('#company').val('');
+						} else {
+							context.$el.find('#company').val(customer.name.first);
 
-                        context.$el.find('#first').val('');
-                        context.$el.find('#last').val('');
+							context.$el.find('#first').val('');
+							context.$el.find('#last').val('');
 
-                    }
-                    context.$el.find('#email').val(customer.email);
-                    context.$el.find('#phone').val(customer.phones.phone);
-                    context.$el.find('#mobile').val(customer.phones.mobile);
-                    context.$el.find('#street').val(customer.address.street);
-                    context.$el.find('#city').val(customer.address.city);
-                    context.$el.find('#state').val(customer.address.state);
-                    context.$el.find('#zip').val(customer.address.zip);
-                    context.$el.find('#country').val(customer.address.country);
-                }, this);
+						}
+						context.$el.find('#email').val(customer.email);
+						context.$el.find('#phone').val(customer.phones.phone);
+						context.$el.find('#mobile').val(customer.phones.mobile);
+						context.$el.find('#street').val(customer.address.street);
+						context.$el.find('#city').val(customer.address.city);
+						context.$el.find('#state').val(customer.address.state);
+						context.$el.find('#zip').val(customer.address.zip);
+						context.$el.find('#country').val(customer.address.country);
+					}, this);
+				}else{
+					this.$el.find('#email').val('');
+					this.$el.find('#phone').val('');
+					this.$el.find('#mobile').val('');
+					this.$el.find('#street').val('');
+					this.$el.find('#city').val('');
+					this.$el.find('#state').val('');
+					this.$el.find('#zip').val('');
+					this.$el.find('#country').val('');
+                    this.$el.find('#company').val('');
+                    this.$el.find('#first').val('');
+                    this.$el.find('#last').val('');
+				}
 
             },
 
@@ -326,7 +340,7 @@ define([
                 );
 				populate.getPriority("#priorityDd",this);
 				populate.getWorkflow("#workflowsDd","","/WorkflowsForDd",{id:"Leads"},"name",this);			
-				populate.get2name("#customerDd", "/Customer",{},this);	
+				populate.get2name("#customerDd", "/Customer",{},this, null, true);	
 				populate.get2name("#salesPerson", "/getForDdByRelatedUser",{},this);	
 				populate.get("#campaignDd", "/Campaigns",{},"name",this);	
 				populate.get("#sourceDd", "/sources",{},"name",this);	

@@ -17,12 +17,14 @@
             initialize: function (options) {
                 _.bindAll(this, "saveItem");
                 _.bindAll(this, "render", "deleteItem");
-                this.workflowsCollection = new WorkflowsCollection({ id: 'Applications' });
                 this.employeesCollection = options.collection;
                 this.currentModel = (options.model) ? options.model : options.collection.getElement();
 				this.currentModel.urlRoot = "/Applications";
 				this.responseObj = {};
-                this.render();
+                this.workflowsCollection = new WorkflowsCollection({ id: 'Applications' });
+//				this.workflowsCollection.bind("reset",this.render, this);
+				this.render();
+
             },
 
             events: {
@@ -53,6 +55,7 @@
                 this.currentModel.save({
                     workflow: id
                 }, {
+                    patch: true,
                     success: function (model) {
 						model = model.toJSON();
 						var viewType = custom.getCurrentVT();
@@ -87,7 +90,8 @@
             isEmployee: function (e) {
 				e.preventDefault();
             	this.currentModel.save({
-                    isEmployee: true
+            	    isEmployee: true,
+            	    hired: true // for recalculate Birtdays only
                 }, {
                     headers: {
                         mid: 39
@@ -218,11 +222,12 @@
                     department: department,
                     jobPosition: jobPositionId,
                     expectedSalary: $.trim(this.$el.find("#expectedSalary").val()),
-                    proposedSalary: $.trim(this.$el.find("#proposedSalary").val()),
+                    //proposedSalary: $.trim(this.$el.find("#proposedSalary").val()),
+                    proposedSalary: parseInt($.trim(this.$el.find("#proposedSalary").val()), 10),     //Masalovych bag 812
                     tags: $.trim(this.$el.find("#tags").val()).split(','),
                     otherInfo: this.$el.find("#otherInfo").val(),
                     groups: {
-                        owner: $("#allUsers").val(),
+						owner: $("#allUsersSelect").data("id"),
                         users: usersId,
                         group: groupsId
                     },
@@ -357,8 +362,14 @@
             },
 
             render: function () {
+                var workflow = this.workflowsCollection.findWhere({ name: "Refused" });
+				var id =null;
+				if (workflow){
+					id = workflow.get('_id');
+				}
                 var formString = this.template({
-                    model: this.currentModel.toJSON()
+                    model: this.currentModel.toJSON(),
+					refuseId: id
                 });
                 var self = this;
                 this.$el = $(formString).dialog({
