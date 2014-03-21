@@ -70,10 +70,9 @@ var Workflow = function (logWriter, mongoose, models, event) {
                             result.send(400, { error: 'WorkFlow.js create workflow Incorrect Incoming Data' });
                             return;
                         } else {
-                            //add vasya no not create workflow with the same name
-                            if (workflows.length > 0) {//add vasya no not create workflow with the same name
-                                if (workflows[0].name === data.name) {//add vasya no not create workflow with the same name
-                                    result.send(400, { error: 'An Workflows with the same Name already exists' });//add vasya no not create workflow with the same name
+                            if (workflows.length > 0) {
+                                if (workflows[0].name === data.name) {
+                                    result.send(400, { error: 'An Workflows with the same Name already exists' });
                                 }
                             }
                             else if(workflows.length === 0) {
@@ -104,19 +103,18 @@ var Workflow = function (logWriter, mongoose, models, event) {
         },
 
         update: function (req, _id, data, result) {
-            console.log('>>>>>>>Incoming Workflow Update>>>>>>>');
             
             try {
                 if (data) {
-                 models.get(req.session.lastDb - 1, "workflows", workflowSchema).find({ _id: _id }, function (err, workflows) {//add vasya no not create workflow with the same name
-                     models.get(req.session.lastDb - 1, "workflows", workflowSchema).find({ $and: [{ wId: workflows[0].wId  },{name: data.name}]}, function (err, workflow) {//add vasya no not create workflow with the same name
+                 models.get(req.session.lastDb - 1, "workflows", workflowSchema).find({ _id: _id }, function (err, workflows) {
+                     models.get(req.session.lastDb - 1, "workflows", workflowSchema).find({ $and: [{ wId: workflows[0].wId  },{name: data.name}]}, function (err, workflow) {
                             delete data._id;
-                            if (workflow.length > 0 && workflow[0]._id != _id) {//add vasya no not create workflow with the same name
-                                     if (workflow[0].name === data.name) {//add vasya no not create workflow with the same name
-                                            result.send(400, { error: 'An Workflows with the same Name already exists' });//add vasya no not create workflow with the same name
+                            if (workflow.length > 0 && workflow[0]._id != _id) {
+                                     if (workflow[0].name === data.name) {
+                                            result.send(400, { error: 'An Workflows with the same Name already exists' });
                                      }
                             }
-                            else  {//add vasya no not create workflow with the same name
+                            else  {
                                 models.get(req.session.lastDb - 1, "workflows", workflowSchema).update({ _id: _id }, data, function (err, res) {
                                     if (err) {
                                         console.log(err);
@@ -137,7 +135,6 @@ var Workflow = function (logWriter, mongoose, models, event) {
             }
         },
         updateOnlySelectedFields: function (req, _id, data, result) {
-			console.log('>>>>>>>Incoming Workflow Update>>>>>>>');
             try {
                 if (data) {
 					updateSequence(models.get(req.session.lastDb - 1, "workflows", workflowSchema), "sequence", data.sequenceStart, data.sequence, data.wId, false, false, function(sequence){
@@ -149,7 +146,6 @@ var Workflow = function (logWriter, mongoose, models, event) {
 								result.send(400, { error: 'WorkFlow.js update workflow error ' });
 								return;
 							} else {
-								console.log(res);
 								result.send(200, { success: 'WorkFlow update success' });
 							}
 						});
@@ -163,7 +159,6 @@ var Workflow = function (logWriter, mongoose, models, event) {
         getWorkflowsForDd: function (req, data, response) {
             var res = {};
             res['data'] = [];
-            //var query = workflow.find({ $and: [{ wId: data.type.id }, { name: data.type.name }] });
             var query = models.get(req.session.lastDb - 1, "workflows", workflowSchema).find({ wId: data.type.id });
             query.select('name wName');
             query.sort({ 'sequence': -1,"editedBy.date":-1 });
@@ -173,9 +168,7 @@ var Workflow = function (logWriter, mongoose, models, event) {
                     logWriter.log('Workflow.js get workflow.find' + err);
                     response.send(500, { error: "Can't find Workflow" });
                 } else {
-                    //res['data'] = result[0].value;
                     res['data'] = result;
-                    
                     response.send(res);
                 }
             });
