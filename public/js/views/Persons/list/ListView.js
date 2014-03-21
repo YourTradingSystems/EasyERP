@@ -345,7 +345,6 @@ function (listTemplate, createView, listItemView, aphabeticTemplate,contentColle
             created.text("Created in " + (new Date() - this.startTime) + " ms");
             holder.prepend(alphaBet);
             holder.append(created);
-            this.asyncLoadImgs(newModels);
         },
 
         gotoForm: function (e) {
