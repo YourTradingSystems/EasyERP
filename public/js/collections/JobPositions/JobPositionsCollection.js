@@ -1,18 +1,15 @@
 define([
     'models/JobPositionsModel'
 ],
-    function (JobPositionsModel) {
+function (JobPositionsModel) {
         var JobPositionsCollection = Backbone.Collection.extend({
             model: JobPositionsModel,
             url: function () {
                 return "/JobPosition";
             },
-
             initialize: function () {
                 console.log("JobPosition Collection Init");
-
                 var mid = 39;
-
                 this.fetch({
                     data: $.param({
                         mid: mid
@@ -23,22 +20,10 @@ define([
                     error: this.fetchError
                 });
             },
-
             parse: true,
-
             parse: function (response) {
                 return response.data;
             },
-
-            fetchSuccess: function (collection, response) {
-                console.log("JobPosition fetchSuccess");
-            },
-            fetchError: function (error) {
-
-            }
-
-
         });
-
         return JobPositionsCollection;
-    });
+});

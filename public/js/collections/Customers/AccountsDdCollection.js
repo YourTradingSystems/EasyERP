@@ -28,13 +28,6 @@ define(function () {
 
         parse: function (response) {
             return response.data;
-        },
-
-        fetchSuccess: function (collection, response) {
-            console.log("PersonsForDd fetchSuccess");
-        },
-        fetchError: function (error) {
-
         }
     });
 

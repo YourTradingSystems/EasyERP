@@ -19,7 +19,6 @@
                 
                 if (options && options.viewType) {
                     this.url += options.viewType;
-                   // delete options.viewType;
                 }
                 if (options && options.count) {
                     this.namberToShow = options.count;
@@ -61,7 +60,6 @@
                 });
 
             },
-
             parse: true,
             parse: function (response) {
                 return response.data;
@@ -69,4 +67,4 @@
         });
 
         return TasksCollection;
-    });
+});

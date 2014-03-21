@@ -1,8 +1,7 @@
 define([
     "models/UsersModel"
 ],
-    function (UserModel) {
-
+function (UserModel) {
         var UsersCollection = Backbone.Collection.extend({
             model: UserModel,
             url: function () {
@@ -10,7 +9,6 @@ define([
             },
             initialize: function () {
                 var mid = 39;
-
                 this.fetch({
                     data: $.param({
                         mid: mid
@@ -24,13 +22,6 @@ define([
             parse: function (response) {
                 return response.data;
             },
-
-            fetchSuccess:function(){
-                console.log("Users fetchSuccess");
-            },
-            fetchError: function (error) {
-            }
         });
-
         return UsersCollection;
-    });
+});

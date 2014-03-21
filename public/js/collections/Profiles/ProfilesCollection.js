@@ -1,7 +1,7 @@
 define([
      "models/ProfilesModel"
 ],
-    function (ProfilesModel) {
+function (ProfilesModel) {
         var ProfilesCollection = Backbone.Collection.extend({
             model: ProfilesModel,
             url: function () {
@@ -10,7 +10,6 @@ define([
             initialize: function () {
 				this.startTime = new Date();
                 mid = 39;
-
                 this.fetch({
                     data: $.param({
                         mid: mid
@@ -25,14 +24,9 @@ define([
                 });
             },
             parse: true,
-
             parse: function (response) {
                 return response.data;
             },
-            fetchSuccess : function(){
-                console.log('Profiles fetch Success');
-            }
         });
-
         return ProfilesCollection;
-    });
+});

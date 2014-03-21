@@ -11,12 +11,10 @@
                 this.fetch({
                     reset: true,
                     success: function() {
-                        console.log("Birthdays fetchSuccess");
                     },
                     error: this.fetchError
                 });
             },
-
             parse: true,
             parse: function (response) {
                 if (response.data) {
@@ -26,14 +24,12 @@
                             return employee;
                         });
                     }
-                    
                     if (response.data.nextweek) {
                         _.map(response.data.nextweek, function (employee) {
                             employee.dateBirth = common.utcDateToLocaleDate(employee.dateBirth);
                             return employee;
                         });
                     }
-                    
                     if (response.data.monthly) {
                         _.map(response.data.monthly, function (employee) {
                             employee.dateBirth = common.utcDateToLocaleDate(employee.dateBirth);
@@ -43,9 +39,6 @@
                 }
                 return response.data;
             }
-
-            
         });
-
         return EmployeesCollection;
     });

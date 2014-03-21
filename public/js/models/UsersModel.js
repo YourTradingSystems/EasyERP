@@ -16,7 +16,6 @@ define(['Validation'],function (Validation) {
                 }
             });
         },
-
         validate: function(attrs, options){
             var errors = [];
                 if(options.editMode==false) {
@@ -45,8 +44,6 @@ define(['Validation'],function (Validation) {
         urlRoot: function(){
             return "/Users";
         }
-
     });
-
     return UserModel;
 });

@@ -11,7 +11,6 @@
             namberToShow: null,
             viewType: null,
             contentType: null,
-
             initialize: function (options) {
 				this.startTime = new Date();
 
@@ -22,7 +21,6 @@
                 this.page = options.page || 1;
                 if (options && options.viewType) {
                     this.url += options.viewType;
-                    //delete options.viewType;
                 }
                 this.fetch({
                     data: options,
@@ -38,11 +36,7 @@
 
             showMore: function (options) {
                 var that = this;
-
                 var filterObject = options || {};
-
-
-
                 filterObject['page'] = (options && options.page) ? options.page: this.page;
                 filterObject['count'] = (options && options.count) ? options.count: this.namberToShow;
                 filterObject['viewType'] = (options && options.viewType) ? options.viewType: this.viewType;
@@ -81,7 +75,6 @@
                     }
                 });
             },
-
             getAlphabet: function (callback) {
 				dataService.getData("/getEmployeesAlphabet", { mid: 39 }, function (response) {
 					if (callback){
@@ -94,9 +87,6 @@
             parse: function (response) {
                 return response.data;
             }
-
-            
         });
-
         return EmployeesCollection;
-    });
+});

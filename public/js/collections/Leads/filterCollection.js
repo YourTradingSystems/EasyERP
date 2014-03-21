@@ -11,7 +11,6 @@
 
             initialize: function (options) {
                 this.startTime = new Date();
-
                 var that = this;
                 this.namberToShow = options.count;
                 this.viewType = options.viewType;
@@ -20,7 +19,6 @@
                 this.page = options.page || 1;
                 if (options && options.viewType) {
                     this.url += options.viewType;
-                    //delete options.viewType;
                 }
 
                 this.fetch({
@@ -37,7 +35,6 @@
 
             showMore: function (options) {
                 var that = this;
-
                 var filterObject = {};
                 if (options) {
                     for (var i in options) {
@@ -58,7 +55,6 @@
                     data: filterObject,
                     waite: true,
                     success: function (models) {
-                        console.log('Fetch from Server --->' + models.length);
                         that.page ++;
                         that.trigger('showmore', models);
                     },
@@ -67,12 +63,10 @@
                     }
                 });
             },
-
             parse: true,
             parse: function (response) {
                 return response.data;
             }
         });
-
         return LeadsCollection;
     });

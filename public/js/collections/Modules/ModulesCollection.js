@@ -1,6 +1,5 @@
 define(function () {
     var MenuItems = Backbone.Collection.extend({
-
         url: function () {
             return "/getModules"
         },
@@ -10,11 +9,9 @@ define(function () {
             });
         },
         parse: true,
-
         parse: function (response) {
             return response.data;
         }
     });
-
     return MenuItems;
 });

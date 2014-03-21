@@ -1,14 +1,13 @@
 ﻿define([
     'models/TasksModel'
 ],
-    function (TaskModel) {
+function (TaskModel) {
         var TasksCollection = Backbone.Collection.extend({
             model: TaskModel,
             url: "/Tasks/",
             page: null,
             namberToShow: null,
             viewType: null,
-
             initialize: function (options) {
                 this.startTime = new Date();
                 this.parrentContentId = (options) ? options.parrentContentId : null;
@@ -32,10 +31,8 @@
                     }
                 });
             },
-
             showMore: function (options) {
                 var that = this;
-
                 var filterObject = {};
                 if (options) {
                     for (var i in options) {
@@ -51,7 +48,6 @@
                 filterObject['page'] = this.page;
                 filterObject['count'] = this.namberToShow;
                 filterObject['filter'] = (options) ? options.filter : {};
-
                 this.fetch({
                     data: filterObject,
                     waite: true,
@@ -64,14 +60,10 @@
                     }
                 });
             },
-
             parse: true,
             parse: function (response) {
                 return response.data;
             }
-
-
         });
-
         return TasksCollection;
-    });
+});

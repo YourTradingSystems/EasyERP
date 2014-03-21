@@ -1,7 +1,7 @@
 define([
     'models/WorkflowsModel',
 ],
-	function (WorkflowsModel) {
+function (WorkflowsModel) {
     var WorkflowsCollection = Backbone.Collection.extend({
         model: WorkflowsModel,
         url: function () {
@@ -9,7 +9,6 @@ define([
                 url = "/Workflows?mid=" + mid + "&id=" + this.type;
             return url;
         },
-
         initialize: function (options) {
             if (!options) {
                 this.type = "";
@@ -23,20 +22,10 @@ define([
                 error: this.fetchError
             });
         },
-
         parse: true,
         parse: function (response) {
             return response.data;
         },
-
-        fetchSuccess: function (collection, response) {
-            console.log("Workflows fetchSuccess");
-        },
-        fetchError: function (error) {
-
-        }
-
     });
-
     return WorkflowsCollection;
 });

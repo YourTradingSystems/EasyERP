@@ -8,12 +8,8 @@ define([
             url: function () {
                 return "/Leads";
             },
-
             initialize: function () {
-                console.log("Leads Collection Init");
-
                 var mid = 39;
-
                 this.fetch({
                     data: $.param({
                         mid: mid
@@ -24,22 +20,11 @@ define([
                     error: this.fetchError
                 });
             },
-
             parse: true,
 
             parse: function (response) {
                 return response.data;
             },
-
-            fetchSuccess: function (collection, response) {
-                console.log("Leads fetchSuccess");
-            },
-
-            fetchError: function (error) {
-
-            }
-
         });
-
         return LeadsCollection;
     });

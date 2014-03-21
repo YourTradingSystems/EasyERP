@@ -21,7 +21,6 @@
                 this.page = options.page || 1;
                 if (options && options.viewType) {
                     this.url += options.viewType;
-                    //delete options.viewType;
                 }
                 this.fetch({
                     data: options,
@@ -34,13 +33,11 @@
                     }
                 });
             },
-
             filterByWorkflow: function (id) {
                 return this.filter(function (data) {
                     return data.get("workflow")._id == id;
                 });
             },
-
             showMore: function (options) {
                 var that = this;
                 var filterObject = options || {};
@@ -62,7 +59,6 @@
                     }
                 });
             },
-
             showMoreAlphabet: function (options) {
                 var that = this;
                 var filterObject = options || {};
@@ -79,9 +75,7 @@
                         that.page += 1;
 							that.trigger('showmoreAlphabet', models);
                     },
-                    error: function () {
-                        alert('Some Error');
-                    }
+                    error: this.fetchError
                 });
             },
 
@@ -97,9 +91,6 @@
             parse: function (response) {
                 return response.data;
             }
-
-            
         });
-
         return CompaniesCollection;
-    });
+});

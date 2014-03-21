@@ -18,7 +18,6 @@ define([
             },
             
             editItem: function () {
-                //create editView in dialog here
                 new EditView({ model: this.formModel });
             },
             

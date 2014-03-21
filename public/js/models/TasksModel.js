@@ -14,7 +14,6 @@ define([
                 });
             },
             parse: true,
-
             parse: function (response) {
                 if (response.StartDate)
                     response.StartDate = common.utcDateToLocaleDate(response.StartDate);
@@ -52,36 +51,9 @@ define([
                     return errors;
             },
 
-            //defaults: {
-            //    summary: '',
-            //    taskCount: 0,
-            //    type: '',
-            //    project: '',
-            //    assignedTo: '',
-            //    deadline: null,
-            //    tags: [],
-            //    description: '',
-            //    extrainfo: {
-            //    	priority: 'P3',
-            //        duration: null,
-            //        sequence: 0,
-            //        customer:'',
-            //        StartDate: null,
-            //        EndDate: null
-            //    },
-
-            //    color: '#4d5a75',
-            //    estimated: 0,
-            //    logged: 0,
-            //    remaining: 0,
-            //    progress: 0,
-            //    notes:[]
-            //},
-
             urlRoot: function () {
                 return "/Tasks";
             }
         });
-
         return TaskModel;
     });
