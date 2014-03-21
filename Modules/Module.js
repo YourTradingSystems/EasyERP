@@ -13,25 +13,6 @@ var Module = function (logWriter, mongoose, profile, models) {
     mongoose.model('modules', moduleSchema);
 
     return {
-        create: function (data, func) {
-            var testmmodule = new _module();
-            testmmodule._id = data._id;
-            testmmodule.mname = data.mname;
-            testmmodule.ancestors = data.ancestors;
-            testmmodule.users = data.users;
-            testmmodule.parrent = data.parrent;
-            testmmodule.link = data.link;
-            testmmodule.save(function (err, res) {
-                if (err) {
-                    console.log(err);
-                    logWriter.log(err);
-                } else {
-                    console.log('Save is success');
-                    func(res);
-                }
-            });
-        },//End create
-
         get: function (req, id, response) {
            
             models.get(req.session.lastDb - 1, "Profile", profile.schema).aggregate(
@@ -119,47 +100,7 @@ var Module = function (logWriter, mongoose, profile, models) {
                 }
             );
         },
-        update: function (func) {
-            _module.find({}, function (err, modules) {
-                if (!err) {
-                    upMod(0, modules);
-                } else {
-                    console.log(err);
-                    logWriter.log(err);
-                }
-            });
-
-            function toHref(str) {
-                str.trim();
-                var arr = str.split(' ');
-                var s = '';
-                for (var i in arr) {
-                    s += arr[i];
-                }
-                return s.toLowerCase();
-            }
-
-            var upMod = function (count, modules) {
-                if (!(count === (modules.length - 1))) {
-                    var value = toHref(modules[count].mname);
-                    _module.update({ _id: modules[count]._id }, { $set: { href: value } }, function (err, res) {
-                        if (!err) {
-                            count++;
-                            upMod(count, modules);
-                        } else {
-                            console.log(err);
-                            logWriter.log(err);
-                            func(false);
-                        }
-                    });
-                } else {
-                    func(true);
-                }
-
-            }
-
-        }
     };
-}
+};
 
 module.exports = Module;

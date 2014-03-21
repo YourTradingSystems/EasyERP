@@ -85,7 +85,6 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
 
         var contentType = req.params.contentType;
         var optionsObject = {};
-        //modified for filter Vasya
         if (data.filter && data.filter.workflow) {
             data.filter.workflow = data.filter.workflow.map(function (item) {
                 return item === "null" ? null : item;
@@ -171,7 +170,6 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                                     res['showMore'] = true;
                                 }
                                 res['count'] = result.length;
-                                console.log(result.length);
                                 response.send(res);
                             } else {
                                 console.log(err);
@@ -199,7 +197,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
 
             function savetoDb(data) {
                 try {
-                    _opportunitie = new models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema)();
+                    var _opportunitie = new models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema)();
                     _opportunitie.isOpportunitie = (data.isOpportunitie) ? data.isOpportunitie : false;
                     if (data.name) {
                         _opportunitie.name = data.name;
@@ -357,7 +355,6 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                         _opportunitie.sequence = sequence;
                         _opportunitie.save(function (err, result) {
                             if (err) {
-                                //								console.log(err);
                                 console.log("Opportunities.js create savetoDB _opportunitie.save " + err);
                                 res.send(500, { error: 'Opportunities.save BD error' });
                             } else {
@@ -365,7 +362,6 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                             }
                         });
                     });
-                    //					}
                 } catch (error) {
                     console.log(error);
                     logWriter.log("Opportunities.js create savetoDB " + error);
@@ -405,7 +401,6 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
         if (data.source) {
 
             var c = new Date() - data.dataRange * 24 * 60 * 60 * 1000;
-            console.log(data.dataRange);
             var a = new Date(c);
             models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).aggregate({ $match: { $and: [{ createdBy: { $ne: null }, source: { $ne: "" }, $or: [{ isConverted: true }, { isOpportunitie: false }] }, { 'createdBy.date': { $gte: a } }] } }, { $group: { _id: { source: "$source", isOpportunitie: "$isOpportunitie" }, count: { $sum: 1 } } }, { $project: { "source": "$_id.source", count: 1, "isOpp": "$_id.isOpportunitie", _id: 0 } }).exec(function (err, result) {
                 if (err) {
@@ -519,28 +514,6 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
         });
     };
 
-    function getLeads(req, response) {
-        //var res = {};
-        //res['data'] = [];
-        //var query = models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).find({ isOpportunitie: false });
-        //query.sort({ name: 1 });
-        //query.populate('customer salesPerson salesTeam workflow').
-        //    populate('createdBy.user').
-        //    populate('editedBy.user');
-
-        //query.exec(function (err, result) {
-        //    if (err) {
-        //        console.log(err);
-        //        logWriter.log('Leads.js get lead.find' + err);
-        //        response.send(500, { error: "Can't find Leads" });
-        //    } else {
-        //        res['data'] = result;
-        //        
-        //        response.send(res);
-        //    }
-        //});
-    };
-
     function getFilter(req, response) {
         var res = {};
         res['data'] = [];
@@ -563,9 +536,6 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
             }
                 break;
         }
-
-        console.log('>>>>>>>>>>>');
-        console.log(optionsObject);
 
         models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema).aggregate(
             {
@@ -638,7 +608,6 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
 
                                     case ('Opportunities'): {
                                         if (data && data.filter && data.filter.workflow) {
-                                            console.log(data.filter.workflow);
                                             query.where('workflow').in(data.filter.workflow);
                                         } else if (data && (!data.newCollection || data.newCollection === 'false')) {
                                             query.where('workflow').in([]);
@@ -745,8 +714,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
 
         function updateOpp() {
             var createPersonCustomer = function (company) {
-                if (data.contactName && (data.contactName.first || data.contactName.last)) {                           //�������� Person
-                    //add "phones:data.phones" convert phones (Vasya)
+                if (data.contactName && (data.contactName.first || data.contactName.last)) {
                     var _person = {
                         name: data.contactName,
                         email: data.email,
@@ -758,7 +726,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                         },
                         type: 'Person',
                         createdBy: { user: req.session.uId }
-                    }
+                    };
                     models.get(req.session.lastDb - 1, "Customers", customer.customerSchema).find({ $and: [{ 'name.first': data.contactName.first }, { 'name.last': data.contactName.last }] }, function (err, _persons) {
                         if (err) {
                             console.log(err);
@@ -782,7 +750,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                             });
                         }
                     });
-                }                                              //����� �������� Person
+				}
             };
 
             if (data.company && data.company._id) {
@@ -814,19 +782,13 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                     } else {
 
                         if (data.createCustomer) {
-                            console.log(data.createCustomer);//�������� ���������
-                            console.log('************Cre Cust***********');
-                            console.log(data);
-                            console.log('*******************************');
-                            if (data.tempCompanyField) {                          //�������� �������
-                                //add " address:data.address" convert address (Vasya)
+                            if (data.tempCompanyField) {
                                 var _company = {
                                     name: {
                                         first: data.tempCompanyField,
                                         last: ''
                                     },
                                     address: data.address,
-                                    //email: data.email,
                                     salesPurchases: {
                                         isCustomer: true,
                                         salesPerson: data.salesPerson
@@ -834,7 +796,6 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                                     type: 'Company',
                                     createdBy: { user: req.session.uId }
                                 };
-                                console.log(_company);
                                 models.get(req.session.lastDb - 1, 'Customers', customer.customerSchema).find({ 'name.first': data.tempCompanyField }, function (err, companies) {
                                     if (err) {
                                         console.log(err);
@@ -895,7 +856,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
             logWriter.log("Opportunities.js update " + exception);
             res.send(500, { error: 'Opportunities updated error' });
         }
-    }// end update
+    }
 
     function updateOnlySelectedFields(req, _id, data, res) {
         var fileName = data.fileName;
@@ -942,11 +903,6 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                     logWriter.log('Opprtunities.js. create opportunitie.find' + error);
                     res.send(500, { error: 'Opprtunities.create find error' });
                 }
-                // An Opportunity with the same Name is already exists
-                /*if (doc.length > 0&&doc[0]._id!=_id) {
-                    logWriter.log('Opprtunities.js. createLead Dublicate Leads' + data.name);
-                    res.send(400, { error: 'An Opportunities with the same Name already exists' });
-                }else{*/
                 if (data.notes && data.notes.length != 0) {
                     var obj = data.notes[data.notes.length - 1];
                     if (!obj._id)
@@ -1002,7 +958,6 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                     }
 
                 });
-                //}
             });
 
         }
@@ -1025,7 +980,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
             function (err, deps) {
                 if (!err) {
                     var arrOfObjectId = deps.objectID();
-                    var arrOr = []
+                    var arrOr = [];
                     if (data.person) {
                         arrOr.push({ "customer": newObjectId(data.person) });
                     }
@@ -1091,7 +1046,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                                         } else {
                                             console.log(error);
                                         }
-                                    })
+                                    });
                                 } else {
 
                                     if (data && data.status && data.status.length > 0)
@@ -1191,7 +1146,6 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                         },
                         function (err, responseOpportunities) {
                             if (!err) {
-                                console.log(responseOpportunities.length);
                                 var query = models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).
                                 where('_id').in(responseOpportunities).
 								select("_id customer salesPerson workflow editedBy.date name nextAction expectedRevenue sequence").
@@ -1223,7 +1177,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
     };
 
     function getCollectionLengthByWorkflows(req, res) {
-        data = {};
+        var data = {};
         data['showMore'] = false;
         models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema).aggregate(
             {
@@ -1290,7 +1244,6 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                                     },
                                     function (err, responseOpportunities) {
                                         if (!err) {
-                                            console.log(responseOpportunities);
                                             responseOpportunities.forEach(function (object) {
                                                 if (object.count > req.session.kanbanSettings.opportunities.countPerPage) data['showMore'] = true;
                                             });
@@ -1307,7 +1260,6 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
     }
 
     function remove(req, _id, res) {
-        console.log(_id);
         models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).findByIdAndRemove(_id, function (err, result) {
             if (err) {
                 console.log(err);
@@ -1320,7 +1272,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                 res.send(200, { success: 'Opportunities removed' });
             }
         });
-    }// end remove
+    }
 
     return {
         getTotalCount: getTotalCount,
@@ -1336,8 +1288,6 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
         getFilterOpportunitiesForKanban: getFilterOpportunitiesForKanban,
 
         getFilterOpportunitiesForMiniView: getFilterOpportunitiesForMiniView,
-
-        getLeads: getLeads,
 
         getFilter: getFilter,
 
