@@ -6,18 +6,17 @@ define([
     'views/Workflows/CreateView',
     'custom',
     "models/WorkflowsModel",
-    "common"
+    "common",
+    "collections/Workflows/WorkflowsCollection"
 ],
-	   function (ListTemplate, ListItemView, FormTemplate, RelatedStatusesCollection, CreateView, Custom, WorkflowsModel, common) {
+	   function (ListTemplate, ListItemView, FormTemplate, RelatedStatusesCollection, CreateView, Custom, WorkflowsModel, common, workflowsCollection) {
 		   var ContentView = Backbone.View.extend({
 			   el: '#content-holder',
 			   initialize: function (options) {
-
 				   this.startTime = options.startTime;
 				   _.bindAll(this, "saveStatus", "render");
 				   this.relatedStatusesCollection = new RelatedStatusesCollection();
 				   this.relatedStatusesCollection.bind('reset', _.bind(this.render, this));
-				   console.log('Init Workflows View');
 				   this.collection = options.collection;
 				   this.collection.bind('reset', _.bind(this.render, this));
 				   this.render();
@@ -59,7 +58,7 @@ define([
 				   var id = tdName.data("id");
 				   var sequence = tdName.data("sequence");
 
-                   var model =this.collection.get(id);
+                   var model = this.collection.get(id);
                    this.collection.url = "/Workflows";
 				   var obj = {
 					   name: name,
@@ -73,7 +72,14 @@ define([
 						   mid: mid
 					   },
 					   success: function (model) {
-						   common.checkBackboneFragment("easyErp/Workflows");
+                           var targetParent = $(e.target).parent();
+                           targetParent.siblings().find("span.name").text(obj.name);
+                           targetParent.siblings().find("span.status").text(obj.status);
+                           targetParent.siblings().find("span").removeClass("hidden").end().find("input, select, a:contains('Cancel'), a:contains('Save')").remove();
+                           targetParent.find(".edit").removeClass("hidden").end().find("a:contains('Cancel'), a:contains('Save')").remove();
+                           targetParent.find(".delete").removeClass("hidden").end().find("a:contains('Cancel'), a:contains('Save')").remove();
+                           $("#addNewStatus").show();
+						   //common.checkBackboneFragment("easyErp/Workflows");
 					   },
                     error: function (model, xhr) {
     					self.errorNotification(xhr);
@@ -141,7 +147,8 @@ define([
 							   mid: mid
 						   },
 						   success: function () {
-                    		   common.checkBackboneFragment("easyErp/Workflows", { trigger: true });
+                               $(e.target).parent().parent().remove();
+                    		   //common.checkBackboneFragment("easyErp/Workflows", { trigger: true });
 						   },
 						   error: function (model, xhr) {
     						   self.errorNotification(xhr);
@@ -206,29 +213,38 @@ define([
 				   }
 			   },
 			   chooseWorkflowDetailes: function (e) {
-				   e.preventDefault();
-				   var self = this;
+                   e.preventDefault();
+                   var self = this;
+
 				   this.$(".workflow-sub-list>*").remove();
 				   this.$("#details").addClass("active").show();
 				   this.$("#workflows").empty();
 				   this.$("#workflowNames").html("");
 				   $("#addNewStatus").show();
 				   if ($(e.target).hasClass("workflow")) {
-					   wId = $(e.target).text();
+					   var wId = $(e.target).text();
 					   $(".workflow-list .active").removeClass("active");
 					   $(e.target).parent().addClass("active");
 				   }
 				   var name = $(e.target).data("id");
 				   var values = [];
-				   _.each(this.collection.models, function (model) {
-					   if (model.get('wId') == name) {
-						   values.push({ id: model.get("_id"), name: model.get('name'), status: model.get('status'), sequence: model.get('sequence'), color: model.get('color') });
-					   }
-				   }, this);
-				   //this.$("#sub-details").attr("data-id", name).find("#workflows").empty().append($("<thead />").append($("<tr />").append($("<th />").text("Name"), $("<th />").text("Status"), $("<th />"))), $("<tbody/>"));
-				   _.each(values, function (value) {
-					   this.$("#workflows").append(new ListItemView({ model: value }).render().el);
-				   }, this);
+
+                   this.collection.fetch({
+                       success: function(collection){
+                           _.each(collection.models, function (model) {
+                               if (model.get('wId') == name) {
+                                   values.push({ id: model.get("_id"), name: model.get('name'), status: model.get('status'), sequence: model.get('sequence'), color: model.get('color') });
+                               }
+                           }, this);
+
+                           //this.$("#sub-details").attr("data-id", name).find("#workflows").empty().append($("<thead />").append($("<tr />").append($("<th />").text("Name"), $("<th />").text("Status"), $("<th />"))), $("<tbody/>"));
+                           _.each(values, function (value) {
+                               this.$("#workflows").append(new ListItemView({ model: value }).render().el);
+                           }, self);
+                       }
+                   });
+
+
 				   this.$("#workflows").sortable({
 					   stop: function (event, ui) {
 						   var id = ui.item.find("div.name").attr("id");
@@ -256,14 +272,14 @@ define([
 
 			   render: function () {
 				   Custom.setCurrentCL(this.collection.models.length);
-				   console.log('Render Workflows View');
-				   var workflowsWIds = _.uniq(_.pluck(this.collection.toJSON(), 'wId'), false);
+				   var workflowsWIds = _.uniq(_.pluck(this.collection.toJSON(), 'wId'), false).sort();
 				   var workflowsWname = _.uniq(_.pluck(this.collection.toJSON(), 'wName', 'wId'), false);
 				   this.$el.html(_.template(ListTemplate, { workflowsWIds: workflowsWIds}));
 				   this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.startTime)+" ms</div>");
  
 				   return this;
 			   },
+
 
 			   checked: function () {
 				   if ($("input:checked").length > 0)
@@ -310,48 +326,56 @@ define([
 				   e.preventDefault();
 				   var mid = 39;
 				   var workflowsModel = new WorkflowsModel();
-				   var wIds = $(".workflow-list li.active").text();
+				   var wId = $(".workflow-list li.active").text();
 				   var workflowCollection = this.collection.toJSON();
 				   var self = this;
 				   
                    var workflowArray = _.filter(workflowCollection, function (workflow) {
-                       if (workflow.wId == wIds) {
+                       if (workflow.wId == wId) {
                            return workflow;
                        }
                    });
-                   lenght = workflowArray.length;
+                   var length = workflowArray.length;
                    
-				   var name = $(".workflow-sub-list li.active a").text();
-				   var value = [];
-				   var names = [],
-                   statuses = [];
-				   names.push($.trim($(".nameStatus").val()));
-				   statuses.push($("#statusesDd option:selected").val());
-				   for (var i = 0; i < names.length; i++) {
-					   value.push({ name: names[i], status: statuses[i], sequence: lenght+1 });
-				   }
+				   //var name = $(".workflow-sub-list li.active a").text();
+
+				   var name = $.trim($(".nameStatus").val());
+                   var status = $("#statusesDd option:selected").val();
+
 				   workflowsModel.save({
-					   wId: wIds,
-					   name: name,
-					   value: value
-				   },{
+                         wId: wId,
+                         name: name,
+                         status: status,
+                         sequence: length
+				   },
+                   {
 					   headers: {
-						   mid: mid
+						    mid: mid
 					   },
-					   validate:true,
-					   success: function (model) {
-						   common.checkBackboneFragment("easyErp/Workflows");
-						   $(".addnew, .SaveCancel").remove();
-						   $("span").removeClass("hidden");
-						   $("input, select, a:contains('Cancel'), a:contains('Save')").remove();
-						   $(".edit").removeClass("hidden");
-						   $(".delete").removeClass("hidden");
-					   },
-                        error: function (model, xhr) {
-    						self.errorNotification(xhr);
-                        }
+                       validate:true,
+                       success: function (model, response) {
+                           //common.checkBackboneFragment("easyErp/Workflows");
+                           model.set('_id',response.createdModel._id);
+                           model.set('color',response.createdModel.color);
+                           var newModel = {
+                               id: response.createdModel._id,
+                               name: response.createdModel.name,
+                               status: response.createdModel.status,
+                               sequence: response.createdModel.sequence,
+                               color: response.createdModel.color,
+                               wId: response.createdModel.wId
+                           };
+                           self.collection.add(workflowsModel);
+                           $("#workflows").prepend(new ListItemView({ model: newModel }).render().el);
+                           $(".addnew, .SaveCancel").remove();
+                           $("#addNewStatus").show();
+                       },
+                       error: function (model, xhr) {
+                            self.errorNotification(xhr);
+                       }
 				   });
 			   },
+
 			   cancelAll:function(e) {
 				   e.preventDefault();
 				   $(".save-status").remove();
@@ -359,6 +383,7 @@ define([
 				   $("li").find("a.workflow-sub").show();
 				   $(".quickEdit").removeClass();
 			   },
+
 			   editAll: function(e){
 				   e.preventDefault();
 				   $(".save-status").remove();
@@ -443,3 +468,6 @@ define([
 
 		   return ContentView;
 	   });
+
+
+
