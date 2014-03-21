@@ -6,6 +6,7 @@ define([
 ], function (Router, Communication, Custom) {
     var initialize = function () {
         var appRouter = new Router();
+        appRouter.checkLogin = Communication.checkLogin;
         Communication.checkLogin(Custom.runApplication);
     };
     var applyDefaults = function () {
