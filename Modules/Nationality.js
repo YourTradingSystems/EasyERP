@@ -20,7 +20,7 @@
                 response.send(res);
             }
         });
-    };
+    }
 
     return {
         getForDd: getForDd,

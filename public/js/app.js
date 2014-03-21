@@ -6,7 +6,8 @@ define([
 ], function (Router, Communication, Custom) {
     var initialize = function () {
         var appRouter = new Router();
-    	Communication.checkLogin(Custom.runApplication);
+        appRouter.checkLogin = Communication.checkLogin;
+        Communication.checkLogin(Custom.runApplication);
     };
     var applyDefaults = function () {
         $.datepicker.setDefaults({
@@ -77,7 +78,7 @@ define([
                         break;
                     case 12: mon = 'Dec';
                         break;
-            };
+                };
                 var target = $(this);
                 var day = target.val().split(' ')[0] || '01';
                 target.val(day + ' ' + mon + ', ' + year);

@@ -78,13 +78,11 @@ var Users = function (logWriter, mongoose, models, department) {
                 models.get(req.session.lastDb - 1, 'Users', userSchema).find({ login: data.login }, function (error, doc) {
                     try {
                         if (error) {
-                            console.log(error);
                             logWriter.log('User.js create User.find' + error);
                             result.send(500, { error: 'User.create find error' });
                         }
                         if (doc.length > 0) {
                             if (doc[0].login === data.login) {
-                                console.log("An user with the same Login already exists");
                                 result.send(400, { error: "An user with the same Login already exists" });
                             }
                         }
@@ -124,7 +122,6 @@ var Users = function (logWriter, mongoose, models, department) {
 
                     _user.save(function (err, result1) {
                         if (err) {
-                            console.log(err);
                             logWriter.log("User.js create savetoBd _user.save " + err);
                             result.send(500, { error: 'User.create save error' });
                         } else {
@@ -134,18 +131,16 @@ var Users = function (logWriter, mongoose, models, department) {
 
                 }
                 catch (error) {
-                    console.log(error);
                     logWriter.log("User.js create savetoBd" + error);
                     result.send(500, { error: 'User.create save error' });
                 }
             }
         }
         catch (exception) {
-            console.log(exception);
             logWriter.log("User.js  " + exception);
             result.send(500, { error: 'User.create save error' });
         }
-    }//End create
+    }
 
     function login(req, data, res) {
         try {
@@ -167,7 +162,6 @@ var Users = function (logWriter, mongoose, models, department) {
                                     models.get(req.session.lastDb - 1, 'Users', userSchema).findByIdAndUpdate(_users[0]._id, { $set: { lastAccess: lastAccess } }, function (err, result) {
                                         if (err) {
                                             logWriter.log("User.js. login User.findByIdAndUpdate " + err);
-                                            console.log(err);
                                         }
                                     });
                                     res.send(200);
@@ -176,7 +170,6 @@ var Users = function (logWriter, mongoose, models, department) {
                                 }
                             } else {
                                 if (err) {
-                                    console.log(err);
                                     logWriter.log("User.js. login User.find " + err);
                                 }
                                 res.send(500);
@@ -188,21 +181,19 @@ var Users = function (logWriter, mongoose, models, department) {
                         }
                     }); //End find method
                 } else {
-                    console.log("Incorect Incoming Data");
-                    res.send(400);
+                    res.send(400, { error: "Incorect Incoming Data" });
                 }
                 //End Validating input data for login
             }
             else {
-                console.log("Incorect Incoming Data");
-                res.send(400);
+                res.send(400, { error: "Incorect Incoming Data" });
             }//End If data != null
         }
         catch (exception) {
             logWriter.log("Users.js  login" + exception);
             res.send(500);
         }
-    }//End login
+    }
 
     function getUsers(req, response, data) {
         var res = {};
@@ -215,8 +206,6 @@ var Users = function (logWriter, mongoose, models, department) {
         }
         query.exec(function (err, result) {
             if (err) {
-                //func();
-                console.log(err);
                 logWriter.log("Users.js get User.find " + err);
                 response.send(500, { error: 'User get DB error' });
             } else {
@@ -241,8 +230,6 @@ var Users = function (logWriter, mongoose, models, department) {
         }
         query.exec(function (err, result) {
             if (err) {
-                //func();
-                console.log(err);
                 logWriter.log("Users.js get User.find " + err);
                 response.send(500, { error: 'User get DB error' });
             } else {
@@ -259,7 +246,6 @@ var Users = function (logWriter, mongoose, models, department) {
 
         query.exec(function (err, result) {
             if (err) {
-                console.log(err);
                 logWriter.log("Users.js get User.find " + err);
                 response.send(500, { error: 'User get DB error' });
             } else {
@@ -285,7 +271,6 @@ var Users = function (logWriter, mongoose, models, department) {
         query.skip((data.page - 1) * data.count).limit(data.count);
         query.exec(function (err, result) {
             if (err) {
-                console.log(err);
                 logWriter.log("Users.js getFilter.find " + err);
                 response.send(500, { error: "User get DB error" });
             } else {
@@ -297,10 +282,6 @@ var Users = function (logWriter, mongoose, models, department) {
 
     function updateUser(req, _id, data, res, options) {
         try {
-            //delete data._id;
-            //var updateFields = {};
-            //console.log(data);
-            //delete data.RelatedEmployee;
             if (options && options.changePass) {
 
                 var shaSum = crypto.createHash('sha256');
@@ -309,7 +290,6 @@ var Users = function (logWriter, mongoose, models, department) {
                 models.get(req.session.lastDb - 1, 'Users', userSchema).findById(_id, function (err, result) {
 
                     if (err) {
-                        console.log(err);
                         logWriter.log("User.js update profile.update" + err);
                         res.send(500, { error: 'User.update BD error' });
                     } else {
@@ -327,20 +307,8 @@ var Users = function (logWriter, mongoose, models, department) {
                 });
             } else updateUser();
             function updateUser() {
-                // console.log("--->"+JSON.stringify(data, ""));
-                //for (var i in data) {
-                //    //commented condition to rewrite empty data
-                //    // if (data[i]) {
-                //        updateFields[i] = data[i];
-                //    //}
-                //}
-
-                //var _object = { $set: updateFields };
-                //console.log("--->"+JSON.stringify(_object, ""));
                 models.get(req.session.lastDb - 1, 'Users', userSchema).findByIdAndUpdate(_id, { $set: data }, function (err, result) {
-
                     if (err) {
-                        console.log(err);
                         logWriter.log("User.js update profile.update" + err);
                         res.send(500, { error: 'User.update DB error' });
                     } else {
@@ -354,7 +322,6 @@ var Users = function (logWriter, mongoose, models, department) {
             }
         }
         catch (exception) {
-            console.log(exception);
             logWriter.log("Profile.js update " + exception);
             res.send(500, { error: 'User.update BD error' });
         }
@@ -367,7 +334,6 @@ var Users = function (logWriter, mongoose, models, department) {
         else
             models.get(req.session.lastDb - 1, 'Users', userSchema).remove({ _id: _id }, function (err, result) {
                 if (err) {
-                    console.log(err);
                     logWriter.log("Users.js remove user.remove " + err);
                     res.send(500, { error: 'User.remove BD error' });
 

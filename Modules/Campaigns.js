@@ -12,7 +12,6 @@ var Campaigns = function (logWriter, mongoose, models) {
         var query = models.get(req.session.lastDb - 1, 'campaigns', CampaignSchema).find({});
         query.exec(function (err, campaigns) {
             if (err) {
-                console.log(err);
                 logWriter.log("Sources.js getForDd find " + err);
                 response.send(500, { error: "Can't find Sources" });
             } else {

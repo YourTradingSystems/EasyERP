@@ -17,7 +17,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         sources = require("./Modules/Sources.js")(logWriter, mongoose, models),
         languages = require("./Modules/Languages.js")(logWriter, mongoose, models),
         jobType = require("./Modules/JobType.js")(logWriter, mongoose, models),
-    	nationality = require("./Modules/Nationality.js")(logWriter, mongoose, models),
+        nationality = require("./Modules/Nationality.js")(logWriter, mongoose, models),
         birthdays = require("./Modules/Birthdays.js")(logWriter, mongoose, employee, models, event);
 
     //binding for remove Workflow
@@ -48,7 +48,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
                     console.log(err);
                     logWriter.log("Removed workflow update " + err);
                 }
-                console.log(result);
             });
         }
     });
@@ -299,7 +298,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         }
     };
 
-    //---------END------Users--------------------------------
     //---------------------Profile--------------------------------
     function createProfile(req, res, data) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
@@ -378,7 +376,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         }
     };
 
-    //---------END------Profile-----------------------------------
     //---------------Persons--------------------------------
     function getForDdByRelatedUser(req, res) {
         try {
@@ -522,7 +519,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
                             res.send(200, { success: 'Customers updated success', data: response });
                         }
                     });
-                    //customer.update(req, id, remove, data.person, res);
                 } else {
                     res.send(403);
                 }
@@ -547,7 +543,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
     };
 
 
-    //---------END------Persons--------------------------------
     //---------------------Project--------------------------------
     function createProject(req, res, data) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
@@ -730,7 +725,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         }
     };
 
-    //---------------END----Project-------------------------------
     //---------------------Tasks-------------------------------
     function createTask(req, res, data) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
@@ -873,7 +867,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         }
     };
 
-    //------------------END---Tasks------------------------------
     //------------------Workflow---------------------------------
 
     function getRelatedStatus(req, res, data) {
@@ -1106,7 +1099,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         }
     };
 
-    //----------------END-----Companies-------------------------------
     //---------------------JobPosition--------------------------------
 
     // get  jobPositions Total count
@@ -1216,7 +1208,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         }
     };
 
-    //---------END------JobPosition-----------------------------------
     //---------------------Employee--------------------------------
 
     function employeesTotalCollectionLength(req, res) {
@@ -1349,7 +1340,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
     };
 
 
-    //---------END------Employees-----------------------------------
 
     //---------------------Application--------------------------------
     function getApplicationsLengthByWorkflows(req, res) {
@@ -1481,7 +1471,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             res.send(401);
         }
     };
-    //---------END------Application-----------------------------------
 
     //---------------------Department--------------------------------
     function createDepartment(req, res, data) {
@@ -1563,7 +1552,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
     function getCustomDepartment(req, res, data) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
-            //company.get(res);
             access.getReadAccess(req, req.session.uId, 15, function (access) {
                 if (access) {
                     department.getCustomDepartment(req, data, res);
@@ -1592,8 +1580,8 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         }
 
     };
-    //---------END------Department----------------------------------
-
+    
+	//---------------------Deegree--------------------------------
     function createDegree(req, res, data) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
             degrees.create(req, data.degree, res);
@@ -1887,7 +1875,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
     function projectsTotalCollectionLength(req, res) {
         project.getTotalCount(req, res);
     }
-    //---------END------Events----------------------------------
     return {
 
         mongoose: mongoose,

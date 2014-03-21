@@ -37,7 +37,7 @@ define([
             },
 
             events: {
-                "click .itemsNumber": "switchPageCounter",
+                'click .itemsNumber': 'switchPageCounter',
                 "click .showPage": "showPage",
                 "change #currentShowPage": "showPage",
                 "click #previousPage": "previousPage",
@@ -50,7 +50,7 @@ define([
                 "click .letter:not(.empty)": "alpabeticalRender",
                 "click #firstShowPage": "firstPage",
                 "click #lastShowPage": "lastPage",
-                "click .oe_sortable": "goSort",
+                "click .oe_sortable": "goSort"
             },
 
             renderContent: function () {
@@ -132,7 +132,7 @@ define([
             },
 
 
-            hideItemsNumber: function (e) {
+            hideItemsNumber: function () {
                 $(".allNumberPerPage").hide();
             },
 
@@ -145,7 +145,7 @@ define([
                 dataService.getData('/totalCollectionLength/Employees', {
                     currentNumber: currentNumber,
                     filter: filter,
-                    newCollection: this.newCollection,
+                    newCollection: this.newCollection
                 }, function (response, context) {
                     var page = 1;
                     context.listLength = response.count || 0;
@@ -223,7 +223,7 @@ define([
                 this.nextP({
                     sort: this.sort,
                     filter: this.filter,
-                    newCollection: this.newCollection,
+                    newCollection: this.newCollection
                 });
                 dataService.getData('/totalCollectionLength/Employees', {
                     filter: this.filter,
@@ -280,7 +280,7 @@ define([
                     count: itemsNumber,
                     page: 1,
                     filter: this.filter,
-                    newCollection: this.newCollection,
+                    newCollection: this.newCollection
                 });
                 this.page = 1;
                 $("#top-bar-deleteBtn").hide();
