@@ -266,6 +266,10 @@ define([
                         model: this.formModel
                     }).render().el
                 );
+				$(window).on("resize",function(){
+					$("#editInput").width($("#editInput").parent().width() - 55);
+
+				});
                 return this;
             },
 
