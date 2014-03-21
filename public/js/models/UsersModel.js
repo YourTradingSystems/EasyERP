@@ -19,12 +19,26 @@ define(['Validation'],function (Validation) {
 
         validate: function(attrs, options){
             var errors = [];
-	            Validation.checkLoginField(errors, true, attrs.login, "Login");
-	            Validation.checkEmailField(errors, false, attrs.email, "Email");
-                if (attrs.login) Validation.checkLoginField(errors, true, attrs.login, "Login");
-                if (attrs.pass)Validation.checkPasswordField(errors, true, attrs.pass, "Password");
-                if (attrs.confirmPass) Validation.checkPasswordField(errors, true, options.confirmPass, "Confirm password");
-                Validation.comparePasswords(errors, attrs.pass, options.confirmPass);
+                if(options.editMode==false) {
+                    Validation.checkLoginField(errors, true, attrs.login, "Login");
+                    Validation.checkEmailField(errors, false, attrs.email, "Email");
+                    Validation.checkPasswordField(errors, true, attrs.pass, "Password");
+                    Validation.checkPasswordField(errors, true, options.confirmPass, "Confirm password");
+                    Validation.checkPasswordField(errors, true, attrs.oldpass, "Old password");
+                    Validation.comparePasswords(errors, attrs.pass, options.confirmPass);
+                 }
+                 else if(options.editMode==true){
+                    Validation.checkLoginField(errors, true, attrs.login, "Login");
+                    Validation.checkEmailField(errors, false, attrs.email, "Email");
+                 }
+                 else{
+                    Validation.checkLoginField(errors, true, attrs.login, "Login");
+                    Validation.checkEmailField(errors, false, attrs.email, "Email");
+                    Validation.checkPasswordField(errors, true, attrs.pass, "Password");
+                    Validation.checkPasswordField(errors, true, options.confirmPass, "Confirm password");
+                    Validation.comparePasswords(errors, attrs.pass, options.confirmPass);
+                 }
+
             if(errors.length > 0)
                 return errors;
         },

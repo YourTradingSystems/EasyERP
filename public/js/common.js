@@ -112,6 +112,10 @@
 
                     $(".cropImages").dialog({
                         dialogClass: "crop-images-dialog",
+                        closeOnEscape: false,
+                        autoOpen: true,
+                        resizable: true,
+                        title: "Crop Images",
                         width: "900px",
                         buttons: {
                             save: {
