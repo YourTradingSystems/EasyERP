@@ -3,7 +3,7 @@ define([
     "text!templates/myProfile/ChangePassword.html",
     'common',
     "models/UsersModel",
-    'dataService'
+    'dataService',
 ],
     function (UsersPagesTemplate, ChangePassword, common, UsersModel, dataService) {
         var ContentView = Backbone.View.extend({
@@ -33,11 +33,16 @@ define([
                     dialogClass: "change-password-dialog",
                     width: "400px",
                     title: "Change Password",
+ 					closeOnEscape: false,
+                    autoOpen: true,
+                    resizable: true,
                     buttons: {
                         save: {
                             text: "Save",
                             class: "btn",
-                            click: self.ChangePassword
+                            click: function () {
+                                self.ChangePassword(self);
+                            }
                         },
                         cancel: {
                             text: "Cancel",
@@ -50,32 +55,33 @@ define([
                 });
             },
 
-            ChangePassword: function (e) {
-                e.preventDefault();
+            ChangePassword: function (self) {
+                    oldpass = $.trim(this.$el.find('#old_password').val());
+                    pass = $.trim(this.$el.find('#new_password').val());
+                    confirmPass = $.trim(this.$el.find('#confirm_new_password').val());
                 dataService.getData('/currentUser', null, function (response, context) {
-                    context.UsersModel = new UsersModel(response.pass);
+                    context.UsersModel = new UsersModel(response);
                     context.UsersModel.urlRoot = '/currentUser';
-                    var self = this;
+
                     var mid = 39;
                     context.UsersModel.save({
-                        oldpass: $.trim($('#old_password').val()),
-                        pass: $.trim($('#new_password').val()),
-                        confirmPass: $.trim($('#confirm_new_password').val()),
+                        oldpass: oldpass,
+                        pass: pass
                     },
 	                {
 	                    headers: {
 	                        mid: mid
 	                    },
 	                    wait: true,
-	                    success: function () {
-	                        $(".change-password-dialog").remove();
-	                        Backbone.history.fragment = "";
-	                        Backbone.history.navigate("easyErp/myProfile", { trigger: true });
+	                    patch:true,
+	                    success: function (model) {
+	                        self.hideDialog();
 	                    },
-	                    error: function () {
-	                        Backbone.history.navigate("home", { trigger: true });
-	                    },
-	                    confirmPass: $.trim($('#confirm_new_password').val())
+                        error: function (model,xhr) {
+                            self.errorNotification(xhr);
+                        },
+	                    editMode: false,
+	                    confirmPass:confirmPass
 	                });
                 }, this);
 
@@ -83,37 +89,34 @@ define([
 
             save: function (e) {
                 e.preventDefault();
+                var email = $.trim(this.$el.find("#email").val());
+                var login = $.trim(this.$el.find("#login").val());
+                var RelatedEmployee = this.$el.find("input[type='radio']:checked").attr("data-id");
                 dataService.getData('/currentUser', null, function (response, context) {
 
-                    var dataResponse = {
-                        login: response.login,
-                        email: response.email,
-                        RelatedEmployee: response.RelatedEmployee,
-                        profile: response.profile._id
-                    };
-                    context.UsersModel = new UsersModel(dataResponse);
-					console.log(dataResponse);
+                    context.UsersModel = new UsersModel(response);
                     context.UsersModel.urlRoot = '/currentUser';
                     var self = this;
                     var mid = 39;
                     context.UsersModel.save({
                         imageSrc: imageSrc,
-                        email: $.trim($("#email").val()),
-                        login: $.trim($("#login").val()),
-                        RelatedEmployee: $("input[type='radio']:checked").attr("data-id")
+                        email: email,
+                        login: login,
+                        RelatedEmployee: RelatedEmployee
                     },
 	                {
 	                    headers: {
 	                        mid: mid
 	                    },
+	                    patch:true,
 	                    wait: true,
 	                    success: function () {
 	                        Backbone.history.fragment = "";
 	                        Backbone.history.navigate("easyErp/myProfile", { trigger: true });
 	                    },
-	                    error: function () {
-	                        Backbone.history.navigate("easyErp", { trigger: true });
-	                    },
+                        error: function (model, xhr) {
+                            self.errorNotification(xhr);
+                        },
 	                    editMode: true
 	                });
                 }, this.render());

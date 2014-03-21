@@ -566,6 +566,14 @@ app.post('/currentUser', function (req, res) {
     requestHandler.updateCurrentUser(req, res, data);
 });
 
+app.patch('/currentUser/:_id', function (req, res) {
+    var data = {};
+        if (req.body.oldpass && req.body.pass) {
+            data.changePass = true;
+        }
+    requestHandler.updateCurrentUser(req, res, data);
+});
+
 app.get('/UsersForDd', function (req, res) {
     requestHandler.getUsersForDd(req, res);
 });

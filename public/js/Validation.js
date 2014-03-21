@@ -5,7 +5,8 @@ define(
             intNumberRegExp = /[0-9]+/,
             nameRegExp = /^[a-zA-Z]+[a-zA-Z-_\s]+$/,
             groupsNameRegExp = /[a-zA-Z0-9]+[a-zA-Z0-9-,#@&*-_\s()\.\/\s]+$/,
-            loginRegExp = /^[\w\.@]{6,100}$/,
+            loginRegExp = /[\w\.@]{6,100}$/,
+            passRegExp = /^[\w\.@]{3,100}$/,
             skypeRegExp = /^[\w\._@]{6,100}$/,
             workflowRegExp = /^[a-zA-Z0-9\s]{2,100}$/,
             invalidCharsRegExp = /[~<>\^\*₴]/,
@@ -52,6 +53,10 @@ define(
         }
         var validateWorkflowName = function(validatedString){
             return workflowRegExp.test(validatedString);
+        }
+
+        var validatePass= function(validatedString){
+            return passRegExp.test(validatedString);
         }
 
         var validateCountryName = function(validatedString){
@@ -443,9 +448,32 @@ define(
         }
 
         var checkPasswordField = function(errorArray, required, fieldValue, fieldName){
-            if(!fieldValue){
-                errorArray.push([fieldName, errorMessages.requiredMsg].join(' '));
-                return;
+            if(required){
+                if(!fieldValue){
+                    errorArray.push([fieldName, errorMessages.requiredMsg].join(' '));
+                    return;
+                }
+                if(hasInvalidChars(fieldValue)) {
+                    errorArray.push([fieldName, errorMessages.invalidCharsMsg].join(' '));
+                    return;
+                }
+                if(fieldValue.length < 3) {
+                    errorArray.push([fieldName, errorMessages.minLengthMsg(3)].join(' '));
+                    return;
+                }
+                if(!validatePass(fieldValue)) errorArray.push([fieldName, errorMessages.invalidLoginMsg].join(' '));
+            } else{
+                if(fieldValue){
+                    if(hasInvalidChars(fieldValue)) {
+                        errorArray.push([fieldName, errorMessages.invalidCharsMsg].join(' '));
+                        return;
+                    }
+                    if(fieldValue.length < 3) {
+                        errorArray.push([fieldName, errorMessages.minLengthMsg(3)].join(' '));
+                        return;
+                    }
+                    if(!validatePass(fieldValue)) errorArray.push([fieldName, errorMessages.invalidLoginMsg].join(' '));
+                }
             }
         }
 
