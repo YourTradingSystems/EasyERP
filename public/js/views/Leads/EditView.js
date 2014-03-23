@@ -364,6 +364,7 @@ define([
                                 }
                             });
                             that.currentModel.save(null, {
+                                validate:false,
                                 headers: {
                                     mid: 39
                                 },
