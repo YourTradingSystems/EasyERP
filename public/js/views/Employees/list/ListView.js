@@ -61,6 +61,12 @@ define([
                 $("#top-bar-deleteBtn").hide();
                 $('#check_all').prop('checked', false);
                 tBody.append(itemView.render());
+                var pagenation = this.$el.find('.pagination');
+                if (this.collection.length === 0) {
+                    pagenation.hide();
+                } else {
+                    pagenation.show();
+                }
             },
 
             //modified for filter Vasya
@@ -115,6 +121,7 @@ define([
                 this.changeLocationHash(1, this.defaultItemsNumber);
                 this.getTotalLength(null, this.defaultItemsNumber, this.filter);
             },
+            
             fetchSortCollection: function (sortObject) {
                 this.sort = sortObject;
                 this.collection = new contentCollection({
@@ -148,7 +155,12 @@ define([
                     newCollection: this.newCollection
                 }, function (response, context) {
                     var page = context.page || 1;
-                    context.listLength = response.count || 0;
+                    var length = context.listLength = response.count || 0;
+                    if (itemsNumber * (page - 1) > length) {
+                        context.page = page = Math.ceil(length / itemsNumber);
+                        context.fetchSortCollection(context.sort);
+                        context.changeLocationHash(page, context.defaultItemsNumber, filter);
+                    }
                     context.pageElementRender(response.count, itemsNumber, page);//prototype in main.js
                 }, this);
             },
