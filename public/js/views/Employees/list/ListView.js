@@ -345,7 +345,6 @@ define([
                 var holder = this.$el;
                 var alphaBet = holder.find('#startLetter');
                 var created = holder.find('#timeRecivingDataFromServer');
-                var countPerPage = this.countPerPage = newModels.length;
                 content.remove();
                 holder.append(this.template({ collection: newModels.toJSON(), page: holder.find("#currentShowPage").val(), itemsNumber: holder.find("span#itemsNumber").text() }));
                 $("#top-bar-deleteBtn").hide();
