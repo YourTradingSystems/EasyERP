@@ -57,7 +57,7 @@ define([
                });
            };
 
-           var getWorkflow = function (nameId, statusId, url, data, field, content, isCreate) {
+           var getWorkflow = function (nameId, statusId, url, data, field, content, isCreate,callback) {
                dataService.getData(url, data, function (response) {
                    content.responseObj[nameId] = _.map(response.data, function (item) {
                        return { _id: item._id, name: item[field], status:item.status };
@@ -74,6 +74,7 @@ define([
                        $(nameId).text(content.responseObj[nameId][0].name).attr("data-id", content.responseObj[nameId][0]._id);
                        $(statusId).text(content.responseObj[statusId][0].name).attr("data-id", content.responseObj[statusId][0]._id);
                    }
+                   if (callback)callback(content.responseObj[nameId]);
                });
            };
 
