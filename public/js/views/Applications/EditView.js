@@ -22,7 +22,8 @@
 				this.currentModel.urlRoot = "/Applications";
 				this.responseObj = {};
                 this.workflowsCollection = new WorkflowsCollection({ id: 'Applications' });
-				this.render();
+                this.workflowsCollection.bind("reset",this.render,this);
+//				this.render();
 
             },
 
@@ -347,6 +348,8 @@
 
             render: function () {
                 var workflow = this.workflowsCollection.findWhere({ name: "Refused" });
+                console.log(workflow);
+                console.log(this.workflowsCollection);
 				var id =null;
 				if (workflow){
 					id = workflow.get('_id');
