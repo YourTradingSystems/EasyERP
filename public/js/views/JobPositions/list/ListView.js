@@ -133,7 +133,6 @@ define([
                 }
             },
 
-
             goSort: function (e) {
                 this.collection.unbind('reset');
                 this.collection.unbind('showmore');
