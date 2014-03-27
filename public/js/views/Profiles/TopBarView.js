@@ -30,7 +30,7 @@ define([
                 event.preventDefault();
                 this.trigger('nextEvent');
             },
-            deleteEvent: function(){
+            deleteEvent: function(event){
 				var self = this;
                 event.preventDefault();
                 var selectedProfileId = $('#profilesList > li.active > a').data('id');
