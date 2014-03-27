@@ -21,6 +21,8 @@ function (common, Validation) {
             	if(response.nextAction) {
             		response.nextAction = common.utcDateToLocaleDate(response.nextAction);
             	}
+	            if (response.dateBirth)
+	                response.dateBirth = common.utcDateToLocaleDate(response.dateBirth);
             	if (response.createdBy)
             		response.createdBy.date = common.utcDateToLocaleDateTime(response.createdBy.date);
 				
@@ -41,6 +43,7 @@ function (common, Validation) {
             Validation.checkNameField(errors, true, attrs.name.first, "First name");
             Validation.checkNameField(errors, true, attrs.name.last, "Last name");
             Validation.checkEmailField(errors, false, attrs.personalEmail, "Email");
+            Validation.checkGroupsNameField(errors, true, attrs.dateBirth, "Date of Birth");
 			if (attrs.department)
             Validation.checkGroupsNameField(errors, true, attrs.department._id || attrs.department, "Department");
             Validation.checkPhoneField(errors, false, attrs.workPhones.phone, "Phone");

@@ -133,7 +133,7 @@ define([
                     phone: phone,
                     mobile: mobile
                 };
-
+                var dateBirthSt = $.trim(this.$el.find("#dateBirth").val());
                 var workflow = $("#workflowsDd").data("id");
                 var relatedUserId = $("#relatedUsersDd option:selected").val();
                 var nextAction = $.trim($("#nextAction").val());
@@ -176,6 +176,7 @@ define([
                     jobType: jobType,
                     otherInfo: otherInfo,
                     workflow: workflow,
+                    dateBirth: dateBirthSt,
                     groups: {
 						owner: $("#allUsersSelect").data("id"),
                         users: usersId,
@@ -253,6 +254,12 @@ define([
                     changeMonth: true,
                     changeYear: true,
                     minDate: new Date()
+                });
+                $('#dateBirth').datepicker({
+                	changeMonth: true,
+                    changeYear: true,
+                    yearRange: '-100y:c+nn',
+                    maxDate: '-18y'
                 });
                 this.delegateEvents(this.events);
                 return this;

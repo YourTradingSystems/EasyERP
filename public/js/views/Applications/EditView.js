@@ -174,6 +174,7 @@
                    relatedUser = relatedUser ? relatedUser : null;
                    var department = this.$el.find("#departmentDd").data("id");
                    department = department ? department : null;
+                   var dateBirthSt = $.trim(this.$el.find("#dateBirth").val());
                    var nextAction = $.trim(this.$el.find("#nextAction").val());
                    var jobPositionId = this.$el.find("#jobPositionDd").data("id") ? this.$el.find("#jobPositionDd").data("id") : null;
                    var usersId = [];
@@ -195,6 +196,7 @@
                            first: this.$el.find("#first").val(),
                            last: this.$el.find("#last").val()
                        },
+                       dateBirth: dateBirthSt,
                        personalEmail: $.trim(this.$el.find("#pemail").val()),
                        workPhones: {
                            phone: $.trim(this.$el.find("#phone").val()),
@@ -404,7 +406,13 @@
                        changeYear: true,
                        minDate: this.currentModel.toJSON().creationDate
                    });
-
+                $('#dateBirth').datepicker({
+                    dateFormat: "d M, yy",
+                    changeMonth : true,
+                    changeYear : true,
+                    yearRange: '-100y:c+nn',
+                    maxDate: '-18y'
+                });
                    var model = this.currentModel.toJSON();
                    if (model.groups)
                        if (model.groups.users.length > 0 || model.groups.group.length) {
