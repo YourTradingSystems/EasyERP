@@ -63,7 +63,7 @@ define([
                 var self = this;
                 this.$el = $(formString).dialog({
                     dialogClass: "change-password-dialog",
-                    width: "400px",
+                    width: "500px",
                     title: "Change Password",
  					closeOnEscape: false,
                     autoOpen: true,
