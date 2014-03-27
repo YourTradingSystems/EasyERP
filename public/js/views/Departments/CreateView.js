@@ -181,7 +181,6 @@ define([
                 var formString = this.template({});
 
                 this.$el = $(formString).dialog({
-					closeOnEscape: false,
                     autoOpen:true,
                     resizable:true,
 					dialogClass:"create-dialog",
