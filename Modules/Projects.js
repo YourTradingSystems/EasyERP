@@ -1520,8 +1520,8 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                     }
                     if (data.uId) {
                         _task.createdBy.user = data.uId;
-                        _task.createdBy.date = data.now;
-                        _task.editedBy.date = data.now;
+                        _task.createdBy.date = new Date();
+                        _task.editedBy.date = new Date();
                         _task.editedBy.user = data.uId;
                     }
                     if (data.logged) {
