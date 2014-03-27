@@ -29,10 +29,11 @@
             </div>
             <div class="app-block right">
               <dl class="app-normal-info">
+                <dt><label for="dateBirth">Date of Birth</label></dt><dd><input type="text" name="dateBirth" id="dateBirth" value="<%=model.dateBirth%>" required readonly/></dd>
                 <dt><label for="pemail">Email </label></dt><dd><input type="email" id="pemail" maxlength="48" value="<%=model.personalEmail%>"/></dd>
                 <dt><label for="phone">Phone </label></dt><dd><input type="text" id="phone" maxlength="20" value="<%=model.workPhones.phone%>"/></dd>
                 <dt><label for="tags">Tags </label></dt><dd><input type="text" id="tags" value="<%=model.tags%>" /></dd>
-                <dt><label for="nextAction">Next Action </label></dt><dd><input type="text" id="nextAction" maxlength="32" value="<%=model.nextAction%>" readonly/></dd>
+
               </dl>
             </div>
             <div class="clearfix"></div>
@@ -42,6 +43,7 @@
             </div>
             <div class="app-block right bottom">
               <dl class="person-info">
+                  <dt><label for="nextAction">Next Action </label></dt><dd><input type="text" id="nextAction" maxlength="32" value="<%=model.nextAction%>" readonly/></dd>
                 <dt><label for="jobPositionDd">Applied Job </label></dt>
                 <dd>
 				  <a id="jobPositionDd" data-id="<%=model.jobPosition?model.jobPosition._id:""%>" class="current-selected" href="javascript:;"><%=model.jobPosition?model.jobPosition.name:"Select"%></a>
