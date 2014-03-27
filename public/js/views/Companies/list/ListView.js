@@ -69,13 +69,19 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, contentColl
         },
 
         renderContent: function () {
-            var currentEl = this.$el;
-            var tBody = currentEl.find('#listTable');
-            tBody.empty();
-            $("#top-bar-deleteBtn").hide();
-            $('#check_all').prop('checked', false);
-            var itemView = new listItemView({ collection: this.collection, page: this.page, itemsNumber: this.collection.namberToShow });
-            tBody.append(itemView.render());
+                var currentEl = this.$el;
+                var tBody = currentEl.find('#listTable');
+                tBody.empty();
+                $("#top-bar-deleteBtn").hide();
+                $('#check_all').prop('checked', false);
+                var itemView = new listItemView({ collection: this.collection, page: this.page, itemsNumber: this.collection.namberToShow });
+                tBody.append(itemView.render());
+                var pagenation = this.$el.find('.pagination');
+                if (this.collection.length === 0) {
+                    pagenation.hide();
+                } else {
+                    pagenation.show();
+                }
         },
 
         goSort: function (e) {
@@ -145,11 +151,16 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, contentColl
                 currentNumber: currentNumber,
                 filter: filter,
                 newCollection: this.newCollection
-            }, function (response, context) {
-                var page = context.page || 1;
-                context.listLength = response.count || 0;
-                context.pageElementRender(response.count, itemsNumber, page);
-            }, this);
+                }, function (response, context) {
+                    var page = context.page || 1;
+                    var length = context.listLength = response.count || 0;
+                    if (itemsNumber * (page - 1) > length) {
+                        context.page = page = Math.ceil(length / itemsNumber);
+                        context.fetchSortCollection(context.sort);
+                        context.changeLocationHash(page, context.defaultItemsNumber, filter);
+                    }
+                    context.pageElementRender(response.count, itemsNumber, page);//prototype in main.js
+                }, this);
         },
 
         render: function () {

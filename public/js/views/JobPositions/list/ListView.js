@@ -124,10 +124,14 @@ define([
                 $('#check_all').prop('checked', false);
                 tBody.empty();
                 var itemView = new listItemView({ collection: this.collection, page: currentEl.find("#currentShowPage").val(), itemsNumber: currentEl.find("span#itemsNumber").text() });
-
                 tBody.append(itemView.render());
+                var pagenation = this.$el.find('.pagination');
+                if (this.collection.length === 0) {
+                    pagenation.hide();
+                } else {
+                    pagenation.show();
+                }
             },
-
 
             goSort: function (e) {
                 this.collection.unbind('reset');
@@ -180,8 +184,13 @@ define([
                     newCollection: this.newCollection
                 }, function (response, context) {
                     var page = context.page || 1;
-                    context.listLength = response.count || 0;
-                    context.pageElementRender(response.count, itemsNumber, page);
+                    var length = context.listLength = response.count || 0;
+                    if (itemsNumber * (page - 1) > length) {
+                        context.page = page = Math.ceil(length / itemsNumber);
+                        context.fetchSortCollection(context.sort);
+                        context.changeLocationHash(page, context.defaultItemsNumber);
+                    }
+                    context.pageElementRender(response.count, itemsNumber, page);//prototype in main.js
                 }, this);
             },
 

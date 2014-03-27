@@ -34,7 +34,7 @@ function (listTemplate, createView, listItemView, aphabeticTemplate,contentColle
             this.page = options.collection.page;
             this.render();
             this.getTotalLength(null, this.defaultItemsNumber, this.filter);
-
+            this.contentCollection = contentCollection;
         },
 
         events: {
@@ -140,7 +140,12 @@ function (listTemplate, createView, listItemView, aphabeticTemplate,contentColle
                     newCollection: this.newCollection
                 }, function (response, context) {
                     var page = context.page || 1;
-                    context.listLength = response.count || 0;
+                    var length = context.listLength = response.count || 0;
+                    if (itemsNumber * (page - 1) > length) {
+                        context.page = page = Math.ceil(length / itemsNumber);
+                        context.fetchSortCollection(context.sort);
+                        context.changeLocationHash(page, context.defaultItemsNumber, filter);
+                    }
                     context.pageElementRender(response.count, itemsNumber, page);//prototype in main.js
                 }, this);
         },
@@ -196,8 +201,13 @@ function (listTemplate, createView, listItemView, aphabeticTemplate,contentColle
                 $('#check_all').prop('checked', false);
                 tBody.empty();
                 var itemView = new listItemView({ collection: this.collection,page: currentEl.find("#currentShowPage").val(), itemsNumber: currentEl.find("span#itemsNumber").text() });
-
                 tBody.append(itemView.render());
+                var pagenation = this.$el.find('.pagination');
+                if (this.collection.length === 0) {
+                    pagenation.hide();
+                } else {
+                    pagenation.show();
+                }
         },
         previousPage: function (event) {
                 event.preventDefault();
