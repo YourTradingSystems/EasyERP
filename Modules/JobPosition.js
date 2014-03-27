@@ -345,6 +345,7 @@ var JobPosition = function (logWriter, mongoose, employee, department, models) {
                                     skip((data.page - 1) * data.count).
                                     limit(data.count).
                                     exec(function (error, _res) {
+                                        
                                         if (!error) {
                                             res['data'] = _res;
                                             if (_res.length !== 0) {
@@ -357,7 +358,9 @@ var JobPosition = function (logWriter, mongoose, employee, department, models) {
                                                             console.log(err);
                                                             response.send(500, { error: 'Some error occured in JobPosition' });
                                                         }
-                                                        if (index === data.count - 1 || ((result.length < data.count) && (index === result.length - 1))) {
+                                                        if (index == data.count-1 || ((_res.length < data.count) && (index == _res.length - 1))) {
+
+
                                                             if (data.sort && (data.sort.totalForecastedEmployees || data.sort.numberOfEmployees)) {
                                                                 for (var i in data.sort) {
                                                                     switch (i) {
