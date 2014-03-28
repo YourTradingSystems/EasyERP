@@ -15,16 +15,14 @@
             imageSrc: '',
             template: _.template(EditTemplate),
             initialize: function (options) {
-                _.bindAll(this, "saveItem");
-                _.bindAll(this, "render", "deleteItem");
+                _.bindAll(this, "saveItem", "render", "deleteItem");
                 this.employeesCollection = options.collection;
                 this.currentModel = (options.model) ? options.model : options.collection.getElement();
-				this.currentModel.urlRoot = "/Applications";
-				this.responseObj = {};
+                this.currentModel.urlRoot = "/Applications";
+                this.responseObj = {};
                 this.workflowsCollection = new WorkflowsCollection({ id: 'Applications' });
-                this.workflowsCollection.bind("reset",this.render,this);
-//				this.render();
-
+                this.workflowsCollection.bind("reset", this.render, this);
+                //this.render();
             },
 
             events: {
@@ -41,57 +39,57 @@
                 "click .newSelectList li.miniStylePagination": "notHide",
                 "click .newSelectList li.miniStylePagination .next:not(.disabled)": "nextSelect",
                 "click .newSelectList li.miniStylePagination .prev:not(.disabled)": "prevSelect",
-				"click .hireEmployee": "isEmployee",
+                "click .hireEmployee": "isEmployee",
                 "click .refuseEmployee": "refuseEmployee"
             },
             refuseEmployee: function (e) {
-				var self = this;
+                var self = this;
                 var workflow = this.workflowsCollection.findWhere({ name: "Refused" });
                 if (!workflow) {
                     throw new Error('Workflow "Refused" not found');
                 }
                 var id = workflow.get('_id');
-				var workflowStart = this.currentModel.get("workflow")&&this.currentModel.get("workflow")._id?this.currentModel.get("workflow")._id:this.currentModel.get("workflow");
+                var workflowStart = this.currentModel.get("workflow") && this.currentModel.get("workflow")._id ? this.currentModel.get("workflow")._id : this.currentModel.get("workflow");
                 this.currentModel.save({
                     workflow: id
                 }, {
                     patch: true,
                     success: function (model) {
-						model = model.toJSON();
-						var viewType = custom.getCurrentVT();
-						switch (viewType) {
-						case 'list':
-							{
-                                $("tr[data-id='" + model._id + "'] td").eq(6).find("a").text("Refused");
-							}
-							break;
-						case 'kanban':
-							{
+                        model = model.toJSON();
+                        var viewType = custom.getCurrentVT();
+                        switch (viewType) {
+                            case 'list':
+                                {
+                                    $("tr[data-id='" + model._id + "'] td").eq(6).find("a").text("Refused");
+                                }
+                                break;
+                            case 'kanban':
+                                {
                                     $(".column[data-id='" + id + "']").find(".columnNameDiv").after($("#" + model._id));
-                                      if (id) {
-                                           var counter = $(".column[data-id='" + id + "']").closest(".column").find(".totalCount");
-                                           counter.html(parseInt(counter.html()) + 1);
-                                           counter = $(".column[data-id='" + workflowStart + "']").closest(".column").find(".totalCount");
-                                           counter.html(parseInt(counter.html()) - 1);
+                                    if (id) {
+                                        var counter = $(".column[data-id='" + id + "']").closest(".column").find(".totalCount");
+                                        counter.html(parseInt(counter.html()) + 1);
+                                        counter = $(".column[data-id='" + workflowStart + "']").closest(".column").find(".totalCount");
+                                        counter.html(parseInt(counter.html()) - 1);
 
-                                      }
+                                    }
 
-							}
-						}
-						self.hideDialog();
+                                }
+                        }
+                        self.hideDialog();
                     },
                     error: function (model, xhr, options) {
-    					self.errorNotification(xhr);
+                        self.errorNotification(xhr);
                     }
                 });
-				return false;
+                return false;
 
             },
             isEmployee: function (e) {
-				e.preventDefault();
-            	this.currentModel.save({
-            	    isEmployee: true,
-            	    hired: true
+                e.preventDefault();
+                this.currentModel.save({
+                    isEmployee: true,
+                    hired: true
                 }, {
                     headers: {
                         mid: 39
@@ -104,15 +102,15 @@
             },
 
             notHide: function (e) {
-				return false;
+                return false;
             },
 
             nextSelect: function (e) {
                 this.showNewSelect(e, false, true);
-			},
+            },
             prevSelect: function (e) {
                 this.showNewSelect(e, true, false);
-			},
+            },
 
             changeTab: function (e) {
                 var holder = $(e.target);
@@ -219,7 +217,7 @@
                     tags: $.trim(this.$el.find("#tags").val()).split(','),
                     otherInfo: this.$el.find("#otherInfo").val(),
                     groups: {
-						owner: $("#allUsersSelect").data("id"),
+                        owner: $("#allUsersSelect").data("id"),
                         users: usersId,
                         group: groupsId
                     },
@@ -239,63 +237,63 @@
                     patch: true,
                     success: function (model, result) {
                         model = model.toJSON();
-						result = result.result;
+                        result = result.result;
                         var editHolder = self.$el;
-						switch (viewType) {
-                        case 'list':
-                            {
-								var tr_holder = $("tr[data-id='" + model._id + "'] td");
+                        switch (viewType) {
+                            case 'list':
+                                {
+                                    var tr_holder = $("tr[data-id='" + model._id + "'] td");
                                     tr_holder.eq(2).text(data.name.first + " " + data.name.last);
-                                tr_holder.eq(3).text(data.personalEmail);
+                                    tr_holder.eq(3).text(data.personalEmail);
                                     tr_holder.eq(4).find("a").text(data.workPhones.phone).attr("href", "skype:" + data.workPhones.phone + "?call");
-                                tr_holder.eq(5).text(self.$el.find("#jobPositionDd").text());
-                                tr_holder.eq(6).find("a").text(self.$el.find("#workflowsDd").text());
-                                tr_holder.eq(7).text(data.jobType);
+                                    tr_holder.eq(5).text(self.$el.find("#jobPositionDd").text());
+                                    tr_holder.eq(6).find("a").text(self.$el.find("#workflowsDd").text());
+                                    tr_holder.eq(7).text(data.jobType);
                                     if (data.workflow) {
-									Backbone.history.fragment = "";
+                                        Backbone.history.fragment = "";
                                         Backbone.history.navigate(window.location.hash.replace("#", ""), { trigger: true });
-								}
-                            }
-                            break;
-                        case 'kanban':
-                            {
-                                var kanban_holder = $("#" + model._id);
+                                    }
+                                }
+                                break;
+                            case 'kanban':
+                                {
+                                    var kanban_holder = $("#" + model._id);
                                     kanban_holder.find(".application-header .left").html(data.name.first + "<br/>" + data.name.last);
-								if (parseInt(data.proposedSalary))
+                                    if (parseInt(data.proposedSalary))
                                         kanban_holder.find(".application-header .right").text(data.proposedSalary + "$");
-                                kanban_holder.find(".application-content p.center").text(self.$el.find("#jobPositionDd").text());
-                                kanban_holder.find(".application-content p.right").text(nextAction);
-								if (new Date()>new Date(nextAction)){
-                                kanban_holder.find(".application-content p.right").addClass("red");
-								}else{
-                                kanban_holder.find(".application-content p.right").removeClass("red");
-								}
+                                    kanban_holder.find(".application-content p.center").text(self.$el.find("#jobPositionDd").text());
+                                    kanban_holder.find(".application-content p.right").text(nextAction);
+                                    if (new Date() > new Date(nextAction)) {
+                                        kanban_holder.find(".application-content p.right").addClass("red");
+                                    } else {
+                                        kanban_holder.find(".application-content p.right").removeClass("red");
+                                    }
 
                                     if (result && result.sequence) {
-									$("#" + data.workflowStart).find(".item").each(function () {
-										var seq = $(this).find(".inner").data("sequence");
-										if (seq > data.sequenceStart) {
-											$(this).find(".inner").attr("data-sequence", seq - 1);
-										}
-									});
-                                    kanban_holder.find(".inner").attr("data-sequence", result.sequence);
-								}
-                                if (data.workflow) {
+                                        $("#" + data.workflowStart).find(".item").each(function () {
+                                            var seq = $(this).find(".inner").data("sequence");
+                                            if (seq > data.sequenceStart) {
+                                                $(this).find(".inner").attr("data-sequence", seq - 1);
+                                            }
+                                        });
+                                        kanban_holder.find(".inner").attr("data-sequence", result.sequence);
+                                    }
+                                    if (data.workflow) {
+                                        $(".column[data-id='" + data.workflow + "']").find(".columnNameDiv").after(kanban_holder);
+                                        var counter = $(".column[data-id='" + data.workflow + "']").closest(".column").find(".totalCount");
+                                        counter.html(parseInt(counter.html()) + 1);
+                                        counter = $(".column[data-id='" + data.workflowStart + "']").closest(".column").find(".totalCount");
+                                        counter.html(parseInt(counter.html()) - 1);
+
+                                    }
                                     $(".column[data-id='" + data.workflow + "']").find(".columnNameDiv").after(kanban_holder);
-                                    var counter = $(".column[data-id='" + data.workflow + "']").closest(".column").find(".totalCount");
-                                    counter.html(parseInt(counter.html()) + 1);
-                                    counter = $(".column[data-id='" + data.workflowStart + "']").closest(".column").find(".totalCount");
-                                    counter.html(parseInt(counter.html()) - 1);
 
                                 }
-                                $(".column[data-id='" + data.workflow + "']").find(".columnNameDiv").after(kanban_holder);
-
-                            }
                         }
                         self.hideDialog();
                     },
                     error: function (model, xhr) {
-    					self.errorNotification(xhr);
+                        self.errorNotification(xhr);
                     }
                 });
             },
@@ -310,26 +308,26 @@
                             mid: mid
                         },
                         success: function (model) {
-							model = model.toJSON();
-							var viewType = custom.getCurrentVT();
-							switch (viewType) {
-							case 'list':
-								{
-									$("tr[data-id='" + model._id + "'] td").remove();
-								}
-								break;
-							case 'kanban':
-								{
-									$("#" + model._id).remove();
-									var wId = model.workflow._id;
+                            model = model.toJSON();
+                            var viewType = custom.getCurrentVT();
+                            switch (viewType) {
+                                case 'list':
+                                    {
+                                        $("tr[data-id='" + model._id + "'] td").remove();
+                                    }
+                                    break;
+                                case 'kanban':
+                                    {
+                                        $("#" + model._id).remove();
+                                        var wId = model.workflow._id;
                                         var newTotal = ($("td[data-id='" + wId + "'] .totalCount").html() - 1);
-									$("td[data-id='" + wId + "'] .totalCount").html(newTotal);
-								}
-							}
-							self.hideDialog();
+                                        $("td[data-id='" + wId + "'] .totalCount").html(newTotal);
+                                    }
+                            }
+                            self.hideDialog();
                         },
                         error: function (model, xhr) {
-    						self.errorNotification(xhr);
+                            self.errorNotification(xhr);
                         }
                     });
                 }
@@ -348,19 +346,17 @@
 
             render: function () {
                 var workflow = this.workflowsCollection.findWhere({ name: "Refused" });
-                console.log(workflow);
-                console.log(this.workflowsCollection);
-				var id =null;
-				if (workflow){
-					id = workflow.get('_id');
-				}
+                var id = null;
+                if (workflow) {
+                    id = workflow.get('_id');
+                }
                 var formString = this.template({
                     model: this.currentModel.toJSON(),
-					refuseId: id
+                    refuseId: id
                 });
                 var self = this;
                 this.$el = $(formString).dialog({
-					closeOnEscape: false,
+                    closeOnEscape: false,
                     dialogClass: "edit-dialog",
                     width: 690,
                     title: "Edit Application",
@@ -382,14 +378,14 @@
                         }
                     }
                 });
-				var notDiv = this.$el.find('.attach-container');
+                var notDiv = this.$el.find('.attach-container');
                 notDiv.append(
                     new attachView({
                         model: this.currentModel,
-						url:"/uploadApplicationFiles"
+                        url: "/uploadApplicationFiles"
                     }).render().el
                 );
-				notDiv = this.$el.find('.assignees-container');
+                notDiv = this.$el.find('.assignees-container');
                 notDiv.append(
                     new AssigneesView({
                         model: this.currentModel,
@@ -421,6 +417,7 @@
                         });
 
                     }
+                this.delegateEvents();
                 return this;
             }
         });
