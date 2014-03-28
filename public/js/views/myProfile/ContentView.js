@@ -121,9 +121,9 @@ define([
 
             save: function (e) {
                 e.preventDefault();
-                var email = $.trim(this.$el.find("#email").val());
-                var login = $.trim(this.$el.find("#login").val());
-                var RelatedEmployee = this.$el.find("input[type='radio']:checked").attr("data-id");
+                var email = $.trim($("#email").val());
+                var login = $.trim($("#login").val());
+                var RelatedEmployee = $("input[type='radio']:checked").attr("data-id");
                 dataService.getData('/currentUser', null, function (response, context) {
 
                     context.UsersModel = new UsersModel(response);

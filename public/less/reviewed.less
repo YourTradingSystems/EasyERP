@@ -739,6 +739,9 @@ input::-ms-clear {
     float: left;
     overflow: visible;
   }
+  &.banned {
+    border-bottom:0
+  }
 }
 
 .submenu(@defaultColor: #FFF,@activeColor: #FFF, @height: 30px, @bg: #4D5A75) {
@@ -1132,9 +1135,6 @@ input::-ms-clear {
   .noPaddingMargin;
   min-width: 100%;
   table-layout: fixed;
-  &.opp {
-    width: 100%;
-  }
   tbody {
     width: 100%;
   }
@@ -4705,4 +4705,27 @@ border: 1px solid #E2E9EF !important;
 }
 #createUserForm #resetBtn:hover, #createUserForm #saveBtn:hover, .changePassword:hover{
     background: #ECECEC !important;
+}
+
+#banned {
+    height: 80px;
+    width:365px;
+    margin:0 auto;
+    .icon-banned {
+        background: url("../images/banned.png") no-repeat;
+        float:left;
+        height: 100%;
+        width:20%;
+    }
+    .text-banned {
+        float:right;
+        h1 {
+            font-size: 24px;
+            padding: 0 0 10px;
+            font-weight: 300!important;
+        }
+        p {
+            font-size: 16px;
+        }
+    }
 }

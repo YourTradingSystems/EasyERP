@@ -213,7 +213,7 @@ define([
                    $(document).on("click", function () {
                        self.hideItemsNumber();
                    });
-                   common.populateWorkflowsList("Jobpositions", ".filter-check-list", ".filter-check-list", "/Workflows", null, function (stages) {
+                   common.populateWorkflowsList("Job positions", ".filter-check-list", ".filter-check-list", "/Workflows", null, function (stages) {
                        self.stages = stages;
                        var stage = (self.filter) ? self.filter.workflow : null;
                        if (stage) {

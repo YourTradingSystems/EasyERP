@@ -334,7 +334,7 @@
                     opacity: 0.7,
                     revert: true,
                     helper: 'clone',
-
+                    containment:'document',
                     start: function (event, ui) {
                         var id = ui.item.context.id;
                         var model = collection.get(id);

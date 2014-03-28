@@ -272,7 +272,7 @@ function (WorkflowsTemplate, kanbanSettingsTemplate, WorkflowsCollection, Kanban
                 opacity: 0.7,
                 revert: true,
                 helper: 'clone',
-
+                containment:'document',
                 start: function (event, ui) {
 					self.updateCounter(ui.item,false);
                 },

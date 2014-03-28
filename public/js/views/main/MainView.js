@@ -8,12 +8,10 @@ define([
 
         var MainView = Backbone.View.extend({
             el: '#wrapper',
-            
             events: {
                 'click #loginPanel': 'showSelect',
                 'click': 'hideProp'
             },
-            
             initialize: function(options) {
 				this.contentType = options?options.contentType:null;
                 this.render();
@@ -60,24 +58,27 @@ define([
             render: function() {
 				var self = this;
                 dataService.getData('/currentUser', null, function (response, context) {
-					if (response.RelatedEmployee){
-						$("#loginPanel .iconEmployee").attr("src",response.RelatedEmployee.imageSrc);
-						if (response.RelatedEmployee.name){
-							$("#loginPanel  #userName").text(response.RelatedEmployee.name.first+" "+response.RelatedEmployee.name.last);
-						}else{
-							$("#loginPanel  #userName").text(response.login);
-						}
-					}else{
-						$("#loginPanel .iconEmployee").attr("src",response.imageSrc);
-						$("#loginPanel  #userName").text(response.login);
-					}
+					if(response.profile.profileName == 'baned') {
+					    $('title').text("EasyERP");
+                    	context.$el.find("li#userpage").remove();
+                    	context.$el.find("#top-bar").addClass("banned");
+                    	context.$el.find("#content-holder").append("<div id = 'banned'><div class='icon-banned'></div><div class='text-banned'><h1>Sorry, this user is banned!</h1><p>Please contact the administrator.</p></div></div>");
+                    }
+                    if (response.RelatedEmployee){
+                        $("#loginPanel .iconEmployee").attr("src",response.RelatedEmployee.imageSrc);
+                        if (response.RelatedEmployee.name){
+                             $("#loginPanel  #userName").text(response.RelatedEmployee.name.first+" "+response.RelatedEmployee.name.last);
+                        }else{
+                             $("#loginPanel  #userName").text(response.login);
+                        }
+                    }else{
+                         $("#loginPanel .iconEmployee").attr("src",response.imageSrc);
+                         $("#loginPanel  #userName").text(response.login);
+                    }
                 }, this);
-				this.$el.html(_.template(MainTemplate));
-
+                this.$el.html(_.template(MainTemplate));
                 return this;
             }
         });
-
         return MainView;
-
     });

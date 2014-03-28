@@ -5,7 +5,7 @@ define(['libs/date.format', 'common'], function (dateformat, common) {
             Backbone.history.start({ silent: true });
         if (success) {
             var url = (App.requestedURL == null) ? Backbone.history.fragment : App.requestedURL;
-            if ((url == "") || (url == "login")) url = 'home';
+            if ((url == "") || (url == "login")) url = 'easyErp';
 
             Backbone.history.fragment = "";
             Backbone.history.navigate(url, { trigger: true });

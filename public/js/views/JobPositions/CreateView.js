@@ -176,7 +176,7 @@ define([
                     }).render().el
                 );
 				populate.get("#departmentDd", "/DepartmentsForDd", {}, "departmentName", this, true, true);
-                populate.getWorkflow("#workflowsDd", "#workflowNamesDd", "/WorkflowsForDd", { id: "Jobpositions" }, "name", this, true);
+                populate.getWorkflow("#workflowsDd", "#workflowNamesDd", "/WorkflowsForDd", { id: "Job positions" }, "name", this, true);
                 this.delegateEvents(this.events);
                 return this;
             }
