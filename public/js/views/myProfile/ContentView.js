@@ -91,6 +91,7 @@ define([
                     oldpass = $.trim(this.$el.find('#old_password').val());
                     pass = $.trim(this.$el.find('#new_password').val());
                     confirmPass = $.trim(this.$el.find('#confirm_new_password').val());
+
                 dataService.getData('/currentUser', null, function (response, context) {
                     context.UsersModel = new UsersModel(response);
                     context.UsersModel.urlRoot = '/currentUser';
