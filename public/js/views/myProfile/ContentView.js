@@ -63,7 +63,7 @@ define([
                 var self = this;
                 this.$el = $(formString).dialog({
                     dialogClass: "change-password-dialog",
-                    width: "400px",
+                    width: "500px",
                     title: "Change Password",
  					closeOnEscape: false,
                     autoOpen: true,
@@ -91,6 +91,7 @@ define([
                     oldpass = $.trim(this.$el.find('#old_password').val());
                     pass = $.trim(this.$el.find('#new_password').val());
                     confirmPass = $.trim(this.$el.find('#confirm_new_password').val());
+
                 dataService.getData('/currentUser', null, function (response, context) {
                     context.UsersModel = new UsersModel(response);
                     context.UsersModel.urlRoot = '/currentUser';
@@ -121,9 +122,9 @@ define([
 
             save: function (e) {
                 e.preventDefault();
-                var email = $.trim(this.$el.find("#email").val());
-                var login = $.trim(this.$el.find("#login").val());
-                var RelatedEmployee = this.$el.find("input[type='radio']:checked").attr("data-id");
+                var email = $.trim($("#email").val());
+                var login = $.trim($("#login").val());
+                var RelatedEmployee = $("input[type='radio']:checked").attr("data-id");
                 dataService.getData('/currentUser', null, function (response, context) {
 
                     context.UsersModel = new UsersModel(response);

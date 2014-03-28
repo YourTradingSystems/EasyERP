@@ -243,7 +243,7 @@ function uploadFileArray(req, res, callback) {
                     file.name = item.name;
 					file.shortPas = encodeURIComponent(shortPas);
                     if (item.size>=1024) {
-                        file.size = (Math.round(item.size / 1024 / 2024 * 1000) / 1000)+'&nbsp;Mb';
+                        file.size = (Math.round(item.size / 1024 / 1024 * 1000) / 1000)+'&nbsp;Mb';
                     }
                     else{
                         file.size = (Math.round(item.size / 1024 * 1000)/1000)+'&nbsp;Kb';

@@ -187,6 +187,7 @@ define([
 
 
                    this.$("#workflows").sortable({
+                       containment:'document',
                        stop: function (event, ui) {
                            var id = ui.item.find("div.name").attr("id");
                            self.collection.url = "/Workflows";

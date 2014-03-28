@@ -152,7 +152,7 @@
                                       var estimated = parseInt(editHolder.find("#estimated").val() || 0);
                                       var logged = parseInt(editHolder.find("#logged").val() || 0);
                                       var progress = Math.round(logged / estimated * 100);
-                                      if ((progress === Infinity) || (progress === NaN))
+                                      if ((progress === Infinity)||!progress)
                                           progress = 0;
                                       tr_holder.eq(7).text(estimated);
                                       tr_holder.eq(8).text(logged);

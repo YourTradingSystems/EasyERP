@@ -96,6 +96,7 @@ function (ListTemplate, CreateView, currentModel, ListItemView, EditView) {
 			self = this;
 			this.$("ul").sortable({
 				connectWith: 'ul',
+				containment:'document',
                 stop: function (event, ui) {
 					self.groupMove();
 					var model = self.collection.get(ui.item.attr("data-id"));

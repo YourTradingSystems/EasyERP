@@ -247,7 +247,7 @@
                     opacity: 0.7,
                     revert: true,
                     helper: 'clone',
-
+                    containment:'document',
                     start: function (event, ui) {
                         var column = ui.item.closest(".column");
                         column.find(".totalCount").html(parseInt(column.find(".totalCount").html()) - 1);

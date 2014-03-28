@@ -33,11 +33,20 @@ define([
                 "click .newSelectList li.miniStylePagination": "notHide",
                 "click .newSelectList li.miniStylePagination .next:not(.disabled)": "nextSelect",
                 "click .newSelectList li.miniStylePagination .prev:not(.disabled)": "prevSelect",
+               // 'keydown': 'keydownHandler'
             },
             notHide: function (e) {
                 return false;
             },
-
+            keydownHandler: function(e){
+                switch (e.which){
+                    case 27:
+                        this.hideDialog();
+                        break;
+                    default:
+                        break;
+                }
+            },
             nextSelect: function (e) {
                 this.showNewSelect(e, false, true);
             },
@@ -172,27 +181,29 @@ define([
                 var formString = this.template({});
 
                 this.$el = $(formString).dialog({
-                    closeOnEscape: false,
-                    autoOpen: true,
-                    resizable: true,
-                    dialogClass: "edit-dialog",
-                    title: "Edit department",
+                    autoOpen:true,
+                    resizable:true,
+					dialogClass:"create-dialog",
                     width: "950px",
                     buttons: [
                         {
                             text: "Create",
-                            click: function () { self.saveItem(); }
+                            click: function () {
+                                self.saveItem();
+                            }
                         },
-
 						{
 						    text: "Cancel",
-						    click: function () { $(this).dialog().remove(); }
+						    click: function () {
+                                self.hideDialog();
+                            }
 						}]
 
                 });
                 populate.get2name("#departmentManager", "/getPersonsForDd", {}, this, true, true);
                 populate.getParrentDepartment("#parentDepartment", "/getSalesTeam", {}, this, true, true);
                 common.populateUsersForGroups('#sourceUsers', '#targetUsers', null, 1);
+                this.delegateEvents(this.events);
                 return this;
             }
         });
