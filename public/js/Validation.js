@@ -233,33 +233,34 @@ define(
         };
 
         var checkSkypeField = function(errorArray, required, fieldValue, fieldName){
-            if(required){
-                if(!fieldValue){
-                    errorArray.push([fieldName, errorMessages.requiredMsg].join(' '));
-                    return;
-                }
-                if(hasInvalidChars(fieldValue)) {
-                    errorArray.push([fieldName, errorMessages.invalidCharsMsg].join(' '));
-                    return;
-                }
-                if(fieldValue.length < LOGIN_MIN_LENGTH) {
-                    errorArray.push([fieldName, errorMessages.minLengthMsg(LOGIN_MIN_LENGTH)].join(' '));
-                    return;
-                }
-                if(!validateSkype(fieldValue)) errorArray.push([fieldName, errorMessages.invalidLoginMsg].join(' '));
-            } else{
-                if(fieldValue){
-                    if(hasInvalidChars(fieldValue)) {
-                        errorArray.push([fieldName, errorMessages.invalidCharsMsg].join(' '));
-                        return;
-                    }
-                    if(fieldValue.length < MIN_LENGTH) {
-                        errorArray.push([fieldName, errorMessages.minLengthMsg(6)].join(' '));
-                        return;
-                    }
-                    if(!validateSkype(fieldValue)) errorArray.push([fieldName, errorMessages.invalidLoginMsg].join(' '));
-                }
-            }
+               if(required){
+                   if(!fieldValue){
+                       errorArray.push([fieldName, errorMessages.requiredMsg].join(' '));
+                       return;
+                   }
+                   if(hasInvalidChars(fieldValue)) {
+                       errorArray.push([fieldName, errorMessages.invalidCharsMsg].join(' '));
+                       return;
+                   }
+                   if(fieldValue.length < 6) {
+                       errorArray.push([fieldName, errorMessages.minLengthMsg(6)].join(' '));
+                       return;
+                   }
+                   if(!validateWorkflowName(fieldValue)) errorArray.push([fieldName, errorMessages.invalidLoginMsg].join(' '));
+               } else{
+                   if(fieldValue){
+                       if(hasInvalidChars(fieldValue)) {
+                           errorArray.push([fieldName, errorMessages.invalidCharsMsg].join(' '));
+                           return;
+                       }
+                       if(fieldValue.length < 6) {
+                           errorArray.push([fieldName, errorMessages.minLengthMsg(6)].join(' '));
+                           return;
+                       }
+                       if(!validateSkype(fieldValue)) errorArray.push([fieldName, errorMessages.invalidLoginMsg].join(' '));
+                   }
+               }
+
         };
 
 
