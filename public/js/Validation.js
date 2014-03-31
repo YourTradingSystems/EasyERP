@@ -304,11 +304,19 @@ define(
                     errorArray.push([fieldName, errorMessages.invalidCharsMsg].join(' '));
                     return;
                 }
+                if(fieldValue.length < 5) {
+                    errorArray.push([fieldName, errorMessages.minLengthMsg(5)].join(' '));
+                    return;
+                }
                 if(!validatePhone(fieldValue)) errorArray.push([fieldName, errorMessages.invalidPhoneMsg].join(' '));
             } else {
                 if(fieldValue){
                     if(hasInvalidChars(fieldValue)) {
                         errorArray.push([fieldName, errorMessages.invalidCharsMsg].join(' '));
+                        return;
+                    }
+                    if(fieldValue.length < 5) {
+                        errorArray.push([fieldName, errorMessages.minLengthMsg(5)].join(' '));
                         return;
                     }
                     if(!validatePhone(fieldValue)) errorArray.push([fieldName, errorMessages.invalidPhoneMsg].join(' '));
