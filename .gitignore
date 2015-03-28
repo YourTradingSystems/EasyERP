@@ -6,3 +6,5 @@
 /crmbb.iml
 
 node_modules
+.idea
+crmbb.iml
