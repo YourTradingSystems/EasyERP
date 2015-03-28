@@ -1,0 +1,14 @@
+{
+  "name": "easyErp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "dependencies": {
+    "connect-mongo": "0.3.3",
+    "express": "3.4.0",
+    "googleapis": "0.4.6",
+    "mongoose": "3.8.3",
+    "request": "2.29.0",
+    "xml2js": "0.4.0"
+  }
+}
