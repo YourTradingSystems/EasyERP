@@ -25,5 +25,5 @@ var logWriter = function (fs) {
         log: erfunc,
         fs: fs
     }
-}
+};
 module.exports = logWriter;
