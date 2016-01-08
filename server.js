@@ -470,7 +470,7 @@ app.post('/uploadOpportunitiesFiles', function (req, res, next) {
                 dir = __dirname + "\/uploads\/";
             }
     }
-    
+
     fs.readdir(dir, function (err, files) {
         if (err) {
             fs.mkdir(dir, function (errr) {
@@ -661,7 +661,7 @@ app.get('/getPersonsForMiniView', function (req, res) {
 
 });
 
-//--------------------------Customers----------------------------------------------------------     
+//--------------------------Customers----------------------------------------------------------
 
 app.get('/Customer', function (req, res) {
     var data = {};
@@ -1330,4 +1330,4 @@ app.get('/:id', function (req, res) {
 app.listen(8088);
 
 
-console.log("server start");
+console.log("server started on port 8088");
